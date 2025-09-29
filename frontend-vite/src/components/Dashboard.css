@@ -1,0 +1,43 @@
+.dashboard-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  padding: 2.5rem 2.5rem;
+  max-width: 600px;
+  margin: 40px auto;
+  color: #222;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.dashboard-welcome {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-subtitle {
+  margin: 2rem 0 1rem 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+.dashboard-table th, .dashboard-table td {
+  padding: 0.7rem 0.5rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+.dashboard-table th {
+  font-weight: 700;
+}
+.dashboard-table tr:hover {
+  background: #f7f7f7;
+}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LoginForm from "./components/LoginForm";
+import Dashboard from "./components/Dashboard"; // <-- Dashboard importeren
 
 function App() {
   const [user, setUser] = useState(null);
@@ -8,11 +9,9 @@ function App() {
     return <LoginForm onLogin={setUser} />;
   }
 
+  // Toon nu het dashboard na login
   return (
-    <div>
-      <h1>Welkom, {user.username}!</h1>
-      {/* Hier kun je je dashboard of offerte-functionaliteit tonen */}
-    </div>
+    <Dashboard user={user} />
   );
 }
 
