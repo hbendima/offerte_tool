@@ -1,0 +1,16 @@
+.calc-result {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 700px;
+  margin: 40px auto;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.11);
+}
+.calc-result table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.calc-result th, .calc-result td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
