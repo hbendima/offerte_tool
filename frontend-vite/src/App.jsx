@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard"; // <-- Dashboard importeren
+import QuotationTool from './components/QuotationTool';// <-- QuotationTool importeren <QuotationTool />
 
 function App() {
   const [user, setUser] = useState(null);

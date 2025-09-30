@@ -1,5 +1,7 @@
+// src/components/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
+import QuotationTool from "./QuotationTool"; // <-- Toegevoegd
 
 function Dashboard({ user }) {
   const [offertes, setOffertes] = useState([]);
@@ -17,7 +19,9 @@ function Dashboard({ user }) {
   return (
     <div className="dashboard-card">
       <div className="dashboard-title">Dashboard</div>
-      <div className="dashboard-welcome">Welkom, <b>{user.name || user.username}</b></div>
+      <div className="dashboard-welcome">
+        Welkom, <b>{user.name || user.username}</b>
+      </div>
       <div className="dashboard-subtitle">Laatste offertes</div>
       {loading ? (
         <p>Laden...</p>
@@ -43,6 +47,11 @@ function Dashboard({ user }) {
           </tbody>
         </table>
       )}
+
+      {/* Offerte maken tool */}
+      <div style={{ marginTop: 32 }}>
+        <QuotationTool />
+      </div>
     </div>
   );
 }
