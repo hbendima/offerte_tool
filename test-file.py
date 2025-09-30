@@ -1,11 +1,22 @@
 import pyodbc
 dsn = 'Elastic PRD'
-db = 'af18a173ef024c099dccaa12408ad127'
-table = 'business'
 sku = '02067726'
 conn = pyodbc.connect(f'DSN={dsn}')
 cursor = conn.cursor()
+
+# Product info
 cursor.execute(f"SELECT SKU, PRICE FROM business WHERE SKU = '{sku}'")
 for row in cursor:
-    print(row)
+    print('Product:', row)
+
+# Stock
+cursor.execute(f"SELECT LAST_STATE@IMH_HAS FROM storage_stock_update WHERE SKU = '{sku}'")
+for row in cursor:
+    print('Stock:', row[0])
+
+# MSQ
+cursor.execute(f"SELECT SALES_QUANTITY FROM storage_article_price WHERE SKU = '{sku}'")
+for row in cursor:
+    print('MSQ:', row[0])
+
 conn.close()

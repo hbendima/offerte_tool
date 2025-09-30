@@ -28,6 +28,21 @@ function formatSku(sku) {
   return sku.trim().padStart(8, '0');
 }
 
+// Utility: Maak alles JSON-safe (BigInt naar string)
+function safeJson(obj) {
+  if (Array.isArray(obj))
+    return obj.map(safeJson);
+  if (obj && typeof obj === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(obj)) {
+      if (typeof v === 'bigint') out[k] = v.toString();
+      else out[k] = safeJson(v);
+    }
+    return out;
+  }
+  return obj;
+}
+
 // POST /api/quotation
 router.post('/quotation', async (req, res) => {
   try {
@@ -37,7 +52,6 @@ router.post('/quotation', async (req, res) => {
     }
     if (items.length > MAX_SKUS) items = items.slice(0, MAX_SKUS);
 
-    // Format SKUs en aantallen
     const skus = items.map(i => formatSku(i.sku));
     const amounts = Object.fromEntries(items.map(i => [formatSku(i.sku), i.amount]));
     const fieldList = FIELDS.map(f => `"${f}"`).join(',');
@@ -64,8 +78,7 @@ router.post('/quotation', async (req, res) => {
       const cost = Number(prod.COST) || 0;
       const margin = Number(prod.MARGIN) || 0;
 
-      // Macro-style fields
-      const proposal = price; // eventueel logica voor voorstelprijs toevoegen
+      const proposal = price;
       const marginPct = price ? (margin / price) : 0;
       const marginPropPct = proposal ? ((proposal - cost) / proposal) : 0;
 
@@ -86,8 +99,8 @@ router.post('/quotation', async (req, res) => {
         "On NL": prod.VISIBILITY_NL,
         "On COM": prod.VISIBILITY_COM,
         Ecotax: Number(prod.ECOTAX) || 0,
-        Stock: "-", // optioneel: extra query
-        MSQ: "-",   // optioneel: extra query
+        Stock: "-",
+        MSQ: "-",
       });
 
       totalCurrent += amount * price;
@@ -97,7 +110,6 @@ router.post('/quotation', async (req, res) => {
       totalProfitProp += amount * (proposal - cost);
     }
 
-    // Totalen/offerte
     const totals = {
       currentPrice: totalCurrent,
       newPrice: totalProposal,
@@ -110,7 +122,8 @@ router.post('/quotation', async (req, res) => {
       discountPct: totalCurrent ? ((totalCurrent - totalProposal) / totalCurrent) : 0,
     };
 
-    res.json({ products, totals });
+    // Gebruik safeJson voor beide!
+    res.json(safeJson({ products, totals }));
   } catch (err) {
     console.error('Quotation error', err);
     res.status(500).json({ error: 'Quotation error', details: err.message });
