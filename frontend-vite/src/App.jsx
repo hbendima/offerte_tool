@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard";
-import QuotationTool from './components/QuotationTool';
+// Offerte Tool verwijderd
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -30,25 +30,10 @@ export default function App() {
         >
           Dashboard
         </button>
-        <button
-          onClick={() => setView("quotation")}
-          style={{
-            padding: "10px 28px",
-            borderRadius: 7,
-            border: "none",
-            background: view === "quotation" ? "#222" : "#888",
-            color: "#fff",
-            fontWeight: 700,
-            cursor: "pointer",
-            fontSize: "1rem"
-          }}
-        >
-          Offerte Tool
-        </button>
+        {/* Offerte Tool tabblad verwijderd */}
       </nav>
       {/* Render de juiste view */}
-      {view === "dashboard" && <Dashboard user={user} />}
-      {view === "quotation" && <QuotationTool />}
+  {view === "dashboard" && <Dashboard user={user} />}
     </div>
   );
 }
