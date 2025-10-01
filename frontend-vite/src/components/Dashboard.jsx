@@ -6,6 +6,7 @@ import QuotationTool from "./QuotationTool"; // <-- Toegevoegd
 function Dashboard({ user }) {
   const [offertes, setOffertes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOfferte, setSelectedOfferte] = useState(null);
 
   // Ophalen offertes
   const fetchOffertes = () => {
@@ -39,6 +40,7 @@ function Dashboard({ user }) {
               <th>Klant</th>
               <th>Totaal</th>
               <th>Datum</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -48,10 +50,57 @@ function Dashboard({ user }) {
                 <td>{o.customer}</td>
                 <td>€ {o.total}</td>
                 <td>{o.date}</td>
+                <td>
+                  <button style={{padding:'4px 12px',borderRadius:6}} onClick={() => setSelectedOfferte(o)}>
+                    Bekijk
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      )}
+
+      {/* Offerte detail modal */}
+      {selectedOfferte && (
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.35)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center'}} onClick={()=>setSelectedOfferte(null)}>
+          <div style={{background:'#fff',padding:32,borderRadius:16,minWidth:440,maxWidth:700,boxShadow:'0 2px 18px rgba(0,0,0,0.18)',position:'relative'}} onClick={e=>e.stopPropagation()}>
+            <button style={{position:'absolute',top:18,right:18,fontSize:'1.6em',background:'none',border:'none',cursor:'pointer',color:'#222'}} onClick={()=>setSelectedOfferte(null)}>
+              <span style={{color:'#222',background:'#fff',borderRadius:'50%',padding:'2px 8px',fontWeight:700}}>✕</span>
+            </button>
+            <h2>Offerte #{selectedOfferte.id}</h2>
+            <div><b>Klant:</b> {selectedOfferte.customer}</div>
+            {selectedOfferte.bedrijf && <div><b>Bedrijf:</b> {selectedOfferte.bedrijf}</div>}
+            {selectedOfferte.email && <div><b>Email:</b> {selectedOfferte.email}</div>}
+            <div><b>Totaal:</b> € {selectedOfferte.total}</div>
+            <div><b>Datum:</b> {selectedOfferte.date}</div>
+            {selectedOfferte.producten && selectedOfferte.producten.length > 0 && (
+              <div style={{marginTop:18}}>
+                <b>Producten:</b>
+                <table style={{width:'100%',marginTop:8}}>
+                  <thead>
+                    <tr>
+                      <th>SKU</th>
+                      <th>Naam</th>
+                      <th>Aantal</th>
+                      <th>Prijs</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedOfferte.producten.map((p, i) => (
+                      <tr key={i}>
+                        <td>{p.sku}</td>
+                        <td>{p.naam}</td>
+                        <td>{p.aantal}</td>
+                        <td>€ {p.prijs}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
       )}
 
       {/* Offerte maken tool */}
