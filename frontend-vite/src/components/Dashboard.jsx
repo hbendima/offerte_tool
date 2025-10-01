@@ -7,13 +7,19 @@ function Dashboard({ user }) {
   const [offertes, setOffertes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  // Ophalen offertes
+  const fetchOffertes = () => {
+    setLoading(true);
     fetch("/api/dashboard")
       .then(res => res.json())
       .then(data => {
         setOffertes(data.offertes);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchOffertes();
   }, []);
 
   return (
@@ -50,7 +56,7 @@ function Dashboard({ user }) {
 
       {/* Offerte maken tool */}
       <div style={{ marginTop: 32 }}>
-        <QuotationTool />
+        <QuotationTool onOfferteSaved={fetchOffertes} />
       </div>
     </div>
   );
