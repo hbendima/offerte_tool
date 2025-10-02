@@ -68,6 +68,7 @@ router.get('/products', async (req, res) => {
   try {
     const skusParam = req.query.skus;
     const suprefParam = req.query.supref;
+    const nameParam = req.query.name;
     let whereClause = "ACTIVE = '1'";
     let skus = [];
     if (skusParam) {
@@ -76,8 +77,10 @@ router.get('/products', async (req, res) => {
       whereClause += ` AND SKU IN (${skuList})`;
     } else if (suprefParam) {
       whereClause += ` AND SUPPLIER_REFERENCE LIKE '%${suprefParam}%'`;
+    } else if (nameParam) {
+      whereClause += ` AND PRODUCT_NAME_H1.nl_BE LIKE '%${nameParam}%'`;
     } else {
-      return res.status(400).json({ error: 'No SKUs or SupRef provided' });
+      return res.status(400).json({ error: 'No SKUs, SupRef, or Name provided' });
     }
 
     const fieldList = FIELDS.join(',');

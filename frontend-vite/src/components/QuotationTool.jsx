@@ -29,9 +29,9 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
 
   // Batch import & SupRef search
   const [batchInput, setBatchInput] = useState("");
-  const [supRefInput, setSupRefInput] = useState("");
-  const [supRefSearchResults, setSupRefSearchResults] = useState([]);
-  const [loadingSupRef, setLoadingSupRef] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
 
   // --- Columns ---
   const columns = [
@@ -73,36 +73,73 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     setBatchInput("");
   }
 
-  // --- SupRef search logic: search, show results, then 'Toevoegen' per match ---
-  async function handleSupRefSearch() {
-    const queries = supRefInput.split(/[\t,; ]+/).map(x => x.trim()).filter(Boolean);
+  // --- Product search logic: search both SupRef and Name fields ---
+  async function handleProductSearch() {
+    const queries = searchInput.split(/[\t,; ]+/).map(x => x.trim()).filter(Boolean);
     if (!queries.length) return;
-    setSupRefSearchResults([]);
-    setLoadingSupRef(true);
+    setSearchResults([]);
+    setLoadingSearch(true);
     try {
       let found = [];
       for (let q of queries) {
-        // <<< HIER DE JUISTE POORT EN API PREFIX GEBRUIKEN >>>
-        const res = await fetch(`http://localhost:3000/api/products?supref=${encodeURIComponent(q)}`);
-        const data = await res.json();
-        if (data.products && data.products.length) {
-          found.push(...data.products.map(p => ({
+        // Search SupRef
+        let urlSupRef = `http://localhost:3000/api/products?supref=${encodeURIComponent(q)}`;
+        const resSupRef = await fetch(urlSupRef);
+        const dataSupRef = await resSupRef.json();
+        if (dataSupRef.products && dataSupRef.products.length) {
+          found.push(...dataSupRef.products.map(p => ({
+            sku: p.SKU,
+            supref: p.SUPPLIER_REFERENCE,
+            name: p.Name
+          })));
+        }
+        // Search Name
+        let urlName = `http://localhost:3000/api/products?name=${encodeURIComponent(q)}`;
+        const resName = await fetch(urlName);
+        const dataName = await resName.json();
+        if (dataName.products && dataName.products.length) {
+          found.push(...dataName.products.map(p => ({
             sku: p.SKU,
             supref: p.SUPPLIER_REFERENCE,
             name: p.Name
           })));
         }
       }
-      setSupRefSearchResults(found);
+      // Remove duplicates by SKU
+      const unique = {};
+      found.forEach(p => { unique[p.sku] = p; });
+      let resultsArr = Object.values(unique);
+      // Sort: exact matches first, then 'contains' matches, then fuzzy
+      const queryLower = searchInput.trim().toLowerCase();
+      const exactMatches = resultsArr.filter(p =>
+        p.sku.toLowerCase() === queryLower ||
+        (p.supref && p.supref.toLowerCase() === queryLower) ||
+        (p.name && p.name.toLowerCase() === queryLower)
+      );
+      const containsMatches = resultsArr.filter(p =>
+        !exactMatches.includes(p) && (
+          p.sku.toLowerCase().includes(queryLower) ||
+          (p.supref && p.supref.toLowerCase().includes(queryLower)) ||
+          (p.name && p.name.toLowerCase().includes(queryLower))
+        )
+      );
+      const fuzzyMatches = resultsArr.filter(p =>
+        !exactMatches.includes(p) && !containsMatches.includes(p)
+      );
+      // Combine, exact first, then contains, then fuzzy, max 20
+      resultsArr = [...exactMatches, ...containsMatches, ...fuzzyMatches].slice(0, 20);
+      setSearchResults(resultsArr);
+      setTooManyResults(exactMatches.length + containsMatches.length + fuzzyMatches.length > 20);
     } catch (e) {
-      alert("Fout bij zoeken op SupRef");
+      alert("Fout bij zoeken naar product");
     }
-    setLoadingSupRef(false);
+    setLoadingSearch(false);
   }
+  const [tooManyResults, setTooManyResults] = useState(false);
 
-  function handleAddSupRefRow(sku) {
+  function handleAddSearchRow(sku) {
     setRows(r => [...r, { sku, amount: 1 }]);
-    setSupRefSearchResults(supRefSearchResults.filter(r => r.sku !== sku));
+    setSearchResults(searchResults.filter(r => r.sku !== sku));
   }
 
   // --- Core tool logic ---
@@ -499,24 +536,40 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
         />
         <button style={{marginRight:16, padding:'8px 18px', borderRadius:6}} onClick={handleBatchImport}>Batch toevoegen</button>
       </div>
-      {/* SupRef search block */}
+      {/* Product search block: search both SupRef and Name */}
       <div style={{marginBottom: 25}}>
-        <b>Zoek op leveranciersreferentie (SupRef):</b><br />
+        <b>Zoek op product (SupRef of Naam):</b><br />
         <input
-          placeholder="SupRef, bijvoorbeeld DF330DWE"
-          value={supRefInput}
-          onChange={e => setSupRefInput(e.target.value)}
+          placeholder="SupRef of Naam, bijvoorbeeld DF330DWE of Makita"
+          value={searchInput}
+          onChange={e => setSearchInput(e.target.value)}
           style={{ width: 280, marginTop: 10, marginRight: 8, padding:8, borderRadius:6 }}
         />
-        <button style={{marginRight:16, padding:'8px 18px', borderRadius:6}} onClick={handleSupRefSearch} disabled={loadingSupRef}>Zoek en voeg toe</button>
-        {supRefSearchResults.length > 0 && (
-          <div style={{marginTop: 6, background:'#222', padding:12, borderRadius:8, color:'white', maxWidth:440}}>
-            <b>Gevonden producten:</b>
-            <ul>
-              {supRefSearchResults.map(r =>
-                <li key={r.sku} style={{marginBottom:6}}>
-                  <span style={{fontWeight:700}}>{r.sku}</span> - {r.supref} - {r.name}
-                  <button style={{marginLeft:10, padding:'2px 8px', fontSize:'0.95em', borderRadius:6}} onClick={() => handleAddSupRefRow(r.sku)}>
+        <button style={{marginRight:16, padding:'8px 18px', borderRadius:6}} onClick={handleProductSearch} disabled={loadingSearch}>Zoek en voeg toe</button>
+        {searchResults.length > 0 && (
+          <div style={{marginTop: 6, background:'#222', padding:20, borderRadius:14, color:'white', maxWidth:900, minWidth:600, position:'relative', boxShadow:'0 2px 18px #000a'}}>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8}}>
+              <b>Gevonden producten:</b>
+              <button
+                onClick={() => { setSearchResults([]); setTooManyResults(false); }}
+                style={{background:'none', border:'none', color:'white', fontSize:'1.4em', fontWeight:'bold', cursor:'pointer', padding:'0 8px'}}
+                title="Sluit suggestielijst"
+              >
+                &#10005;
+              </button>
+            </div>
+            {tooManyResults && (
+              <div style={{color:'#ffb300', fontWeight:600, marginBottom:8}}>
+                Te veel resultaten (max. 20), verfijn je zoekactie en probeer opnieuw.
+              </div>
+            )}
+            <ul style={{paddingLeft:0, margin:0}}>
+              {searchResults.map(r =>
+                <li key={r.sku} style={{marginBottom:8, listStyle:'none', display:'grid', gridTemplateColumns:'110px 140px 1fr 110px', alignItems:'start', gap:'10px', padding:'10px 0', borderBottom:'1px solid #333'}}>
+                  <span style={{fontWeight:700, minWidth:90, wordBreak:'break-word'}}>{r.sku}</span>
+                  <span style={{minWidth:90, wordBreak:'break-word'}}>{r.supref}</span>
+                  <span style={{whiteSpace:'pre-line', wordBreak:'break-word', lineHeight:'1.3', maxWidth:600, overflowWrap:'anywhere', minHeight:'1em'}}>{r.name}</span>
+                  <button style={{padding:'2px 12px', fontSize:'0.95em', borderRadius:6, border:'2px solid #0077cc', background:'white', color:'#0077cc', fontWeight:600, cursor:'pointer', height:'fit-content'}} onClick={() => handleAddSearchRow(r.sku)}>
                     Toevoegen
                   </button>
                 </li>
