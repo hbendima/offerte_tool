@@ -7,6 +7,7 @@ function Dashboard({ user }) {
   const [offertes, setOffertes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOfferte, setSelectedOfferte] = useState(null);
+  const [openOfferte, setOpenOfferte] = useState(null);
 
   // Ophalen offertes
   const fetchOffertes = () => {
@@ -50,9 +51,12 @@ function Dashboard({ user }) {
                 <td>{o.customer}</td>
                 <td>€ {o.total}</td>
                 <td>{o.date}</td>
-                <td>
+                <td style={{display:'flex',gap:8}}>
                   <button style={{padding:'4px 12px',borderRadius:6}} onClick={() => setSelectedOfferte(o)}>
                     Bekijk
+                  </button>
+                  <button style={{padding:'4px 12px',borderRadius:6,background:'#0077cc',color:'#fff',fontWeight:600,border:'none',boxShadow:'0 1px 4px #0077cc44',cursor:'pointer'}} onClick={() => setOpenOfferte(o)}>
+                    Open
                   </button>
                 </td>
               </tr>
@@ -107,7 +111,7 @@ function Dashboard({ user }) {
 
       {/* Offerte maken tool */}
       <div style={{ marginTop: 32 }}>
-        <QuotationTool onOfferteSaved={fetchOffertes} />
+        <QuotationTool onOfferteSaved={fetchOffertes} offerteData={openOfferte} />
       </div>
     </div>
   );

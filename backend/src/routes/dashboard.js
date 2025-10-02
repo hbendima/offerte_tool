@@ -41,8 +41,18 @@ router.post("/offerte", (req, res) => {
     total: data.totaal,
     date: data.datum,
     bedrijf: data.bedrijf,
-    producten: data.producten,
-    email: data.email
+    btw: data.btw,
+    adres: data.adres,
+    postcode: data.postcode,
+    gemeente: data.gemeente,
+    land: data.land,
+    email: data.email,
+    producten: Array.isArray(data.producten) ? data.producten.map(p => ({
+      sku: p.sku,
+      naam: p.naam,
+      aantal: p.aantal,
+      prijs: p.prijs
+    })) : [],
   };
   offertes.push(nieuweOfferte);
   writeOffertes(offertes);

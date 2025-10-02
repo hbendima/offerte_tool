@@ -1,36 +1,23 @@
 [
   {
     "id": 1,
-    "customer": "Klant A",
-    "total": 1200,
-    "date": "2025-09-25"
-  },
-  {
-    "id": 2,
-    "customer": "Klant B",
-    "total": 980,
-    "date": "2025-09-27"
-  },
-  {
-    "id": 3,
-    "customer": "Test ",
-    "total": 3749.7,
+    "customer": "Hakim Bendima",
+    "total": 495,
     "date": "2025-10-02",
-    "bedrijf": "Klium N.V.",
+    "bedrijf": "KLIUM N.V.",
+    "btw": "BE123456789",
+    "adres": "Ekkelgaarden 26",
+    "postcode": "3500",
+    "gemeente": "Hasselt",
+    "land": "BE",
+    "email": "hakim.bendima@gmail.com",
     "producten": [
       {
-        "sku": "02691478",
-        "naam": "DEWALT DCD791P2-QW 18V XR Brushless accu-schroefboormachine in TSTAK (2x 5.0Ah accu + lader)",
-        "aantal": 10,
-        "prijs": 221.1
-      },
-      {
-        "sku": "02067726",
-        "naam": "MAKITA DF330DWE 10,8V accu-schroefboormachine 10 mm in koffer (2x 1,3Ah accu + lader)",
-        "aantal": 10,
-        "prijs": 153.87
+        "sku": "08087734",
+        "naam": "MILWAUKEE M18 FPP2A3-502X FUEL accu-machineset FPD3 + FID3 2-delig in HD Box 2-delig (2x 5,0Ah accu + lader) - 4933480873",
+        "aantal": 1,
+        "prijs": 495
       }
-    ],
-    "email": "hakim.bendima@gmail.com"
+    ]
   }
 ]

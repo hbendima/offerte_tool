@@ -3,6 +3,59 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
 export default function QuotationTool({ onOfferteSaved, offerteData }) {
+  // Prefill on offerteData change
+  useEffect(() => {
+    async function prefillFromOfferte() {
+      if (offerteData && offerteData.id) {
+        setCustomerData({
+          naam: offerteData.customer || '',
+          bedrijf: offerteData.bedrijf || '',
+          btw: offerteData.btw || '',
+          adres: offerteData.adres || '',
+          postcode: offerteData.postcode || '',
+          gemeente: offerteData.gemeente || '',
+          land: offerteData.land || '',
+          email: offerteData.email || ''
+        });
+        // Fetch full product info for all SKUs
+        const skus = Array.isArray(offerteData.producten)
+          ? offerteData.producten.map(p => p.sku).join(",")
+          : "";
+        if (skus) {
+          try {
+            const res = await fetch(`http://localhost:3000/api/products?skus=${skus}`);
+            const data = await res.json();
+            // Merge with offerteData
+            const prodMap = {};
+            offerteData.producten.forEach(p => { prodMap[p.sku] = p; });
+            const merged = (data.products || []).map(p => {
+              const o = prodMap[p.SKU] || {};
+              return {
+                ...p,
+                amount: o.aantal ?? 1,
+                proposal: o.prijs ?? p.Price,
+                Name: o.naam ?? p.Name
+              };
+            });
+            setProducts(merged);
+          } catch (e) {
+            // fallback: just use offerteData
+            setProducts(
+              offerteData.producten.map(p => ({
+                SKU: p.sku,
+                Name: p.naam,
+                amount: p.aantal,
+                proposal: p.prijs
+              }))
+            );
+          }
+        } else {
+          setProducts([]);
+        }
+      }
+    }
+    prefillFromOfferte();
+  }, [offerteData]);
   // --- Customer data state ---
   const [customerData, setCustomerData] = useState({
     naam: "",
@@ -540,7 +593,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
       <div style={{marginBottom: 25}}>
         <b>Zoek op product (SupRef of Naam):</b><br />
         <input
-          placeholder="SupRef of Naam, bijvoorbeeld DF330DWE of Makita"
+          placeholder="SupRef of Naam"
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
           style={{ width: 280, marginTop: 10, marginRight: 8, padding:8, borderRadius:6 }}
