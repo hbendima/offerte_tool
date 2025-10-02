@@ -23,7 +23,14 @@ function getNextId(offertes) {
   return offertes.length > 0 ? Math.max(...offertes.map(o => o.id)) + 1 : 1;
 }
 
+// Old dashboard endpoint
 router.get("/dashboard", (req, res) => {
+  const offertes = readOffertes();
+  res.json({ offertes });
+});
+
+// New endpoint for frontend: /api/offertes
+router.get("/offertes", (req, res) => {
   const offertes = readOffertes();
   res.json({ offertes });
 });
