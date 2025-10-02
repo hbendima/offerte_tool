@@ -121,13 +121,19 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
       // <<< HIER DE JUISTE POORT EN API PREFIX GEBRUIKEN >>>
       const res = await fetch(`http://localhost:3000/api/products?skus=${skuString}`);
       const data = await res.json();
+      // Sum amounts for duplicate SKUs
+      const skuAmounts = rows.reduce((acc, r) => {
+        if (!r.sku) return acc;
+        acc[r.sku] = (acc[r.sku] || 0) + (Number(r.amount) || 1);
+        return acc;
+      }, {});
       const enriched = (data.products || []).map(p => {
         const sku = p.SKU;
         let defaultProposal = p.Price ? Number(p.Price).toFixed(2) : "0.00";
         let proposalVal = proposals[sku] !== undefined ? proposals[sku] : defaultProposal;
         return {
           ...p,
-          amount: rows.find(r => r.sku === sku)?.amount ?? 1,
+          amount: skuAmounts[sku] ?? 1,
           proposal: Number(proposalVal)
         };
       });
