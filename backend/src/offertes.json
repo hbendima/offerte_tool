@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "customer": "Klant A",
+    "total": 1200,
+    "date": "2025-09-25"
+  },
+  {
+    "id": 2,
+    "customer": "Klant B",
+    "total": 980,
+    "date": "2025-09-27"
+  },
+  {
+    "id": 3,
+    "customer": "Test ",
+    "total": 3749.7,
+    "date": "2025-10-02",
+    "bedrijf": "Klium N.V.",
+    "producten": [
+      {
+        "sku": "02691478",
+        "naam": "DEWALT DCD791P2-QW 18V XR Brushless accu-schroefboormachine in TSTAK (2x 5.0Ah accu + lader)",
+        "aantal": 10,
+        "prijs": 221.1
+      },
+      {
+        "sku": "02067726",
+        "naam": "MAKITA DF330DWE 10,8V accu-schroefboormachine 10 mm in koffer (2x 1,3Ah accu + lader)",
+        "aantal": 10,
+        "prijs": 153.87
+      }
+    ],
+    "email": "hakim.bendima@gmail.com"
+  }
+]

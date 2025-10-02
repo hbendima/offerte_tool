@@ -1,15 +1,31 @@
 const express = require("express");
 const router = express.Router();
 
-// Dummy offertes data
-let NEXT_ID = 3;
-const OFFERTES = [
-  { id: 1, customer: "Klant A", total: 1200, date: "2025-09-25" },
-  { id: 2, customer: "Klant B", total: 980, date: "2025-09-27" },
-];
+
+const fs = require('fs');
+const path = require('path');
+const OFFERTES_PATH = path.join(__dirname, '../offertes.json');
+
+function readOffertes() {
+  try {
+    const data = fs.readFileSync(OFFERTES_PATH, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    return [];
+  }
+}
+
+function writeOffertes(offertes) {
+  fs.writeFileSync(OFFERTES_PATH, JSON.stringify(offertes, null, 2), 'utf8');
+}
+
+function getNextId(offertes) {
+  return offertes.length > 0 ? Math.max(...offertes.map(o => o.id)) + 1 : 1;
+}
 
 router.get("/dashboard", (req, res) => {
-  res.json({ offertes: OFFERTES });
+  const offertes = readOffertes();
+  res.json({ offertes });
 });
 
 // Offerte opslaan endpoint
@@ -18,8 +34,9 @@ router.post("/offerte", (req, res) => {
   if (!data.klant || !data.totaal || !data.datum) {
     return res.status(400).json({ error: "Verplichte velden ontbreken" });
   }
+  const offertes = readOffertes();
   const nieuweOfferte = {
-    id: NEXT_ID++,
+    id: getNextId(offertes),
     customer: data.klant,
     total: data.totaal,
     date: data.datum,
@@ -27,7 +44,8 @@ router.post("/offerte", (req, res) => {
     producten: data.producten,
     email: data.email
   };
-  OFFERTES.push(nieuweOfferte);
+  offertes.push(nieuweOfferte);
+  writeOffertes(offertes);
   res.json({ success: true, offerte: nieuweOfferte });
 });
 

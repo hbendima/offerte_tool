@@ -92,7 +92,9 @@ function Dashboard({ user }) {
                         <td>{p.sku}</td>
                         <td>{p.naam}</td>
                         <td>{p.aantal}</td>
-                        <td>€ {p.prijs}</td>
+                        <td style={{textAlign:'right', minWidth:'100px', whiteSpace:'nowrap'}}>
+                          € {typeof p.prijs === 'number' ? p.prijs.toFixed(2) : p.prijs}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
