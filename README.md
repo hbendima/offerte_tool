@@ -12,7 +12,17 @@ De tool bestaat uit drie onderdelen die als aparte servers draaien:
 ### 1. **Python API Server (`product_api.py`)**
 - **Doel:** Haalt productinformatie, voorraad en UOM direct uit Elastic PRD via ODBC.
 - **Uitvoering:**  
-  - Start in een terminal vanuit de juiste map:
+  - **Maak en activeer een virtual environment (venv):**
+    ```sh
+    python -m venv .venv
+    .venv\Scripts\activate
+    ```
+  - **Installeer dependencies:**
+    ```sh
+    pip install -r requirements.txt
+    ```
+    *(Of: `pip install flask flask-cors pyodbc` als er geen requirements.txt is)*
+  - **Start de server vanuit de juiste map:**
     ```sh
     python product_api.py
     ```
@@ -31,6 +41,7 @@ De tool bestaat uit drie onderdelen die als aparte servers draaien:
 ### 3. **Frontend Server (React/Vite)**
 - **Doel:** Webinterface voor invoer SKUs/aantallen en tonen van het eindresultaat.
 - **Uitvoering:**  
+  - **Let op Node.js versie:** Gebruik minimaal Node.js 22.12.0 (LTS) voor compatibiliteit met Vite.
   - Ga naar de frontend-directory:
     ```sh
     npm install
@@ -52,7 +63,11 @@ De tool bestaat uit drie onderdelen die als aparte servers draaien:
 
 - Gebruik een `.gitignore` zodat de `venv/`, `node_modules/` en andere tijdelijke/binary files niet meegecommit worden.
 - Leg alle dependencies vast in `requirements.txt` (Python) en `package.json` (Node).
-- Bij werken op een nieuwe PC: installeer eerst alle dependencies, maak een nieuwe venv, en start de servers zoals hierboven.
+- Bij werken op een nieuwe PC:
+  - Installeer eerst alle dependencies.
+  - Maak een nieuwe venv en activeer deze vóór je Python dependencies installeert of de API start.
+  - Controleer je Node.js versie en upgrade indien nodig.
+  - Start de servers zoals hierboven.
 
 ---
 
