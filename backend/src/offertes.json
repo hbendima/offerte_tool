@@ -535,5 +535,116 @@
         "prijs": 153.87
       }
     ]
+  },
+  {
+    "id": 26,
+    "customer": "Jamal",
+    "total": 4699.14,
+    "date": "2025-10-31",
+    "bedrijf": "Jasacom SRL",
+    "btw": "",
+    "adres": "???",
+    "postcode": "???",
+    "gemeente": "???",
+    "land": "BE",
+    "email": "amal@jasacom.be",
+    "producten": [
+      {
+        "sku": "02857202",
+        "naam": "MILWAUKEE 4932464082 Packout organiser koffer",
+        "aantal": 5,
+        "prijs": 54.38
+      },
+      {
+        "sku": "08082566",
+        "naam": "MAKITA 832074-1 gereedschapstas",
+        "aantal": 10,
+        "prijs": 7.93
+      },
+      {
+        "sku": "08097545",
+        "naam": "MILWAUKEE 4932480943 slagdoppenset diep 1/2\" in PACKOUT organizer 16-delig",
+        "aantal": 5,
+        "prijs": 102.15
+      },
+      {
+        "sku": "08102668",
+        "naam": "BOSCH 2608003040 PRO IMPACT krachtdoppenset 1/2\" buitenvierkant in etui 77 mm, 10-27 mm, 9-delig",
+        "aantal": 4,
+        "prijs": 39.01
+      },
+      {
+        "sku": "02618888",
+        "naam": "DEWALT DCL050-XJ 18V XR led accu-inspectielamp (zonder accu en lader)",
+        "aantal": 35,
+        "prijs": 44.29
+      },
+      {
+        "sku": "02857206",
+        "naam": "MILWAUKEE 4932464083 Packout compact koffer organiser",
+        "aantal": 5,
+        "prijs": 32.89
+      },
+      {
+        "sku": "08087462",
+        "naam": "MILWAUKEE 4932492445 SHOCKWAVE IMPACT DUTY slagdoppenset magnetisch 4-delig",
+        "aantal": 20,
+        "prijs": 14.54
+      },
+      {
+        "sku": "03048861",
+        "naam": "MILWAUKEE 4932464664 rolmaat autolock 8 m / 25 mm bladbreedte",
+        "aantal": 10,
+        "prijs": 11.4
+      },
+      {
+        "sku": "08123133",
+        "naam": "MILWAUKEE 4932498780 rolmaat Compact GEN II 8 m x 25 mm",
+        "aantal": 10,
+        "prijs": 14.38
+      },
+      {
+        "sku": "03235277",
+        "naam": "MILWAUKEE 4932480457 SHOCKWAVE IMPACT DUTY 1/2\" slagdoppenset diep 10-delig",
+        "aantal": 10,
+        "prijs": 54.5
+      },
+      {
+        "sku": "08120673",
+        "naam": "MILWAUKEE 4932498770 rolmaat magnetisch GEN IIII 8 m x 30 mm",
+        "aantal": 10,
+        "prijs": 21.32
+      },
+      {
+        "sku": "08123511",
+        "naam": "HG 540100103 gelontstopper 1000 ml",
+        "aantal": 10,
+        "prijs": 6.11
+      },
+      {
+        "sku": "08055062",
+        "naam": "MAKITA 831253-8 draagtas",
+        "aantal": 10,
+        "prijs": 12.89
+      },
+      {
+        "sku": "08055077",
+        "naam": "MAKITA 832188-6 Gereedschapstas",
+        "aantal": 8,
+        "prijs": 13.72
+      },
+      {
+        "sku": "08083576",
+        "naam": "MILWAUKEE 4932472091 Slim waterpas 20cm",
+        "aantal": 10,
+        "prijs": 10.5
+      },
+      {
+        "sku": "08119365",
+        "naam": "MILWAUKEE M18 MPC6 mobiele PACKOUT 6-bay accu-snellader - 4932498551",
+        "aantal": 1,
+        "prijs": 254.99
+      }
+    ]
   }
 ]
