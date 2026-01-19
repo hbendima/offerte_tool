@@ -12,15 +12,15 @@ function Dashboard({ user }) {
   const OFFERTES_PER_PAGE = 10;
 
   // Ophalen offertes
-  const fetchOffertes = () => {
-    setLoading(true);
-    fetch("/api/dashboard")
-      .then(res => res.json())
-      .then(data => {
-        setOffertes(data.offertes);
-        setLoading(false);
-      });
-  };
+    const fetchOffertes = () => {
+      setLoading(true);
+      fetch("/api/offertes")
+        .then(res => res.json())
+        .then(data => {
+          setOffertes(data.offertes);
+          setLoading(false);
+        });
+    };
 
   useEffect(() => {
     fetchOffertes();
