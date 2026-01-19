@@ -47,6 +47,7 @@ function Dashboard({ user }) {
               <table style={{width:'100%', background:'#fff', borderRadius:12, marginBottom:16, fontSize:'1rem', overflow:'hidden', boxShadow:'0 1px 4px rgba(0,0,0,0.04)'}}>
                 <thead>
                   <tr style={{ background: '#f7f7f7', color: '#222', fontWeight: 700, fontSize: '1.08rem', height: '44px' }}>
+                    <th style={{padding:'12px 8px',textAlign:'left',borderBottom:'1px solid #e0e0e0'}}>ID</th>
                     <th style={{padding:'12px 8px',textAlign:'left',borderBottom:'1px solid #e0e0e0'}}>Datum</th>
                     <th style={{padding:'12px 8px',textAlign:'left',borderBottom:'1px solid #e0e0e0'}}>Klant</th>
                     <th style={{padding:'12px 8px',textAlign:'left',borderBottom:'1px solid #e0e0e0'}}>Bedrijf</th>
@@ -59,10 +60,11 @@ function Dashboard({ user }) {
                     <tr key={o.id || idx} style={{ color: '#111', height: '48px', background: idx % 2 === 0 ? '#fff' : '#f9f9f9', transition: 'background 0.2s' }}
                         onMouseEnter={e => e.currentTarget.style.background = '#eaf3fb'}
                         onMouseLeave={e => e.currentTarget.style.background = idx % 2 === 0 ? '#fff' : '#f9f9f9'}>
+                        <td style={{padding:'12px 8px',borderBottom:'1px solid #ececec'}}>{o.id}</td>
                         <td style={{padding:'12px 8px',borderBottom:'1px solid #ececec'}}>{o.date || o.datum}</td>
                         <td style={{padding:'12px 8px',borderBottom:'1px solid #ececec'}}>{o.customer || o.klant}</td>
                         <td style={{padding:'12px 8px',borderBottom:'1px solid #ececec'}}>{o.bedrijf}</td>
-                        <td style={{padding:'12px 8px',borderBottom:'1px solid #ececec',textAlign:'right',fontVariantNumeric:'tabular-nums'}}>{o.total !== undefined ? `€ ${o.total}` : (o.totaal ? `€ ${o.totaal}` : '')}</td>
+                        <td style={{padding:'12px 8px',borderBottom:'1px solid #ececec',textAlign:'right',fontVariantNumeric:'tabular-nums'}}>{o.total !== undefined ? `€ ${(Number(o.total)).toFixed(2)}` : (o.totaal ? `€ ${(Number(o.totaal)).toFixed(2)}` : '')}</td>
                         <td style={{padding:'12px 8px',borderBottom:'1px solid #ececec',textAlign:'center'}}>
                           <span style={{ display: 'inline-flex', gap: '8px' }}>
                             <button style={{borderRadius: '6px', background: '#222', color: 'white', padding: '7px 18px', border: 'none', fontWeight: 500, fontSize: '1rem', cursor: 'pointer', transition: 'background 0.2s'}} onClick={() => setSelectedOfferte(o)}>
@@ -70,6 +72,18 @@ function Dashboard({ user }) {
                             </button>
                             <button style={{borderRadius: '6px', background: '#0074d9', color: 'white', padding: '7px 18px', border: 'none', fontWeight: 500, fontSize: '1rem', cursor: 'pointer', transition: 'background 0.2s'}} onClick={() => setOpenOfferte(o)}>
                               Open
+                            </button>
+                            <button
+                              style={{borderRadius: '6px', background: '#e53935', color: 'white', padding: '7px 18px', border: 'none', fontWeight: 500, fontSize: '1rem', cursor: 'pointer', transition: 'background 0.2s'}}
+                              onClick={() => {
+                                if (window.confirm('Bent u zeker dat u deze offerte wilt verwijderen?')) {
+                                  fetch(`/api/offerte/${o.id}`, { method: 'DELETE' })
+                                    .then(res => res.json())
+                                    .then(() => fetchOffertes());
+                                }
+                              }}
+                            >
+                              Verwijder
                             </button>
                           </span>
                         </td>

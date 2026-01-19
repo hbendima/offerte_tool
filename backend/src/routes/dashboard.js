@@ -66,4 +66,21 @@ router.post("/offerte", (req, res) => {
   res.json({ success: true, offerte: nieuweOfferte });
 });
 
+
+// Offerte verwijderen endpoint
+router.delete("/offerte/:id", (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "Ongeldige offerte ID" });
+  }
+  const offertes = readOffertes();
+  const index = offertes.findIndex(o => o.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: "Offerte niet gevonden" });
+  }
+  offertes.splice(index, 1);
+  writeOffertes(offertes);
+  res.json({ success: true });
+});
+
 module.exports = router;
