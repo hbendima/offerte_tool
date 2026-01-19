@@ -149,28 +149,20 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     setSearchResults([]);
     setLoadingSearch(true);
     try {
+      // Stuur alle queries in één keer naar de batch-search endpoint
+      const res = await fetch('http://localhost:3000/api/products/batch-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ suprefs: queries, names: queries })
+      });
+      const data = await res.json();
       let found = [];
-      for (let q of queries) {
-        let urlSupRef = `http://localhost:3000/api/products?supref=${encodeURIComponent(q)}`;
-        const resSupRef = await fetch(urlSupRef);
-        const dataSupRef = await resSupRef.json();
-        if (dataSupRef.products && dataSupRef.products.length) {
-          found.push(...dataSupRef.products.map(p => ({
-            sku: p.SKU,
-            supref: p.SUPPLIER_REFERENCE,
-            name: p.Name
-          })));
-        }
-        let urlName = `http://localhost:3000/api/products?name=${encodeURIComponent(q)}`;
-        const resName = await fetch(urlName);
-        const dataName = await resName.json();
-        if (dataName.products && dataName.products.length) {
-          found.push(...dataName.products.map(p => ({
-            sku: p.SKU,
-            supref: p.SUPPLIER_REFERENCE,
-            name: p.Name
-          })));
-        }
+      if (data.products && data.products.length) {
+        found = data.products.map(p => ({
+          sku: p.SKU,
+          supref: p.SUPPLIER_REFERENCE,
+          name: p["PRODUCT_NAME_H1.nl_BE"] || p.Name
+        }));
       }
       const unique = {};
       found.forEach(p => { unique[p.sku] = p; });

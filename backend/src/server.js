@@ -1,3 +1,5 @@
+// Batch search endpoint
+const batchSearchRoutes = require("./routes/batchSearch");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -12,6 +14,7 @@ app.use(bodyParser.json());
 
 // Dashboard routes (GET /api/dashboard)
 app.use("/api", dashboardRoutes);
+app.use("/api", batchSearchRoutes);
 
 // Calculatie endpoint (POST /api/calc)
 app.post("/api/calc", (req, res) => {

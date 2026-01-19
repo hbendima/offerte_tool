@@ -7,6 +7,7 @@ const loginRouter = require('./routes/login');
 const dashboardRouter = require('./routes/dashboard');
 const productsRouter = require('./products');
 const quotationRouter = require('./quotation');
+const batchSearchRoutes = require('./routes/batchSearch');
 
 app.use(cors());
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use('/api', loginRouter);
 app.use('/api', dashboardRouter);
 app.use('/api', productsRouter);
 app.use('/api', quotationRouter); // <-- Quotation endpoint
+app.use('/api', batchSearchRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });

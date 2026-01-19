@@ -646,5 +646,611 @@
         "prijs": 254.99
       }
     ]
+  },
+  {
+    "id": 27,
+    "customer": "Patryk Mazur",
+    "total": 2352.9299,
+    "date": "2026-01-19",
+    "bedrijf": "TK Shipcare Sp. z o.o.",
+    "btw": "PL8513246584",
+    "adres": "Cyfrowa 6",
+    "postcode": "71-441",
+    "gemeente": "Szczecin",
+    "land": "Poland",
+    "email": "purchasing@tkshipcare.com",
+    "producten": [
+      {
+        "sku": "02011017",
+        "naam": "GEDORE 8551 8 linkse tap Gr. 8 M33-M45 - 6759380",
+        "aantal": 1,
+        "prijs": 17.02
+      },
+      {
+        "sku": "41892355",
+        "naam": "GEDORE 304 16X18 startersleutel 16x18 mm - 6567550",
+        "aantal": 1,
+        "prijs": 22.64
+      },
+      {
+        "sku": "41894806",
+        "naam": "GEDORE 570303 holpijpset 10-dlg 3-25 mm - 1549502",
+        "aantal": 1,
+        "prijs": 99.01
+      },
+      {
+        "sku": "02301624",
+        "naam": "GEDORE 1979841 718 inspectiespiegel",
+        "aantal": 1,
+        "prijs": 67.27
+      },
+      {
+        "sku": "41892167",
+        "naam": "GEDORE 8551 4 linkse tap Gr. 4 M11-M14 - 6758730",
+        "aantal": 1,
+        "prijs": 6.94
+      },
+      {
+        "sku": "41968792",
+        "naam": "GEDORE 8701 2-8 platte vijl 8\", 200x20 mm - 6768100",
+        "aantal": 1,
+        "prijs": 18.84
+      },
+      {
+        "sku": "41992199",
+        "naam": "GEDORE 8719 2-8 driekantvijl 8\", 200x14 mm - 6769340",
+        "aantal": 1,
+        "prijs": 21.16
+      },
+      {
+        "sku": "41992203",
+        "naam": "GEDORE 8722 2-10 ronde vijl 10\", 250x10 mm - 6770270",
+        "aantal": 1,
+        "prijs": 21.32
+      },
+      {
+        "sku": "41992198",
+        "naam": "GEDORE 8701 2-10 platte vijl 10\", 250x25 mm - 6768290",
+        "aantal": 1,
+        "prijs": 22.64
+      },
+      {
+        "sku": "41993595",
+        "naam": "GEDORE 8701 2-6 platte vijl 6\", 150x16 mm - 6768020",
+        "aantal": 1,
+        "prijs": 14.01
+      },
+      {
+        "sku": "41892168",
+        "naam": "GEDORE 8551 5 linkse tap Gr. 5 M14-M18 - 6758810",
+        "aantal": 1,
+        "prijs": 8.62
+      },
+      {
+        "sku": "41891614",
+        "naam": "GEDORE S 42-07 stiftsleutelset 2-8mm 7-delig - 6347430",
+        "aantal": 1,
+        "prijs": 11.96
+      },
+      {
+        "sku": "41894667",
+        "naam": "GEDORE H 42-10 stiftsleutelset 1,3-10 mm 10-delig - 1505408",
+        "aantal": 1,
+        "prijs": 11.53
+      },
+      {
+        "sku": "41890717",
+        "naam": "GEDORE IN 19 PA dopsleutel-schroevendraaierset 1/2\" AF 9-delig - 6156410",
+        "aantal": 1,
+        "prijs": 82.48
+      },
+      {
+        "sku": "41891822",
+        "naam": "GEDORE 400 11X13 ringsleutel open zeskant 11x13 mm - 6057350",
+        "aantal": 1,
+        "prijs": 19.79
+      },
+      {
+        "sku": "41893847",
+        "naam": "GEDORE 169 bit-schroevendraaier met magazijn - 6432700",
+        "aantal": 1,
+        "prijs": 31.7
+      },
+      {
+        "sku": "41891821",
+        "naam": "GEDORE 400 10X11 ringsleutel open zeskant 10x11 mm - 6057270",
+        "aantal": 1,
+        "prijs": 18.84
+      },
+      {
+        "sku": "02716138",
+        "naam": "GEDORE 8314-180 TL zijsnijtang POWER 180 mm kunststof overtrokken - 2910926",
+        "aantal": 1,
+        "prijs": 18.51
+      },
+      {
+        "sku": "41891759",
+        "naam": "GEDORE 304 14X17 startersleutel 14x17 mm - 6470390",
+        "aantal": 1,
+        "prijs": 22.27
+      },
+      {
+        "sku": "41891760",
+        "naam": "GEDORE 304 15X17 startersleutel 15x17 mm - 6470470",
+        "aantal": 1,
+        "prijs": 22.98
+      },
+      {
+        "sku": "41891824",
+        "naam": "GEDORE 400 13X15 ringsleutel open UD 13x15 mm - 6057000",
+        "aantal": 1,
+        "prijs": 19.5
+      },
+      {
+        "sku": "41896565",
+        "naam": "GEDORE 8096-140 Kleine universele schaar - 6707900",
+        "aantal": 1,
+        "prijs": 16.36
+      },
+      {
+        "sku": "01041452",
+        "naam": "GEDORE 1.90/1 flensscheider (paar) 80-250 mm - 1596403",
+        "aantal": 1,
+        "prijs": 302.81
+      },
+      {
+        "sku": "02716009",
+        "naam": "GEDORE 225 18 pijptang 18\" - 2964856",
+        "aantal": 1,
+        "prijs": 34.54
+      },
+      {
+        "sku": "41892825",
+        "naam": "GEDORE 175 4 pijptang 4\" - 6437770",
+        "aantal": 1,
+        "prijs": 193.22
+      },
+      {
+        "sku": "01051968",
+        "naam": "GEDORE 570307 holpijpset 7-dlg 4-16 mm - 2646382",
+        "aantal": 1,
+        "prijs": 49.42
+      },
+      {
+        "sku": "41893411",
+        "naam": "GEDORE 702 8 M voelermaat 0,05-0,50 mm - 6547520",
+        "aantal": 1,
+        "prijs": 8.62
+      },
+      {
+        "sku": "41893412",
+        "naam": "GEDORE 702 88 M voelermaat 0,03-0,10 mm - 6547600",
+        "aantal": 1,
+        "prijs": 10.34
+      },
+      {
+        "sku": "02716751",
+        "naam": "GEDORE 2250 3 pijpsnijder voor koperen pijp 3-35 mm - 2964031",
+        "aantal": 1,
+        "prijs": 42.48
+      },
+      {
+        "sku": "41470148",
+        "naam": "RIDGID PC1375 kunststof schaar - 23493",
+        "aantal": 1,
+        "prijs": 55.54
+      },
+      {
+        "sku": "41896208",
+        "naam": "GEDORE 400 36X41 ringsleutel open UD 36x41 mm - 1933175",
+        "aantal": 1,
+        "prijs": 55.21
+      },
+      {
+        "sku": "41231127",
+        "naam": "GEDORE 1.34/10 binnentrekker-set - 1638629",
+        "aantal": 1,
+        "prijs": 303.1
+      },
+      {
+        "sku": "41891819",
+        "naam": "GEDORE 400 8X10 ringsleutel open zeskant 8x10 mm - 6057190",
+        "aantal": 1,
+        "prijs": 17.85
+      },
+      {
+        "sku": "41895155",
+        "naam": "GEDORE 224 E-27 kunststof hamer d 27 mm - 8821350",
+        "aantal": 1,
+        "prijs": 7.93
+      },
+      {
+        "sku": "41895160",
+        "naam": "GEDORE 224 E-50 kunststof hamer d 50 mm - 8821860",
+        "aantal": 1,
+        "prijs": 22.64
+      },
+      {
+        "sku": "41895508",
+        "naam": "GEDORE 225 E-50 nylon hamer d 50 mm - 8805900",
+        "aantal": 1,
+        "prijs": 27.23
+      },
+      {
+        "sku": "41896377",
+        "naam": "GEDORE 673 L dophouder lang 1/4\" skt - 1/4\" vkt - 1811061",
+        "aantal": 1,
+        "prijs": 9.05
+      },
+      {
+        "sku": "41891758",
+        "naam": "GEDORE 304 14X16 startersleutel 14x16 mm - 6470200",
+        "aantal": 1,
+        "prijs": 20.62
+      },
+      {
+        "sku": "41894744",
+        "naam": "GEDORE ITX 20 TX-015 dopsleutel-schroevendraaierset 1/4\" Torx 15-delig - 1815628",
+        "aantal": 1,
+        "prijs": 108.76
+      },
+      {
+        "sku": "03169816",
+        "naam": "FACOM 601SLS compacte zaagbeugel metaalzagen - SLS",
+        "aantal": 1,
+        "prijs": 38.68
+      },
+      {
+        "sku": "41891820",
+        "naam": "GEDORE 400 9X11 ringsleutel open zeskant 9x11 mm - 6056970",
+        "aantal": 1,
+        "prijs": 17.85
+      },
+      {
+        "sku": "41891825",
+        "naam": "GEDORE 400 14X17 ringsleutel open UD 14x17 mm - 6057510",
+        "aantal": 1,
+        "prijs": 20.33
+      },
+      {
+        "sku": "41891828",
+        "naam": "GEDORE 400 22X24 ringsleutel open UD 22x24 mm - 6057860",
+        "aantal": 1,
+        "prijs": 29.42
+      },
+      {
+        "sku": "41891830",
+        "naam": "GEDORE 400 30X32 ringsleutel open UD-profiel 30x32 mm - 6058830",
+        "aantal": 1,
+        "prijs": 46.61
+      },
+      {
+        "sku": "41895930",
+        "naam": "GEDORE 1.35/1A glij-hamertrekker 230 mm, 700 g - 1958070",
+        "aantal": 1,
+        "prijs": 81.49
+      },
+      {
+        "sku": "41895931",
+        "naam": "GEDORE 1.35/2 glij-hamertrekker 500 mm, 1,7 kg - 8039010",
+        "aantal": 1,
+        "prijs": 77.64
+      },
+      {
+        "sku": "41895932",
+        "naam": "GEDORE 1.35/3 glij-hamertrekker 500 mm, 3 kg - 1958089",
+        "aantal": 1,
+        "prijs": 141.49
+      },
+      {
+        "sku": "41896528",
+        "naam": "GEDORE 8305-6 naaldpunttang - 6725720",
+        "aantal": 1,
+        "prijs": 34.67
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "customer": "Patryk Mazur",
+    "total": 2054.08999,
+    "date": "2026-01-19",
+    "bedrijf": "TK Shipcare Sp. z o.o.",
+    "btw": "PL8513246584",
+    "adres": "Cyfrowa 6",
+    "postcode": "71-441",
+    "gemeente": "Szczecin",
+    "land": "Poland",
+    "email": "purchasing@tkshipcare.com",
+    "producten": [
+      {
+        "sku": "02011017",
+        "naam": "GEDORE 8551 8 linkse tap Gr. 8 M33-M45 - 6759380",
+        "aantal": 1,
+        "prijs": 16.02
+      },
+      {
+        "sku": "41892355",
+        "naam": "GEDORE 304 16X18 startersleutel 16x18 mm - 6567550",
+        "aantal": 1,
+        "prijs": 19.64
+      },
+      {
+        "sku": "41894806",
+        "naam": "GEDORE 570303 holpijpset 10-dlg 3-25 mm - 1549502",
+        "aantal": 1,
+        "prijs": 84.01
+      },
+      {
+        "sku": "02301624",
+        "naam": "GEDORE 1979841 718 inspectiespiegel",
+        "aantal": 1,
+        "prijs": 64.27
+      },
+      {
+        "sku": "41892167",
+        "naam": "GEDORE 8551 4 linkse tap Gr. 4 M11-M14 - 6758730",
+        "aantal": 1,
+        "prijs": 3.94
+      },
+      {
+        "sku": "41968792",
+        "naam": "GEDORE 8701 2-8 platte vijl 8\", 200x20 mm - 6768100",
+        "aantal": 1,
+        "prijs": 17.84
+      },
+      {
+        "sku": "41992199",
+        "naam": "GEDORE 8719 2-8 driekantvijl 8\", 200x14 mm - 6769340",
+        "aantal": 1,
+        "prijs": 18.16
+      },
+      {
+        "sku": "41992203",
+        "naam": "GEDORE 8722 2-10 ronde vijl 10\", 250x10 mm - 6770270",
+        "aantal": 1,
+        "prijs": 19.32
+      },
+      {
+        "sku": "41992198",
+        "naam": "GEDORE 8701 2-10 platte vijl 10\", 250x25 mm - 6768290",
+        "aantal": 1,
+        "prijs": 19.64
+      },
+      {
+        "sku": "41993595",
+        "naam": "GEDORE 8701 2-6 platte vijl 6\", 150x16 mm - 6768020",
+        "aantal": 1,
+        "prijs": 12.01
+      },
+      {
+        "sku": "41892168",
+        "naam": "GEDORE 8551 5 linkse tap Gr. 5 M14-M18 - 6758810",
+        "aantal": 1,
+        "prijs": 4.62
+      },
+      {
+        "sku": "41891614",
+        "naam": "GEDORE S 42-07 stiftsleutelset 2-8mm 7-delig - 6347430",
+        "aantal": 1,
+        "prijs": 6.96
+      },
+      {
+        "sku": "41894667",
+        "naam": "GEDORE H 42-10 stiftsleutelset 1,3-10 mm 10-delig - 1505408",
+        "aantal": 1,
+        "prijs": 9.53
+      },
+      {
+        "sku": "41890717",
+        "naam": "GEDORE IN 19 PA dopsleutel-schroevendraaierset 1/2\" AF 9-delig - 6156410",
+        "aantal": 1,
+        "prijs": 75.48
+      },
+      {
+        "sku": "41891822",
+        "naam": "GEDORE 400 11X13 ringsleutel open zeskant 11x13 mm - 6057350",
+        "aantal": 1,
+        "prijs": 16.79
+      },
+      {
+        "sku": "41893847",
+        "naam": "GEDORE 169 bit-schroevendraaier met magazijn - 6432700",
+        "aantal": 1,
+        "prijs": 27.7
+      },
+      {
+        "sku": "41891821",
+        "naam": "GEDORE 400 10X11 ringsleutel open zeskant 10x11 mm - 6057270",
+        "aantal": 1,
+        "prijs": 15.84
+      },
+      {
+        "sku": "02716138",
+        "naam": "GEDORE 8314-180 TL zijsnijtang POWER 180 mm kunststof overtrokken - 2910926",
+        "aantal": 1,
+        "prijs": 16.51
+      },
+      {
+        "sku": "41891759",
+        "naam": "GEDORE 304 14X17 startersleutel 14x17 mm - 6470390",
+        "aantal": 1,
+        "prijs": 19.27
+      },
+      {
+        "sku": "41891760",
+        "naam": "GEDORE 304 15X17 startersleutel 15x17 mm - 6470470",
+        "aantal": 1,
+        "prijs": 19.98
+      },
+      {
+        "sku": "41891824",
+        "naam": "GEDORE 400 13X15 ringsleutel open UD 13x15 mm - 6057000",
+        "aantal": 1,
+        "prijs": 16.5
+      },
+      {
+        "sku": "41896565",
+        "naam": "GEDORE 8096-140 Kleine universele schaar - 6707900",
+        "aantal": 1,
+        "prijs": 14.36
+      },
+      {
+        "sku": "01041452",
+        "naam": "GEDORE 1.90/1 flensscheider (paar) 80-250 mm - 1596403",
+        "aantal": 1,
+        "prijs": 253.81
+      },
+      {
+        "sku": "02716009",
+        "naam": "GEDORE 225 18 pijptang 18\" - 2964856",
+        "aantal": 1,
+        "prijs": 32.54
+      },
+      {
+        "sku": "41892825",
+        "naam": "GEDORE 175 4 pijptang 4\" - 6437770",
+        "aantal": 1,
+        "prijs": 159
+      },
+      {
+        "sku": "01051968",
+        "naam": "GEDORE 570307 holpijpset 7-dlg 4-16 mm - 2646382",
+        "aantal": 1,
+        "prijs": 45.42
+      },
+      {
+        "sku": "41893411",
+        "naam": "GEDORE 702 8 M voelermaat 0,05-0,50 mm - 6547520",
+        "aantal": 1,
+        "prijs": 4.62
+      },
+      {
+        "sku": "41893412",
+        "naam": "GEDORE 702 88 M voelermaat 0,03-0,10 mm - 6547600",
+        "aantal": 1,
+        "prijs": 5.34
+      },
+      {
+        "sku": "02716751",
+        "naam": "GEDORE 2250 3 pijpsnijder voor koperen pijp 3-35 mm - 2964031",
+        "aantal": 1,
+        "prijs": 35.48
+      },
+      {
+        "sku": "41470148",
+        "naam": "RIDGID PC1375 kunststof schaar - 23493",
+        "aantal": 1,
+        "prijs": 44.54
+      },
+      {
+        "sku": "41896208",
+        "naam": "GEDORE 400 36X41 ringsleutel open UD 36x41 mm - 1933175",
+        "aantal": 1,
+        "prijs": 49.21
+      },
+      {
+        "sku": "41231127",
+        "naam": "GEDORE 1.34/10 binnentrekker-set - 1638629",
+        "aantal": 1,
+        "prijs": 303.1
+      },
+      {
+        "sku": "41891819",
+        "naam": "GEDORE 400 8X10 ringsleutel open zeskant 8x10 mm - 6057190",
+        "aantal": 1,
+        "prijs": 14.85
+      },
+      {
+        "sku": "41895155",
+        "naam": "GEDORE 224 E-27 kunststof hamer d 27 mm - 8821350",
+        "aantal": 1,
+        "prijs": 6.93
+      },
+      {
+        "sku": "41895160",
+        "naam": "GEDORE 224 E-50 kunststof hamer d 50 mm - 8821860",
+        "aantal": 1,
+        "prijs": 19.64
+      },
+      {
+        "sku": "41895508",
+        "naam": "GEDORE 225 E-50 nylon hamer d 50 mm - 8805900",
+        "aantal": 1,
+        "prijs": 23.23
+      },
+      {
+        "sku": "41896377",
+        "naam": "GEDORE 673 L dophouder lang 1/4\" skt - 1/4\" vkt - 1811061",
+        "aantal": 1,
+        "prijs": 8.05
+      },
+      {
+        "sku": "41891758",
+        "naam": "GEDORE 304 14X16 startersleutel 14x16 mm - 6470200",
+        "aantal": 1,
+        "prijs": 17.62
+      },
+      {
+        "sku": "41894744",
+        "naam": "GEDORE ITX 20 TX-015 dopsleutel-schroevendraaierset 1/4\" Torx 15-delig - 1815628",
+        "aantal": 1,
+        "prijs": 91.76
+      },
+      {
+        "sku": "03169816",
+        "naam": "FACOM 601SLS compacte zaagbeugel metaalzagen - SLS",
+        "aantal": 1,
+        "prijs": 34.68
+      },
+      {
+        "sku": "41891820",
+        "naam": "GEDORE 400 9X11 ringsleutel open zeskant 9x11 mm - 6056970",
+        "aantal": 1,
+        "prijs": 14.85
+      },
+      {
+        "sku": "41891825",
+        "naam": "GEDORE 400 14X17 ringsleutel open UD 14x17 mm - 6057510",
+        "aantal": 1,
+        "prijs": 17.33
+      },
+      {
+        "sku": "41891828",
+        "naam": "GEDORE 400 22X24 ringsleutel open UD 22x24 mm - 6057860",
+        "aantal": 1,
+        "prijs": 25.42
+      },
+      {
+        "sku": "41891830",
+        "naam": "GEDORE 400 30X32 ringsleutel open UD-profiel 30x32 mm - 6058830",
+        "aantal": 1,
+        "prijs": 41.61
+      },
+      {
+        "sku": "41895930",
+        "naam": "GEDORE 1.35/1A glij-hamertrekker 230 mm, 700 g - 1958070",
+        "aantal": 1,
+        "prijs": 70
+      },
+      {
+        "sku": "41895931",
+        "naam": "GEDORE 1.35/2 glij-hamertrekker 500 mm, 1,7 kg - 8039010",
+        "aantal": 1,
+        "prijs": 67
+      },
+      {
+        "sku": "41895932",
+        "naam": "GEDORE 1.35/3 glij-hamertrekker 500 mm, 3 kg - 1958089",
+        "aantal": 1,
+        "prijs": 120
+      },
+      {
+        "sku": "41896528",
+        "naam": "GEDORE 8305-6 naaldpunttang - 6725720",
+        "aantal": 1,
+        "prijs": 29.67
+      }
+    ]
   }
 ]
