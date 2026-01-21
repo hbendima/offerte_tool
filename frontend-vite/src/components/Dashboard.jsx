@@ -107,7 +107,7 @@ function Dashboard({ user }) {
       {/* Offerte detail modal */}
       {selectedOfferte && (
         <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.35)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center'}} onClick={()=>setSelectedOfferte(null)}>
-          <div style={{background:'#fff',padding:32,borderRadius:16,minWidth:440,maxWidth:700,boxShadow:'0 2px 18px rgba(0,0,0,0.18)',position:'relative'}} onClick={e=>e.stopPropagation()}>
+          <div style={{background:'#fff',padding:32,borderRadius:16,minWidth:440,maxWidth:700,maxHeight:'70vh',overflowY:'auto',boxShadow:'0 2px 18px rgba(0,0,0,0.18)',position:'relative'}} onClick={e=>e.stopPropagation()}>
             <button style={{position:'absolute',top:18,right:18,fontSize:'1.6em',background:'none',border:'none',cursor:'pointer',color:'#222'}} onClick={()=>setSelectedOfferte(null)}>
               <span style={{color:'#222',background:'#fff',borderRadius:'50%',padding:'2px 8px',fontWeight:700}}>✕</span>
             </button>

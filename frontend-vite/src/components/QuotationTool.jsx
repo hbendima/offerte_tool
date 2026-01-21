@@ -32,6 +32,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   const [totals, setTotals] = useState({});
   const [hoveredRow, setHoveredRow] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [cdcTooltipTimer, setCdcTooltipTimer] = useState(null);
   const [proposals, setProposals] = useState({});
   const [proposalInputBuffer, setProposalInputBuffer] = useState({});
   const proposalRefs = useRef({});
@@ -614,7 +615,8 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
       {/* Offerte producten en totalen */}
       {products.length > 0 && (
         <>
-          <table style={{width:"100%",background:"#222",borderRadius:10}}>
+          <div style={{overflowX: "auto", maxWidth: "100vw"}}>
+            <table style={{width:"100%",background:"#222",borderRadius:10, minWidth: 900}}>
             <thead>
               <tr>
                 {columns.map(col => (
@@ -710,6 +712,8 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                           top: tooltipPosition.y,
                           minWidth: 220,
                           maxWidth: 350,
+                          maxHeight: 340,
+                          overflowY: "auto",
                           background: "#222",
                           color: "#fff",
                           borderRadius: 10,
@@ -745,7 +749,8 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
           {/* Totalen/offerte */}
           <h3 style={{ marginTop: 36 }}>Totalen/offerte</h3>
           <div style={{ display: "flex", gap: 32, alignItems: "flex-start", marginTop: 0 }}>
@@ -828,11 +833,15 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                         <span
                           style={{ cursor: "pointer", fontSize: "1.1em", marginLeft: 2, verticalAlign: "middle" }}
                           onMouseEnter={e => {
+                            if (cdcTooltipTimer) clearTimeout(cdcTooltipTimer);
                             setHoveredRow("cdc-uitleg");
                             const rect = e.target.getBoundingClientRect();
                             setTooltipPosition({ x: rect.right + 10, y: rect.top });
                           }}
-                          onMouseLeave={() => setHoveredRow(null)}
+                          onMouseLeave={e => {
+                            const timer = setTimeout(() => setHoveredRow(null), 200);
+                            setCdcTooltipTimer(timer);
+                          }}
                         >
                           <span style={{ fontSize: "1em", background: "#e3e8ee", borderRadius: "50%", padding: "2px 6px", color: "#1976d2" }}>i</span>
                         </span>
@@ -843,12 +852,15 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                       </span>
                       {hoveredRow === "cdc-uitleg" && (
                         <div
+                          className="cdc-tooltip"
                           style={{
                             position: "fixed",
                             left: tooltipPosition.x,
                             top: tooltipPosition.y,
                             minWidth: 220,
                             maxWidth: 400,
+                            maxHeight: 340,
+                            overflowY: "auto",
                             background: "#222",
                             color: "#fff",
                             borderRadius: 10,
@@ -857,7 +869,15 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                             zIndex: 9999,
                             fontSize: "1.05em",
                             textAlign: "left",
-                            pointerEvents: "none"
+                            pointerEvents: "auto"
+                          }}
+                          onMouseEnter={() => {
+                            if (cdcTooltipTimer) clearTimeout(cdcTooltipTimer);
+                            setHoveredRow("cdc-uitleg");
+                          }}
+                          onMouseLeave={() => {
+                            const timer = setTimeout(() => setHoveredRow(null), 200);
+                            setCdcTooltipTimer(timer);
                           }}
                         >
                           CDC wordt per regel berekend: -5.33€ per lijn.<br />

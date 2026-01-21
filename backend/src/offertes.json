@@ -523,5 +523,359 @@
         "prijs": 168.19
       }
     ]
+  },
+  {
+    "id": 32,
+    "customer": "Erik Touwslager",
+    "total": 3259.9400000000005,
+    "date": "2026-01-21",
+    "bedrijf": "Helmond Machinehandel B.V,",
+    "btw": "",
+    "adres": "Dieselweg 1",
+    "postcode": "4104 BS",
+    "gemeente": "4104 BS Culemborg",
+    "land": "Nederland",
+    "email": "verkoop@helmond-heftrucks.nl",
+    "producten": [
+      {
+        "sku": "02852379",
+        "naam": "MILWAUKEE M12 18 C accu-multilader li-ion - 4932352959",
+        "aantal": 5,
+        "prijs": 61.07
+      },
+      {
+        "sku": "08087749",
+        "naam": "MILWAUKEE M18 BLSAG125X-0 haakse accu-slijper 125mm met schuifschakelaar (zonder accu en lader) - 4933492643",
+        "aantal": 5,
+        "prijs": 125.27
+      },
+      {
+        "sku": "08105258",
+        "naam": "MILWAUKEE M18 BLPDRC-0 compacte Brushless accu-klopboorschroefmachine in kartonnen doos (zonder accu en lader) - 4933492820",
+        "aantal": 2,
+        "prijs": 162.34
+      },
+      {
+        "sku": "02860448",
+        "naam": "MILWAUKEE M18 ONEFHIWF34-0X FUEL ONE-KEY accu-slagmoersleutel 3/4\" met frictiering in HD Box (zonder accu en lader) - 4933459729",
+        "aantal": 4,
+        "prijs": 290.11
+      },
+      {
+        "sku": "03324538",
+        "naam": "MILWAUKEE M18 BLIDRC-0 compacte koolborstelloze accu-slagschroevendraaier 1/4\" Hex (zonder accu en lader) - 4933492839",
+        "aantal": 6,
+        "prijs": 140.52
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "customer": "Wim van Leusen",
+    "total": 5753.49,
+    "date": "2026-01-21",
+    "bedrijf": "Van Leusen Dienstverlening",
+    "btw": "",
+    "adres": "Brugstraat 14",
+    "postcode": "78582 TJ",
+    "gemeente": "Wezup",
+    "land": "Nederland",
+    "email": "destrenkhaarshoeve.wim@outlook.com",
+    "producten": [
+      {
+        "sku": "02637109",
+        "naam": "MAKITA D-10425 groeffrees",
+        "aantal": 1,
+        "prijs": 27.8
+      },
+      {
+        "sku": "03017426",
+        "naam": "STABILA 707 vouwmeter geel 2 m - 01304",
+        "aantal": 5,
+        "prijs": 3.18
+      },
+      {
+        "sku": "08055079",
+        "naam": "MAKITA F-31179 gipsplaatschroef op lint met grove draad 3,9x35mm (1000 st.)",
+        "aantal": 1,
+        "prijs": 17.68
+      },
+      {
+        "sku": "02637111",
+        "naam": "MAKITA D-10431 groeffrees",
+        "aantal": 1,
+        "prijs": 27.77
+      },
+      {
+        "sku": "02669118",
+        "naam": "MAKITA DCG180ZXK 18V LXT accu-kitpistool 300ml in koffer (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 217.54
+      },
+      {
+        "sku": "03174222",
+        "naam": "MAKITA DTM52ZJ 18V LXT accu-multitool in Makpac III (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 194.24
+      },
+      {
+        "sku": "03093785",
+        "naam": "MAKITA DWD181ZJ 18V muurscanner in MAKPAC (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 978.99
+      },
+      {
+        "sku": "08100047",
+        "naam": "MAKITA D-74778 frezenset schacht 8 mm (22 st.)",
+        "aantal": 1,
+        "prijs": 156.36
+      },
+      {
+        "sku": "02135595",
+        "naam": "MAKITA P-33261 schuurpapier Red Velcro 94 mm, korrel 60 (10 st.)",
+        "aantal": 10,
+        "prijs": 4.8
+      },
+      {
+        "sku": "02508758",
+        "naam": "MAKITA 165364-0 kopieerring",
+        "aantal": 1,
+        "prijs": 11.07
+      },
+      {
+        "sku": "02508815",
+        "naam": "MAKITA P-41872 stof-tec boorhouder",
+        "aantal": 1,
+        "prijs": 88.92
+      },
+      {
+        "sku": "02639722",
+        "naam": "MAKITA F-31854 pins 23ga (10000 st.)",
+        "aantal": 1,
+        "prijs": 13.88
+      },
+      {
+        "sku": "02760308",
+        "naam": "MAKITA DST112ZJ 18V LXT accu-nietmachine 10mm in MAKPAC (zonder accu en lader)",
+        "aantal": 2,
+        "prijs": 248.41
+      },
+      {
+        "sku": "03013106",
+        "naam": "MAKITA B-65078 HM-RIFF specieverwijderaar TMA074 70 Starlock",
+        "aantal": 1,
+        "prijs": 27.93
+      },
+      {
+        "sku": "03163040",
+        "naam": "MAKITA F-33977 afwerkingsnagels 16ga brads (2000 st.)",
+        "aantal": 1,
+        "prijs": 11.07
+      },
+      {
+        "sku": "03174304",
+        "naam": "MAKITA HM1512 breekhamer met zeskantopname 28,6mm 48J 1850 W AVT in kunststof koffer",
+        "aantal": 1,
+        "prijs": 992.42
+      },
+      {
+        "sku": "08054941",
+        "naam": "MAKITA F-33935 afwerkingsnagels 16ga brads (2000 st.)",
+        "aantal": 1,
+        "prijs": 8.76
+      },
+      {
+        "sku": "08054946",
+        "naam": "MAKITA F-33993 afwerkingsnagels 16ga brads (2000 st.)",
+        "aantal": 1,
+        "prijs": 12.56
+      },
+      {
+        "sku": "02127664",
+        "naam": "MAKITA 194385-5 spanvijs set (2 st.)",
+        "aantal": 1,
+        "prijs": 20.5
+      },
+      {
+        "sku": "02508869",
+        "naam": "MAKITA 821550-0 MAKPAC II opbergkoffer",
+        "aantal": 2,
+        "prijs": 29.09
+      },
+      {
+        "sku": "08055442",
+        "naam": "MAKITA TK0LM5030F statief 2,9m",
+        "aantal": 1,
+        "prijs": 127.6
+      },
+      {
+        "sku": "08055655",
+        "naam": "MAKITA SK700GDZ 12Vmax CXT kruislijnlaser groen in cordura tas (1H 360° + 2V 360°)",
+        "aantal": 1,
+        "prijs": 486.43
+      },
+      {
+        "sku": "03363701",
+        "naam": "MAKITA 199141-8 geleiderail 1500mm",
+        "aantal": 1,
+        "prijs": 57.69
+      },
+      {
+        "sku": "02712305",
+        "naam": "MAKITA B-49052 SDS V-Plus betonborenset 5-delig",
+        "aantal": 1,
+        "prijs": 11.4
+      },
+      {
+        "sku": "02824407",
+        "naam": "MAKITA DPT353ZJ 18V LXT accu-afwerkingspistool 23Ga 35mm in MAKPAC (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 285.48
+      },
+      {
+        "sku": "03012994",
+        "naam": "MAKITA 198885-7 koppelstripset geleiderail",
+        "aantal": 1,
+        "prijs": 14.83
+      },
+      {
+        "sku": "08110196",
+        "naam": "MAKITA DFR552ZJ 18V LXT accu-schroefautomaat 55mm in Makpac III (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 311.59
+      },
+      {
+        "sku": "08055080",
+        "naam": "MAKITA F-31182 gipsplaatschroef op lint met grove draad 3,9x41mm (1000 st.)",
+        "aantal": 1,
+        "prijs": 18.35
+      },
+      {
+        "sku": "08082703",
+        "naam": "MAKITA 191V02-0 schroefbit voor PH2 155 mm (5 st.)",
+        "aantal": 1,
+        "prijs": 24.13
+      },
+      {
+        "sku": "08053196",
+        "naam": "MAKITA 195136-9 langsgeleider met fijnafstelling",
+        "aantal": 1,
+        "prijs": 36.2
+      },
+      {
+        "sku": "02864224",
+        "naam": "MAKITA DRT50ZJX3 18V LXT accu-bovenfrees/kantenfrees 6-8mm in MAKPAC (zonder accu en lader)",
+        "aantal": 2,
+        "prijs": 273.74
+      },
+      {
+        "sku": "08055078",
+        "naam": "MAKITA F-31140 gipsplaatschroef met grove draad 3,9x55mm (1000 st.)",
+        "aantal": 1,
+        "prijs": 23.47
+      },
+      {
+        "sku": "02383930",
+        "naam": "MAKITA F-31838 pins 23ga (10000 st.)",
+        "aantal": 1,
+        "prijs": 12.35
+      },
+      {
+        "sku": "03157314",
+        "naam": "MAKITA 199140-0 geleiderail voor invalcirkelzaag 1m",
+        "aantal": 1,
+        "prijs": 40.83
+      },
+      {
+        "sku": "03067670",
+        "naam": "MAKITA LDX1 laserontvanger - LE00855702",
+        "aantal": 1,
+        "prijs": 143.9
+      },
+      {
+        "sku": "03182005",
+        "naam": "BOSCH GLM 50-27 CG laserafstandsmeter - 0601072U00",
+        "aantal": 1,
+        "prijs": 185.37
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "customer": "Erik Touwslager",
+    "total": 3323.94,
+    "date": "2026-01-21",
+    "bedrijf": "Helmond Machinehandel B.V,",
+    "btw": "",
+    "adres": "Dieselweg 1",
+    "postcode": "4104 BS",
+    "gemeente": "4104 BS Culemborg",
+    "land": "Nederland",
+    "email": "verkoop@helmond-heftrucks.nl",
+    "producten": [
+      {
+        "sku": "02852379",
+        "naam": "MILWAUKEE M12 18 C accu-multilader li-ion - 4932352959",
+        "aantal": 5,
+        "prijs": 61.07
+      },
+      {
+        "sku": "08087749",
+        "naam": "MILWAUKEE M18 BLSAG125X-0 haakse accu-slijper 125mm met schuifschakelaar (zonder accu en lader) - 4933492643",
+        "aantal": 5,
+        "prijs": 125.27
+      },
+      {
+        "sku": "08105258",
+        "naam": "MILWAUKEE M18 BLPDRC-0 compacte Brushless accu-klopboorschroefmachine in kartonnen doos (zonder accu en lader) - 4933492820",
+        "aantal": 2,
+        "prijs": 162.34
+      },
+      {
+        "sku": "03324538",
+        "naam": "MILWAUKEE M18 BLIDRC-0 compacte koolborstelloze accu-slagschroevendraaier 1/4\" Hex (zonder accu en lader) - 4933492839",
+        "aantal": 6,
+        "prijs": 140.52
+      },
+      {
+        "sku": "02654880",
+        "naam": "MILWAUKEE M18 B5 Li-ion accu 18V 5,0Ah - 4932430483",
+        "aantal": 1,
+        "prijs": 64
+      },
+      {
+        "sku": "02860448",
+        "naam": "MILWAUKEE M18 ONEFHIWF34-0X FUEL ONE-KEY accu-slagmoersleutel 3/4\" met frictiering in HD Box (zonder accu en lader) - 4933459729",
+        "aantal": 4,
+        "prijs": 290.11
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "customer": "Bart Everaert",
+    "total": 16203,
+    "date": "2026-01-21",
+    "bedrijf": "Smet‑Boring nv",
+    "btw": "",
+    "adres": "Kastelsedijk 64",
+    "postcode": "2480",
+    "gemeente": "Dessel",
+    "land": "België",
+    "email": "bart.everaert@smetgroup.be",
+    "producten": [
+      {
+        "sku": "97970948",
+        "naam": "REMA HS2-01 stationaire heftafel 2 ton - 3459002",
+        "aantal": 3,
+        "prijs": 2398
+      },
+      {
+        "sku": "97970028",
+        "naam": "REMA HS2-06 stationaire heftafel 2 ton - 3459003",
+        "aantal": 3,
+        "prijs": 3003
+      }
+    ]
   }
 ]
