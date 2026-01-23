@@ -877,5 +877,218 @@
         "prijs": 3003
       }
     ]
+  },
+  {
+    "id": 36,
+    "customer": "Cédric VIVIER",
+    "total": 5007.3,
+    "date": "2026-01-22",
+    "bedrijf": "Département des Infrastructures - Campus de la Plaine (VUB)",
+    "btw": "",
+    "adres": "Av. F. Roosevelt 50, CP 201",
+    "postcode": "1050",
+    "gemeente": "Ixelles",
+    "land": "België",
+    "email": "cedric.vivier@ulb.be",
+    "producten": [
+      {
+        "sku": "03166432",
+        "naam": "DEWALT DWHT51388-0 moker 1361gr",
+        "aantal": 1,
+        "prijs": 20.5
+      },
+      {
+        "sku": "03166321",
+        "naam": "DEWALT DWHT0-43224 waterpas 600mm",
+        "aantal": 1,
+        "prijs": 32.07
+      },
+      {
+        "sku": "08133266",
+        "naam": "DEWALT DWST82805-1 TOUGHSYSTEM 2.0 DXL korte haak",
+        "aantal": 1,
+        "prijs": 10.87
+      },
+      {
+        "sku": "41190089",
+        "naam": "KNIPEX 16 20 165 SB ontmantelingsgereedschap met sleepmes slagvaste kunststofbehuizing 165 mm",
+        "aantal": 2,
+        "prijs": 17.52
+      },
+      {
+        "sku": "08108750",
+        "naam": "DEWALT DWST08550-1 TOUGHSYSTEM 2.0 DXL Werkblad",
+        "aantal": 1,
+        "prijs": 44.13
+      },
+      {
+        "sku": "41294978",
+        "naam": "FACOM 131A.10 pijptang model stillson staal",
+        "aantal": 1,
+        "prijs": 21.65
+      },
+      {
+        "sku": "08108746",
+        "naam": "DEWALT DWST60510-1 TOUGHSYSTEM 2.0 DXL 5-in-1 modulaire gereedschapskar",
+        "aantal": 1,
+        "prijs": 608.92
+      },
+      {
+        "sku": "02948677",
+        "naam": "FACOM 195A.20VE gebogen tang VDE geisoleerd tot 1000V 200mm",
+        "aantal": 1,
+        "prijs": 34.67
+      },
+      {
+        "sku": "08104528",
+        "naam": "KNIPEX 00 11 06 V04 Universele moersleutel JointKey Quadro voor alle standaard afsluitsystemen 161 mm",
+        "aantal": 5,
+        "prijs": 19.67
+      },
+      {
+        "sku": "02788201",
+        "naam": "DEWALT DT7506-QZ doppenset 6-27 mm + 1/4\" naar 1/2\" adapter 17-delig",
+        "aantal": 1,
+        "prijs": 62.64
+      },
+      {
+        "sku": "02608922",
+        "naam": "STANLEY 4-18-332 FATMAX koudbeitel 25mm (lang)",
+        "aantal": 1,
+        "prijs": 10.04
+      },
+      {
+        "sku": "03221415",
+        "naam": "FACOM VE.A4PB tangenset 1000V 3-delig",
+        "aantal": 1,
+        "prijs": 93.55
+      },
+      {
+        "sku": "08131770",
+        "naam": "WERA Kraftform Kompakt 28 RA bitset met etui, 6-delig - 05051520001",
+        "aantal": 3,
+        "prijs": 44.3
+      },
+      {
+        "sku": "02397324",
+        "naam": "WERA 950/9 Hex-Plus Multicolour 1 SB stiftsleutelset metrisch BlackLaser 9-delig - 05073593001",
+        "aantal": 1,
+        "prijs": 26.28
+      },
+      {
+        "sku": "41430063",
+        "naam": "RIDGID 150-L buizensnijder (6-35 mm) - 66737",
+        "aantal": 1,
+        "prijs": 49.42
+      },
+      {
+        "sku": "02666738",
+        "naam": "MAKITA DHR243RTJ 18V LXT accu-combihamer SDS-Plus 24mm in MAKPAC IV (2x 5,0Ah accu + lader)",
+        "aantal": 1,
+        "prijs": 424.48
+      },
+      {
+        "sku": "08108748",
+        "naam": "DEWALT DWST08520-1 TOUGHSYSTEM 2.0 DXL Koffer met 2 lades",
+        "aantal": 3,
+        "prijs": 180.83
+      },
+      {
+        "sku": "02760132",
+        "naam": "MAKITA DDF453RF3J 18V LXT accu-schroefboormachine in MAKPAC (3x 3,0Ah accu + lader)",
+        "aantal": 1,
+        "prijs": 241.55
+      },
+      {
+        "sku": "03048499",
+        "naam": "MILWAUKEE HL-SF hoofdlamp Alkaline 450 lumen - 4933471388",
+        "aantal": 10,
+        "prijs": 56.36
+      },
+      {
+        "sku": "37960630",
+        "naam": "FLUKE T5-1000 elektrische tester tot 1000V AC/DC - 100A AC - 659570",
+        "aantal": 1,
+        "prijs": 246.78
+      },
+      {
+        "sku": "08103860",
+        "naam": "WERA 05006617001 KRAFTFORM KOMPAKT VDE Big Pack 1, 26-delig",
+        "aantal": 3,
+        "prijs": 86.61
+      },
+      {
+        "sku": "02510366",
+        "naam": "STABILA 1107 vouwmeter wit 2 m - 01701",
+        "aantal": 10,
+        "prijs": 5.48
+      },
+      {
+        "sku": "08121583",
+        "naam": "FACOM RS.GRPPB OGV GRIP doppen set metrisch, 6-kant, 60-delig",
+        "aantal": 1,
+        "prijs": 305.62
+      },
+      {
+        "sku": "02887766",
+        "naam": "KNIPEX 86 06 250 sleuteltang geïsoleerd met meer-componentengrepen, VDE-getest verchroomd 250 mm",
+        "aantal": 3,
+        "prijs": 53.22
+      },
+      {
+        "sku": "03169817",
+        "naam": "FACOM 603FPB zaagbeugel voor metaalzagen zeer sterk",
+        "aantal": 2,
+        "prijs": 43
+      },
+      {
+        "sku": "08095546",
+        "naam": "DEWALT DWST08330-1 ToughSystem 2.0 koffer met 3 lades",
+        "aantal": 2,
+        "prijs": 131.4
+      },
+      {
+        "sku": "03175767",
+        "naam": "MILWAUKEE IR FL500 hoofdlamp met geintegreerde batterij (USB-oplaadbaar) 500 lumen - 4933478586",
+        "aantal": 3,
+        "prijs": 53.92
+      },
+      {
+        "sku": "02948668",
+        "naam": "FACOM 194A.17VE draadstripper 1000V",
+        "aantal": 1,
+        "prijs": 30.41
+      },
+      {
+        "sku": "02095852",
+        "naam": "FACOM RL.NANO1 ratel RL.161 met ultra compacte doppenset metrisch zeskant 1/4\" in opbergdoos 38-delig",
+        "aantal": 1,
+        "prijs": 180.33
+      },
+      {
+        "sku": "03151172",
+        "naam": "MAKITA B-66880 IMPACT BLACK schroefbitset 35-delig",
+        "aantal": 1,
+        "prijs": 29.42
+      },
+      {
+        "sku": "02052519",
+        "naam": "STANLEY 0-10-481 FATMAX afbreekmes 18mm",
+        "aantal": 2,
+        "prijs": 9.25
+      },
+      {
+        "sku": "41299255",
+        "naam": "FACOM 205C.30 monteurshamer type din met steel van grafiet",
+        "aantal": 1,
+        "prijs": 11.24
+      },
+      {
+        "sku": "03169753",
+        "naam": "FACOM 467B.JP10PB anti-slip ringsteeksleutelset met ratel en klemveer 8-19 mm in houder 10-delig",
+        "aantal": 1,
+        "prijs": 147
+      }
+    ]
   }
 ]
