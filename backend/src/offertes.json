@@ -1513,5 +1513,419 @@
         "prijs": 21.5
       }
     ]
+  },
+  {
+    "id": 51,
+    "customer": "Thomas Bandenherrewegen",
+    "total": 11027.179999999998,
+    "date": "2026-03-06",
+    "bedrijf": "LEM-AIR BV / SRL",
+    "btw": "",
+    "adres": "Rue des Sablières 45 - Unit 74",
+    "postcode": "1435",
+    "gemeente": "Mont St. Guibert",
+    "land": "Belgium",
+    "email": "thomas.vandenherrewegen@lem-air.com",
+    "producten": [
+      {
+        "sku": "08073093",
+        "naam": "WIHA 3012 priem kunststof handgreep met ronde punt en kunststof handgreep - 00683",
+        "aantal": 1,
+        "prijs": 5.67
+      },
+      {
+        "sku": "43011008",
+        "naam": "BAHCO 2700-24-XT7-HP Superior handzaag 24\"",
+        "aantal": 1,
+        "prijs": 32.89
+      },
+      {
+        "sku": "03299272",
+        "naam": "LEDLENSER HF8R Work hoofdlamp oplaadbaar 1600 lumen IP68 - 502802",
+        "aantal": 7,
+        "prijs": 96.56
+      },
+      {
+        "sku": "02155341",
+        "naam": "METABO 616359000 doorslijpschijf SP 125x1,0x22,23 inox, TF 41, in blikken doos (10 st.)",
+        "aantal": 100,
+        "prijs": 9.26
+      },
+      {
+        "sku": "41190267",
+        "naam": "KNIPEX 86 03 300 sleuteltang tang en schroefsleutel in één gereedschap met kunststof bekleed verchroomd 300 mm",
+        "aantal": 2,
+        "prijs": 54.38
+      },
+      {
+        "sku": "02232775",
+        "naam": "GEDORE 137-600 monteerijzer 600 x 20 x 5 mm - 8783590",
+        "aantal": 2,
+        "prijs": 48.59
+      },
+      {
+        "sku": "02885093",
+        "naam": "MILWAUKEE 48227508 brede moersleutel verstelbaar 200mm",
+        "aantal": 1,
+        "prijs": 24.3
+      },
+      {
+        "sku": "03077653",
+        "naam": "MILWAUKEE 4932471726 TORQUE LOCK vergrendel klem 250 mm rechte bek",
+        "aantal": 2,
+        "prijs": 14.83
+      },
+      {
+        "sku": "03167437",
+        "naam": "MILWAUKEE M18 FSZ-0X FUEL SAWZALL accu-reciprozaag in HD Box (zonder accu en lader) - 4933478293",
+        "aantal": 3,
+        "prijs": 269.44
+      },
+      {
+        "sku": "08105319",
+        "naam": "MILWAUKEE M18 FB8 18V FORGE 8,0Ah accu - 4932492131",
+        "aantal": 9,
+        "prijs": 204.71
+      },
+      {
+        "sku": "08120566",
+        "naam": "MILWAUKEE 4932499011 blikschaar links",
+        "aantal": 2,
+        "prijs": 14.38
+      },
+      {
+        "sku": "08123123",
+        "naam": "MILWAUKEE 4932498763 rolmaat STUD Gen III 5 m x 33 mm",
+        "aantal": 6,
+        "prijs": 21.82
+      },
+      {
+        "sku": "02302054",
+        "naam": "GEDORE 8178 620 boutenschaar 620 mm - 2675145",
+        "aantal": 1,
+        "prijs": 65.12
+      },
+      {
+        "sku": "03220897",
+        "naam": "FACOM 76.19PB open pijpsleutel, gesmeed, twaalfkant x zeskant, 19 mm",
+        "aantal": 1,
+        "prijs": 15.66
+      },
+      {
+        "sku": "02962817",
+        "naam": "BOSCH 2608644507 cirkelzaagblad E x pert for Wood voor accuzagen 165 x 20 x 1.5/1 mm, 24T",
+        "aantal": 3,
+        "prijs": 26.94
+      },
+      {
+        "sku": "02819799",
+        "naam": "METABO 628272000 zaagblad \"cordless cut wood - classic\", 165x20 Z18 WZ 20°",
+        "aantal": 3,
+        "prijs": 18.68
+      },
+      {
+        "sku": "41890159",
+        "naam": "GEDORE 29 17X19 werfpunt-ratel 17x19 mm - 1648934",
+        "aantal": 1,
+        "prijs": 37.97
+      },
+      {
+        "sku": "08051832",
+        "naam": "BOSCH S 1155 CHC Expert reciprozaagblad Thick Tough Metal (10 st.) - 2608900370",
+        "aantal": 2,
+        "prijs": 120.5
+      },
+      {
+        "sku": "03045295",
+        "naam": "BAHCO 36 spijkertrekker compact met thermoplastische handgreep 220 mm",
+        "aantal": 3,
+        "prijs": 32.73
+      },
+      {
+        "sku": "03005038",
+        "naam": "LUMX LM 87240 XT pro kabelhaspel professioneel 40 m 230V 16 A 2P+A BE/FR zwart",
+        "aantal": 2,
+        "prijs": 120.16
+      },
+      {
+        "sku": "02812896",
+        "naam": "STANLEY STHT0-54128 vuisthamer glasvezel 1500gr",
+        "aantal": 2,
+        "prijs": 20.33
+      },
+      {
+        "sku": "08083383",
+        "naam": "MILWAUKEE M18 PC6 EU PACKOUT-compatibele lader voor 6 accu's - 4932480162",
+        "aantal": 3,
+        "prijs": 222.6
+      },
+      {
+        "sku": "02346346",
+        "naam": "SPIT 052971 RVS reinigingsborstel voor boorgaten in beton en metselwerk 11x120 mm",
+        "aantal": 1,
+        "prijs": 10.41
+      },
+      {
+        "sku": "02346441",
+        "naam": "SPIT 052973 RVS reinigingsborstel voor boorgaten in beton en metselwerk 15x120 mm",
+        "aantal": 1,
+        "prijs": 10.91
+      },
+      {
+        "sku": "41190109",
+        "naam": "KNIPEX 25 05 160 platspitse tang met zijsnijder (radiotang) met comfortgrepen verchroomd",
+        "aantal": 2,
+        "prijs": 18.35
+      },
+      {
+        "sku": "08083455",
+        "naam": "MILWAUKEE 4932492009 SHOCKWAVE IMPACT DUTY bitset 38-delig",
+        "aantal": 2,
+        "prijs": 23.64
+      },
+      {
+        "sku": "03167334",
+        "naam": "MILWAUKEE M18 FMT-0X FUEL accu-multitool in HD box (zonder accu en lader) - 4933478491",
+        "aantal": 2,
+        "prijs": 232.42
+      },
+      {
+        "sku": "02227478",
+        "naam": "BAHCO 111M-36 ringsteeksleutel 15° afgebogen, verchroomd, lengte 410 mm, 36 mm",
+        "aantal": 1,
+        "prijs": 39.83
+      },
+      {
+        "sku": "08105434",
+        "naam": "MILWAUKEE 4932493661 ratel- en doppenset 1/4\" & 1/2\" in PACKOUT slim organizer 63-delig",
+        "aantal": 1,
+        "prijs": 196.53
+      },
+      {
+        "sku": "08119375",
+        "naam": "MILWAUKEE M18 MDTL-0 LED multidirectionele werklamp met magnetische voet (zonder accu en lader) - 4933498149",
+        "aantal": 3,
+        "prijs": 206.27
+      },
+      {
+        "sku": "02890898",
+        "naam": "MILWAUKEE M18 FJS-0X FUEL accu-decoupeerzaag in HD Box (zonder accu en lader) - 4933464726",
+        "aantal": 3,
+        "prijs": 253.58
+      },
+      {
+        "sku": "41190310",
+        "naam": "KNIPEX 87 01 300 Cobra Hightech-waterpomptang met anti-slip kunststof bekleed grijs geatramenteerd 300 mm",
+        "aantal": 2,
+        "prijs": 27.93
+      },
+      {
+        "sku": "02016081",
+        "naam": "BOSCH 2607019159 beitelset SDS-Plus punt-tegel-plat 3-delig",
+        "aantal": 3,
+        "prijs": 27.11
+      },
+      {
+        "sku": "02372806",
+        "naam": "FACOM 83SHST.JP9A zeskant inbussleutelset lang RVS 1,5-10mm 9-delig",
+        "aantal": 1,
+        "prijs": 30.54
+      },
+      {
+        "sku": "03169817",
+        "naam": "FACOM 603FPB zaagbeugel voor metaalzagen zeer sterk",
+        "aantal": 1,
+        "prijs": 43.96
+      },
+      {
+        "sku": "41296754",
+        "naam": "FACOM 1260.50 koevoet",
+        "aantal": 1,
+        "prijs": 24.3
+      },
+      {
+        "sku": "41190314",
+        "naam": "KNIPEX 02 02 180 kracht-kombitang met comfortgrepen zwart geatramenteerd 180 mm",
+        "aantal": 2,
+        "prijs": 17.19
+      },
+      {
+        "sku": "08119319",
+        "naam": "MILWAUKEE M18 FCS552-0X FUEL accu-cirkelzaag 165mm 57mm voor hout en kunststof in HD Box (zonder accu en lader) - 4933493588",
+        "aantal": 3,
+        "prijs": 328.12
+      },
+      {
+        "sku": "02807637",
+        "naam": "STANLEY STHT0-51309 klauwhamer glasvezel 450gr",
+        "aantal": 2,
+        "prijs": 11.9
+      },
+      {
+        "sku": "02851250",
+        "naam": "FACOM 467BF.10 scharnierende steekringratelsleutel 10 mm",
+        "aantal": 1,
+        "prijs": 16
+      },
+      {
+        "sku": "03222099",
+        "naam": "MILWAUKEE M18 FH-0X FUEL accu-combihamer SDS-Plus met 4 standen in HD Box (zonder accu en lader) - 4933478500",
+        "aantal": 3,
+        "prijs": 239.86
+      },
+      {
+        "sku": "02746316",
+        "naam": "DEWALT DT99561-QZ EXTREME Runtime cirkelzaagblad 165mm x 20mm 42T",
+        "aantal": 3,
+        "prijs": 18.51
+      },
+      {
+        "sku": "41190122",
+        "naam": "KNIPEX 74 02 200 kracht-zijsnijtang met comfortgrepen zwart geatramenteerd 200 mm",
+        "aantal": 2,
+        "prijs": 22.98
+      },
+      {
+        "sku": "41430019",
+        "naam": "RIDGID 31100 aluminium rechte pijptang 18\" model 818, buiscapaciteit 65 mm 2 1/2\"",
+        "aantal": 2,
+        "prijs": 99.5
+      },
+      {
+        "sku": "02344595",
+        "naam": "SPIT 065990 handmatige blaaspomp voor reinigen boorgaten",
+        "aantal": 1,
+        "prijs": 21.32
+      },
+      {
+        "sku": "41190255",
+        "naam": "KNIPEX 87 01 180 Cobra Hightech-waterpomptang met anti-slip kunststof bekleed grijs geatramenteerd 180 mm",
+        "aantal": 2,
+        "prijs": 20.5
+      },
+      {
+        "sku": "41299477",
+        "naam": "FACOM 440.10 ringsteeksleutel met OGV profiel 10 mm",
+        "aantal": 1,
+        "prijs": 7.16
+      },
+      {
+        "sku": "11050098",
+        "naam": "RECTAVIT 106617 metalen kokerpistool Professional zwart",
+        "aantal": 3,
+        "prijs": 10.53
+      },
+      {
+        "sku": "03169753",
+        "naam": "FACOM 467B.JP10PB anti-slip ringsteeksleutelset met ratel en klemveer 8-19 mm in houder 10-delig",
+        "aantal": 1,
+        "prijs": 147
+      },
+      {
+        "sku": "03290837",
+        "naam": "DUNLOP WORK IT FULL SAFETY S5 laars zwart - 125.037.001.044",
+        "aantal": 1,
+        "prijs": 24.11
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "customer": "Menno Janssens",
+    "total": 6386,
+    "date": "2026-03-30",
+    "bedrijf": "RN Transporttechniek B.V.",
+    "btw": "NL856715712B01",
+    "adres": "Ketelmeer 12",
+    "postcode": "5347 JX",
+    "gemeente": "Oss",
+    "land": "Nederland",
+    "email": "menno@rntransporttechniek.nl",
+    "producten": [
+      {
+        "sku": "41894192",
+        "naam": "GEDORE 1500 ES-2150 PH schroevendraaierset met 3-component handgreep 6-delig - 1523708",
+        "aantal": 2,
+        "prijs": 42
+      },
+      {
+        "sku": "41894734",
+        "naam": "GEDORE 1500 ES ITX 30 dopsleutel-set 3/8\" 39-delig - 1640860",
+        "aantal": 2,
+        "prijs": 340
+      },
+      {
+        "sku": "41894732",
+        "naam": "GEDORE 1500 ES K 19 L slagmoer-dopsleutelset 1/2\" 12-delig - 1640836",
+        "aantal": 2,
+        "prijs": 175
+      },
+      {
+        "sku": "41894738",
+        "naam": "GEDORE 1500 ES-2163 TX schroevendraaierset met 3-component handgreep 6-delig - 1582666",
+        "aantal": 2,
+        "prijs": 48
+      },
+      {
+        "sku": "02232821",
+        "naam": "GEDORE 1500 ES-7 R ringratel-steeksleutel in 1/3 gereedschapsmodule - 2305429",
+        "aantal": 2,
+        "prijs": 130
+      },
+      {
+        "sku": "02967559",
+        "naam": "GEDORE SB H 42 KEL-88 stiftsleutelset extra lang met kogelkop 2-10mm 8-delig - 3107469",
+        "aantal": 2,
+        "prijs": 30
+      },
+      {
+        "sku": "41892193",
+        "naam": "GEDORE 1504 0511 verrijdbare werkbank met 7 laden en achterwand - 6622830",
+        "aantal": 2,
+        "prijs": 1400
+      },
+      {
+        "sku": "41894096",
+        "naam": "GEDORE 1500 ES-19 set dopsleutels 1/2 (26 st.) - 6626580",
+        "aantal": 2,
+        "prijs": 180
+      },
+      {
+        "sku": "41894737",
+        "naam": "GEDORE 1500 ES-1993U-20 toebehorenset voor dopsleutel 1/2\" - 1550756",
+        "aantal": 2,
+        "prijs": 115
+      },
+      {
+        "sku": "03314162",
+        "naam": "GEDORE R36401009 haakse stiftsleutelset TX met kleurcodering 9-delig, lang - 3301333",
+        "aantal": 2,
+        "prijs": 18
+      },
+      {
+        "sku": "41894086",
+        "naam": "GEDORE 1500 ES-7 ringsteeksleutelset in 2/3 ES module 25-delig - 6612520",
+        "aantal": 2,
+        "prijs": 145
+      },
+      {
+        "sku": "41894100",
+        "naam": "GEDORE 1500 ES-145 tangenset 4-delig - 6614650",
+        "aantal": 2,
+        "prijs": 100
+      },
+      {
+        "sku": "41894094",
+        "naam": "GEDORE 1500 ES-30 dopsleutel-set 3/8 in 1/3 es module (24 st.) - 6626070",
+        "aantal": 2,
+        "prijs": 235
+      },
+      {
+        "sku": "41894092",
+        "naam": "GEDORE 1500 ES-20 dopsleutel-set 1/4 in 1/3 es module\" - 6626230",
+        "aantal": 2,
+        "prijs": 235
+      }
+    ]
   }
 ]
