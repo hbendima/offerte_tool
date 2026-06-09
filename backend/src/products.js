@@ -2,6 +2,10 @@ const express = require('express');
 const odbc = require('odbc');
 const router = express.Router();
 
+const ODBC_DSN = process.env.ODBC_DSN || 'Elastic PRD';
+const ODBC_DATABASE = process.env.ODBC_DATABASE || 'de02157346244195ac7c0474dce38008';
+const ODBC_CONNECTION_STRING = `DSN=${ODBC_DSN};DATABASE=${ODBC_DATABASE};`;
+
 // Velden zoals in je macro en database (let op: exact gespeld, geen haakjes)
 const FIELDS = [
   "SKU",
@@ -19,6 +23,10 @@ const FIELDS = [
   "VISIBILITY_NL",
   "VISIBILITY_COM"
 ];
+
+function quoteIdentifier(identifier) {
+  return `"${String(identifier).replace(/"/g, '""')}"`;
+}
 
 // Helper om SKU te formatteren
 function formatSku(sku) {
@@ -69,25 +77,25 @@ router.get('/products', async (req, res) => {
     const skusParam = req.query.skus;
     const suprefParam = req.query.supref;
     const nameParam = req.query.name;
-    let whereClause = "ACTIVE = '1'";
+    let whereClause = `${quoteIdentifier('ACTIVE')} = '1'`;
     let skus = [];
     if (skusParam) {
       skus = skusParam.split(',').map(formatSku);
       const skuList = skus.map(s => `'${s}'`).join(',');
-      whereClause += ` AND SKU IN (${skuList})`;
+      whereClause += ` AND ${quoteIdentifier('SKU')} IN (${skuList})`;
     } else if (suprefParam) {
-      whereClause += ` AND SUPPLIER_REFERENCE LIKE '%${suprefParam}%'`;
+      whereClause += ` AND ${quoteIdentifier('SUPPLIER_REFERENCE')} LIKE '%${suprefParam}%'`;
     } else if (nameParam) {
-      whereClause += ` AND PRODUCT_NAME_H1.nl_BE LIKE '%${nameParam}%'`;
+      whereClause += ` AND ${quoteIdentifier('PRODUCT_NAME_H1.nl_BE')} LIKE '%${nameParam}%'`;
     } else {
       return res.status(400).json({ error: 'No SKUs, SupRef, or Name provided' });
     }
 
-    const fieldList = FIELDS.join(',');
+    const fieldList = FIELDS.map(quoteIdentifier).join(',');
     const sqlBusiness = `SELECT ${fieldList} FROM business WHERE ${whereClause}`;
     console.log("ODBC QUERY:", sqlBusiness);
 
-    const connection = await odbc.connect('DSN=Elastic PRD');
+    const connection = await odbc.connect(ODBC_CONNECTION_STRING);
     const productsRaw = await connection.query(sqlBusiness);
 
     // Extra info ophalen voor Stock/MSQ/UOM
@@ -148,15 +156,15 @@ router.get('/products/search-supref', async (req, res) => {
     if (!q || q.length < 2) {
       return res.status(400).json({ error: 'Query too short or missing' });
     }
-    const fieldList = FIELDS.join(',');
+    const fieldList = FIELDS.map(quoteIdentifier).join(',');
     const sql = `
       SELECT ${fieldList}
       FROM business
-      WHERE ACTIVE = '1' AND SUPPLIER_REFERENCE LIKE '%${q}%'
+      WHERE ${quoteIdentifier('ACTIVE')} = '1' AND ${quoteIdentifier('SUPPLIER_REFERENCE')} LIKE '%${q}%'
     `;
     console.log("ODBC QUERY:", sql);
 
-    const connection = await odbc.connect('DSN=Elastic PRD');
+    const connection = await odbc.connect(ODBC_CONNECTION_STRING);
     const result = await connection.query(sql);
 
     // Probeer Stock/MSQ/UOM te vullen als er een product is

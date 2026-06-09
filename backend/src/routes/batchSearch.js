@@ -17,6 +17,10 @@ const express = require('express');
 const odbc = require('odbc');
 const router = express.Router();
 
+const ODBC_DSN = process.env.ODBC_DSN || 'Elastic PRD';
+const ODBC_DATABASE = process.env.ODBC_DATABASE || 'de02157346244195ac7c0474dce38008';
+const ODBC_CONNECTION_STRING = `DSN=${ODBC_DSN};DATABASE=${ODBC_DATABASE};`;
+
 const FIELDS = [
   "SKU",
   "SUPPLIER_REFERENCE",
@@ -33,6 +37,10 @@ const FIELDS = [
   "VISIBILITY_NL",
   "VISIBILITY_COM"
 ];
+
+function quoteIdentifier(identifier) {
+  return `"${String(identifier).replace(/"/g, '""')}"`;
+}
 
 // POST /products/batch-search
 router.post('/products/batch-search', async (req, res) => {
@@ -52,14 +60,14 @@ router.post('/products/batch-search', async (req, res) => {
       return res.status(400).json({ error: 'No valid search terms provided' });
     }
 
-    const fieldList = FIELDS.join(',');
+    const fieldList = FIELDS.map(quoteIdentifier).join(',');
     let results = [];
-    const connection = await odbc.connect('DSN=Elastic PRD');
+    const connection = await odbc.connect(ODBC_CONNECTION_STRING);
 
     // Query 1: Exacte SKU's
     if (skus.length > 0) {
       const skuList = skus.map(s => `'${s}'`).join(',');
-      const sqlSku = `SELECT ${fieldList} FROM business WHERE ACTIVE = '1' AND SKU IN (${skuList})`;
+      const sqlSku = `SELECT ${fieldList} FROM business WHERE ${quoteIdentifier('ACTIVE')} = '1' AND ${quoteIdentifier('SKU')} IN (${skuList})`;
       console.log('ODBC SKU QUERY:', sqlSku);
       const skuResult = await connection.query(sqlSku);
       results = results.concat(safeJson(skuResult));
@@ -70,9 +78,9 @@ router.post('/products/batch-search', async (req, res) => {
       // Unieke LIKE-termen
       const likeTerms = Array.from(new Set(textTerms));
       let likeClauses = [];
-      likeClauses.push(...likeTerms.map(s => `SUPPLIER_REFERENCE LIKE '%${s.replace(/'/g, "''")}%'`));
-      likeClauses.push(...likeTerms.map(n => `PRODUCT_NAME_H1.nl_BE LIKE '%${n.replace(/'/g, "''")}%'`));
-      const whereLike = ["ACTIVE = '1'", `(${likeClauses.join(' OR ')})`].join(' AND ');
+      likeClauses.push(...likeTerms.map(s => `${quoteIdentifier('SUPPLIER_REFERENCE')} LIKE '%${s.replace(/'/g, "''")}%'`));
+      likeClauses.push(...likeTerms.map(n => `${quoteIdentifier('PRODUCT_NAME_H1.nl_BE')} LIKE '%${n.replace(/'/g, "''")}%'`));
+      const whereLike = [`${quoteIdentifier('ACTIVE')} = '1'`, `(${likeClauses.join(' OR ')})`].join(' AND ');
       const sqlLike = `SELECT ${fieldList} FROM business WHERE ${whereLike}`;
       console.log('ODBC LIKE QUERY:', sqlLike);
       const likeResult = await connection.query(sqlLike);

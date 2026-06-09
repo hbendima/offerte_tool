@@ -2,6 +2,10 @@ const express = require('express');
 const odbc = require('odbc');
 const router = express.Router();
 
+const ODBC_DSN = process.env.ODBC_DSN || 'Elastic PRD';
+const ODBC_DATABASE = process.env.ODBC_DATABASE || 'de02157346244195ac7c0474dce38008';
+const ODBC_CONNECTION_STRING = `DSN=${ODBC_DSN};DATABASE=${ODBC_DATABASE};`;
+
 // Velden die je wilt ophalen
 const FIELDS = [
   "SKU",
@@ -22,6 +26,10 @@ const FIELDS = [
 
 const MAX_SKUS = 5;
 const CDC_COST = -5.45;
+
+function quoteIdentifier(identifier) {
+  return `"${String(identifier).replace(/"/g, '""')}"`;
+}
 
 // Helper om SKU te formatteren
 function formatSku(sku) {
@@ -54,7 +62,7 @@ router.post('/quotation', async (req, res) => {
 
     const skus = items.map(i => formatSku(i.sku));
     const amounts = Object.fromEntries(items.map(i => [formatSku(i.sku), i.amount]));
-    const fieldList = FIELDS.map(f => `"${f}"`).join(',');
+    const fieldList = FIELDS.map(quoteIdentifier).join(',');
     const skuList = skus.map(s => `'${s}'`).join(',');
     const sql = `
       SELECT ${fieldList}
@@ -63,7 +71,7 @@ router.post('/quotation', async (req, res) => {
     `;
     console.log("ODBC QUERY:", sql);
 
-    const connection = await odbc.connect('DSN=Elastic PRD');
+    const connection = await odbc.connect(ODBC_CONNECTION_STRING);
     const result = await connection.query(sql);
     await connection.close();
 
