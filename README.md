@@ -10,7 +10,7 @@ Hiermee kun je snel productdata ophalen, marges berekenen en resultaten tonen in
 De tool bestaat uit drie onderdelen die als aparte servers draaien:
 
 ### 1. **Python API Server (`product_api.py`)**
-- **Doel:** Haalt productinformatie, voorraad en UOM direct uit Elastic PRD via ODBC.
+- **Doel:** Haalt productinformatie, voorraad en UOM direct uit Elastic UAT via ODBC.
 - **Uitvoering:**  
   - **Maak en activeer een virtual environment (venv):**
     ```sh

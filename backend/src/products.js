@@ -2,7 +2,7 @@ const express = require('express');
 const odbc = require('odbc');
 const router = express.Router();
 
-const ODBC_DSN = process.env.ODBC_DSN || 'Elastic PRD';
+const ODBC_DSN = process.env.ODBC_DSN || 'Elastic UAT';
 const ODBC_DATABASE = process.env.ODBC_DATABASE || 'de02157346244195ac7c0474dce38008';
 const ODBC_CONNECTION_STRING = `DSN=${ODBC_DSN};DATABASE=${ODBC_DATABASE};`;
 

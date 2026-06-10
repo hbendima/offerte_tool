@@ -5,7 +5,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-DSN = 'Elastic PRD'
+DSN = 'Elastic UAT'
 DB = 'af18a173ef024c099dccaa12408ad127'
 FIELDS = [
     "SKU", "SUPPLIER_REFERENCE", "PRODUCT_NAME_H1.nl_BE", "PRICE", "DISCOUNT", "DISCOUNT_PCT_INT",

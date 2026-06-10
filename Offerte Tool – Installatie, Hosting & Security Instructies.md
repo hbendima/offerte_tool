@@ -22,8 +22,8 @@ Het is essentieel dat de tool alleen intern toegankelijk is en goed beveiligd wo
 - **Python 3.11+**
 - **Node.js 22.12.0 (LTS) of hoger**
 - **Git**
-- **ODBC-driver** voor Elastic PRD (voor Python API)
-- **Toegang tot Elastic PRD database**
+- **ODBC-driver** voor Elastic UAT (voor Python API)
+- **Toegang tot Elastic UAT database**
 - **Poorten openzetten**: standaard 5000 (API), 3001 (backend), 3000 (frontend)
 
 ---

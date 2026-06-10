@@ -1,5 +1,5 @@
 import pyodbc
-dsn = 'Elastic PRD'
+dsn = 'Elastic UAT'
 sku = '02067726'
 conn = pyodbc.connect(f'DSN={dsn}')
 cursor = conn.cursor()
