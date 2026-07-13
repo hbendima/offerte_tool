@@ -1,8 +1,7 @@
 #root {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  display: block;
   background: #232323;
 }
 
@@ -40,4 +39,72 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.quote-products-table {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.quote-products-table thead th {
+  background: #1b1e26;
+}
+
+.quote-products-table thead th:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.quote-products-table thead th:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.quote-products-table tbody td {
+  background: #1b1e26;
+  border-top: 1px solid #2c3240;
+  border-bottom: 1px solid #2c3240;
+}
+
+.quote-products-table tbody td:first-child {
+  border-left: 1px solid #2c3240;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.quote-products-table tbody td:last-child {
+  border-right: 1px solid #2c3240;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.quote-name-cell {
+  position: relative;
+}
+
+.quote-name-tooltip {
+  display: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% + 6px);
+  width: max-content;
+  min-width: 280px;
+  max-width: min(560px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #0f1420;
+  border: 1px solid #3a4155;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  z-index: 50;
+  white-space: normal;
+  font-size: 0.92rem;
+  line-height: 1.3;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.quote-name-cell:hover .quote-name-tooltip {
+  display: block;
 }

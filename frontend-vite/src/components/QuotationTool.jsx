@@ -8,7 +8,7 @@ const I18N = {
     fileName: "offerte", title: "OFFERTE", reference: "Referentie",
     deliveryAddress: "Afleveradres", invoiceAddress: "Factuuradres",
     document: "Document", date: "Datum", vatNumber: "Btw-nummer",
-    colRef: "Referentie", colProduct: "Product", colVat: "Btw-tarief",
+    colRef: "Referentie", colProduct: "Product", colVat: "Btw-tarief", colDelivery: "Levertijd",
     colUnit: "Stukprijs (excl. btw)", colQty: "Aantal", colLineTotal: "Totaal (excl. btw)",
     totalProducts: "Totaal producten", shipping: "Verzendkosten", freeShipping: "Gratis verzending",
     totalExcl: "Totaal (excl. btw)", vat: "BTW", total: "Totaal",
@@ -19,7 +19,7 @@ const I18N = {
     fileName: "devis", title: "DEVIS", reference: "Référence",
     deliveryAddress: "Adresse de livraison", invoiceAddress: "Adresse de facturation",
     document: "Document", date: "Date", vatNumber: "N° TVA",
-    colRef: "Référence", colProduct: "Produit", colVat: "Taux TVA",
+    colRef: "Référence", colProduct: "Produit", colVat: "Taux TVA", colDelivery: "Délai",
     colUnit: "Prix unit. (hors TVA)", colQty: "Quantité", colLineTotal: "Total (hors TVA)",
     totalProducts: "Total produits", shipping: "Frais de livraison", freeShipping: "Livraison gratuite",
     totalExcl: "Total (hors TVA)", vat: "TVA", total: "Total",
@@ -30,7 +30,7 @@ const I18N = {
     fileName: "quotation", title: "QUOTATION", reference: "Reference",
     deliveryAddress: "Delivery address", invoiceAddress: "Invoice address",
     document: "Document", date: "Date", vatNumber: "VAT number",
-    colRef: "Reference", colProduct: "Product", colVat: "VAT rate",
+    colRef: "Reference", colProduct: "Product", colVat: "VAT rate", colDelivery: "Lead time",
     colUnit: "Unit price (excl. VAT)", colQty: "Qty", colLineTotal: "Total (excl. VAT)",
     totalProducts: "Total products", shipping: "Shipping", freeShipping: "Free shipping",
     totalExcl: "Total (excl. VAT)", vat: "VAT", total: "Total",
@@ -122,6 +122,130 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     return num.toFixed(decimals);
   };
 
+  function toNumOrNull(v) {
+    if (v === undefined || v === null || v === "") return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function parseDateOrNull(v) {
+    if (!v) return null;
+    const d = new Date(v);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+
+  function startOfDay(d) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function addBusinessDays(date, days) {
+    const out = new Date(date);
+    let left = Math.max(0, Math.floor(Number(days) || 0));
+    while (left > 0) {
+      out.setDate(out.getDate() + 1);
+      const wd = out.getDay();
+      if (wd !== 0 && wd !== 6) left -= 1;
+    }
+    return out;
+  }
+
+  function diffCalendarDays(fromDate, toDate) {
+    const from = startOfDay(fromDate).getTime();
+    const to = startOfDay(toDate).getTime();
+    return Math.ceil((to - from) / (1000 * 60 * 60 * 24));
+  }
+
+  function fmtDateBE(date) {
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const yyyy = date.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  }
+
+  function backorderDateFromSchema(p) {
+    const today = startOfDay(new Date());
+    const normalizeDays = (v) => {
+      const n = toNumOrNull(v);
+      if (n === null || n <= 0) return null;
+      return Math.ceil(n);
+    };
+    const customerDays = normalizeDays(p.CustomerLeadTimeDays);
+    const theoreticalDays = normalizeDays(p.TheoreticalLeadTimeDays);
+    const avgErpDays = normalizeDays(p.AvgErpLeadTimeDays);
+    const lastActualDays = normalizeDays(p.LastActualLeadTimeDays);
+    const leadDays = customerDays ?? theoreticalDays ?? avgErpDays ?? lastActualDays;
+    const kliumDate = parseDateOrNull(p.KliumLeadTimeDate);
+
+    if (!kliumDate) {
+      if (leadDays === null) return null;
+      return addBusinessDays(today, leadDays);
+    }
+    if (leadDays === null) return kliumDate;
+    const kliumDiff = diffCalendarDays(today, kliumDate);
+    if (kliumDiff <= leadDays) return addBusinessDays(today, leadDays);
+    return kliumDate;
+  }
+
+  function deliveryInfo(p) {
+    const amount = Math.max(1, Math.floor(toNumOrNull(p.amount) ?? 1));
+    const stock = Math.max(0, Math.floor(toNumOrNull(p.Stock) ?? 0));
+    const inStock = Math.min(stock, amount);
+    const backOrder = Math.max(amount - stock, 0);
+    const boDate = backOrder > 0 ? backorderDateFromSchema(p) : null;
+    const boDateStr = boDate ? fmtDateBE(boDate) : null;
+
+    if (backOrder <= 0) {
+      return {
+        short: "Uit voorraad",
+        pdf: "Uit voorraad",
+        full: "Uit voorraad",
+        badge: { bg: "#173d20", fg: "#7ee08a", text: "Voorraad" },
+        inStockOnly: true,
+        backOrderDate: null,
+        amount,
+        stock,
+        inStock,
+        backOrder
+      };
+    }
+
+    if (inStock > 0) {
+      const compact = boDateStr
+        ? `${inStock} vrd + ${backOrder} best. (${boDateStr})`
+        : `${inStock} vrd + ${backOrder} best.`;
+      const full = boDateStr
+        ? `${inStock} uit voorraad, ${backOrder} op bestelling vanaf ${boDateStr}`
+        : `${inStock} uit voorraad, ${backOrder} op bestelling`;
+      return {
+        short: compact,
+        pdf: full,
+        full,
+        badge: { bg: "#3d3413", fg: "#ffd166", text: "Split" },
+        inStockOnly: false,
+        backOrderDate: boDate,
+        amount,
+        stock,
+        inStock,
+        backOrder
+      };
+    }
+
+    const compact = boDateStr ? `Op best. (${boDateStr})` : "Op bestelling";
+    const full = boDateStr ? `Op bestelling: bezorgd vanaf ${boDateStr}` : "Op bestelling";
+    return {
+      short: compact,
+      pdf: full,
+      full,
+      badge: { bg: "#3d1717", fg: "#ffb4b4", text: "Bestelling" },
+      inStockOnly: false,
+      backOrderDate: boDate,
+      amount,
+      stock,
+      inStock,
+      backOrder
+    };
+  }
+
   // BTW-regeling bepalen op basis van (leverings)land + btw-nummer van de klant.
   // - BE (of onbekend land = binnenlands): 21% btw
   // - EU niet-BE MET btw-nr: intracommunautair, 0% (btw verlegd)
@@ -199,12 +323,37 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   const [discountNote, setDiscountNote] = useState("");
   const [docLang, setDocLang] = useState("nl"); // taal voor PDF/Excel: 'nl' | 'fr' | 'en'
 
+  function getSafeTooltipPosition(clientX, clientY, opts = {}) {
+    const margin = 12;
+    const offset = opts.offset ?? 14;
+    const tipWidth = opts.width ?? 360;
+    const tipHeight = opts.height ?? 340;
+    const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
+    const vh = typeof window !== "undefined" ? window.innerHeight : 900;
+
+    let x = clientX + offset;
+    let y = clientY + offset;
+
+    if (x + tipWidth > vw - margin) {
+      x = Math.max(margin, vw - tipWidth - margin);
+    }
+    if (y + tipHeight > vh - margin) {
+      y = clientY - tipHeight - offset;
+    }
+    if (y < margin) {
+      y = margin;
+    }
+
+    return { x, y };
+  }
+
   // COLUMNS
   const columns = [
     { key: "SKU", label: "SKU" },
     { key: "amount", label: "Aantal" },
     { key: "SUPPLIER_REFERENCE", label: "SupRef" },
     { key: "Name", label: "Naam" },
+    { key: "LeadTimeLabel", label: "Levertijd" },
     { key: "Price", label: "Prijs (€)" },
     { key: "Discount", label: "Korting (€)" },
     { key: "Discount%", label: "Korting (%)" },
@@ -215,6 +364,23 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     { key: "mpp", label: "M%P" },
     { key: "givenDiscount", label: "Geg. korting (%)" }
   ];
+
+  const colWidths = {
+    SKU: "6%",
+    amount: "7%",
+    SUPPLIER_REFERENCE: "8%",
+    Name: "20%",
+    LeadTimeLabel: "9%",
+    Price: "5%",
+    Discount: "5%",
+    "Discount%": "5%",
+    Cost: "5%",
+    "M€": "5%",
+    "M%": "5%",
+    proposal: "8%",
+    mpp: "4%",
+    givenDiscount: "4%"
+  };
 
   // FETCH RECENT OFFERTES
   useEffect(() => {
@@ -787,6 +953,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
 
   // EXTRA INFO
   function extraInfo(p) {
+    const d = deliveryInfo(p);
     return (
       <div>
         <div><b>Voor Sale:</b> {p["Voor Sale"]}</div>
@@ -794,6 +961,9 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
         <div><b>Op NL:</b> {p["Op NL"]}</div>
         <div><b>Op COM:</b> {p["Op COM"]}</div>
         <div><b>Stock:</b> {(p.Stock !== undefined && p.Stock !== null) ? p.Stock : '-'}</div>
+        <div><b>Levertijd:</b> {d.full}</div>
+        <div><b>Gevraagd:</b> {d.amount} · <b>Voorraad:</b> {d.stock} · <b>Backorder:</b> {d.backOrder}</div>
+        {!d.inStockOnly && <div><b>ETA datum:</b> {d.backOrderDate ? fmtDateBE(d.backOrderDate) : '-'}</div>}
         <div><b>MSQ:</b> {(p.MSQ !== undefined && p.MSQ !== null) ? p.MSQ : '-'}</div>
         <div><b>Ecotax:</b> {fmt(p.Ecotax)}</div>
       </div>
@@ -855,10 +1025,11 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     const td = (txt, align) => ({ text: txt, fontSize: 9, alignment: align || "left", margin: [2, 4, 2, 4] });
 
     const productBody = [
-      [th(t.colRef), th(t.colProduct), th(t.colVat, "center"), th(t.colUnit, "right"), th(t.colQty, "center"), th(t.colLineTotal, "right")],
+      [th(t.colRef), th(t.colProduct), th(t.colDelivery), th(t.colVat, "center"), th(t.colUnit, "right"), th(t.colQty, "center"), th(t.colLineTotal, "right")],
       ...products.map(p => [
         td(p.SKU),
         td(prodName(p)),
+        td(deliveryInfo(p).pdf),
         td(`${vat.pct} %`, "center"),
         td(euro(p.proposal), "right"),
         td(String(p.amount), "center"),
@@ -930,7 +1101,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
           layout: infoLayout, margin: [0, 0, 0, 22]
         },
         {
-          table: { headerRows: 1, widths: ["auto", "*", "auto", "auto", "auto", "auto"], body: productBody },
+          table: { headerRows: 1, widths: ["auto", "*", "auto", "auto", "auto", "auto", "auto"], body: productBody },
           layout: tableLayout, margin: [0, 0, 0, 18]
         },
         {
@@ -1010,7 +1181,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   const customerBtw = customerExcl * vat.pct / 100;
   const customerIncl = customerExcl + customerBtw;
   return (
-    <div style={{padding: 32, color: "white"}}>
+    <div style={{padding: 24, color: "white", width: "100%", maxWidth: 1700, margin: "0 auto", boxSizing: "border-box"}}>
       <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:12}}>
         <h1 style={{margin:0}}>Offerte Tool</h1>
         <button
@@ -1339,15 +1510,20 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
       {/* Offerte producten en totalen */}
       {products.length > 0 && (
         <>
-          <div style={{overflowX: "auto", maxWidth: "100vw"}}>
-            <table style={{width:"100%",background:"#222",borderRadius:10, minWidth: 900}}>
+          <div style={{width: "100%"}}>
+            <table className="quote-products-table" style={{width:"100%",background:"#161b25",borderRadius:10, tableLayout:"fixed", border:"1px solid #2c3240"}}>
+            <colgroup>
+              {columns.map(col => (
+                <col key={col.key} style={{ width: colWidths[col.key] || "auto" }} />
+              ))}
+              <col style={{ width: "76px" }} />
+            </colgroup>
             <thead>
               <tr>
                 {columns.map(col => (
-                  <th key={col.key} style={{padding:"10px",color:"#fff"}}>{col.label}</th>
+                  <th key={col.key} style={{padding:"8px 6px",color:"#fff",fontSize:"0.9rem",whiteSpace:"normal",textAlign:["Price","Discount","Discount%","Cost","M€","M%","mpp","givenDiscount"].includes(col.key)?"right":"left",borderTop:"1px solid #2c3240",borderBottom:"1px solid #2c3240"}}>{col.label}</th>
                 ))}
-                <th></th>
-                <th></th>
+                <th style={{borderTop:"1px solid #2c3240",borderBottom:"1px solid #2c3240"}}></th>
               </tr>
             </thead>
             <tbody>
@@ -1356,14 +1532,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                   {columns.map(col => {
                     if (col.key === "amount") {
                       return (
-                        <td key={col.key} style={{padding:"8px",color:"#eee", display: "flex", alignItems: "center", gap: 6}}>
-                          <button
-                            style={{padding: "2px 8px", borderRadius: 4, background: "#333", color: "#fff", border: "none", fontWeight: "bold", fontSize: "1.1em", cursor: "pointer"}}
-                            onClick={() => {
-                              const newAmount = Math.max(1, p.amount - 1);
-                              setProducts(products => products.map((prod, idx) => idx === i ? { ...prod, amount: newAmount } : prod));
-                            }}
-                          >-</button>
+                        <td key={col.key} style={{padding:"6px",color:"#eee", textAlign:"center"}}>
                           <input
                             type="number"
                             min={1}
@@ -1378,19 +1547,12 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                             }}
                             style={{width: 56, textAlign: "center", padding: "4px 6px", borderRadius: 4, border: "1px solid #aaa"}}
                           />
-                          <button
-                            style={{padding: "2px 8px", borderRadius: 4, background: "#333", color: "#fff", border: "none", fontWeight: "bold", fontSize: "1.1em", cursor: "pointer"}}
-                            onClick={() => {
-                              const newAmount = p.amount + 1;
-                              setProducts(products => products.map((prod, idx) => idx === i ? { ...prod, amount: newAmount } : prod));
-                            }}
-                          >+</button>
                         </td>
                       );
                     }
                     if (col.key === "proposal") {
                       return (
-                        <td key={col.key} style={{padding:"8px",color:"#eee", minWidth: "100px", maxWidth: "140px"}}>
+                        <td key={col.key} style={{padding:"5px",color:"#eee", textAlign:"right"}}>
                           <input
                             ref={el => proposalRefs.current[p.SKU] = el}
                             type="number"
@@ -1399,15 +1561,26 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                             onChange={e => handleProposalInput(p.SKU, e.target.value)}
                             onBlur={e => confirmProposal(p.SKU, e.target.value)}
                             onKeyDown={e => handleProposalKeyDown(e, p.SKU)}
-                            style={{width:100,padding:"6px 8px",borderRadius:4,border:"1px solid #aaa"}}
+                            style={{width:86,padding:"4px 6px",borderRadius:4,border:"1px solid #aaa",fontSize:"0.9em"}}
                           />
                         </td>
                       );
                     }
                     if (col.key === "Price") {
                       return (
-                        <td key={col.key} style={{padding:"8px",color:"#eee", minWidth: "100px", maxWidth: "140px", textAlign: "right", whiteSpace: "nowrap"}}>
+                        <td key={col.key} style={{padding:"5px",color:"#eee", textAlign: "right", whiteSpace: "nowrap", fontVariantNumeric:"tabular-nums", fontSize:"0.92em"}}>
                           {typeof p[col.key] === "number" ? `€ ${fmt(p[col.key])}` : p[col.key]}
+                        </td>
+                      );
+                    }
+                    if (col.key === "LeadTimeLabel") {
+                      const d = deliveryInfo(p);
+                      return (
+                        <td key={col.key} style={{padding:"6px",color:"#eee", fontSize: "0.82em", lineHeight: 1.2, verticalAlign:"top"}}>
+                          <div style={{display:'flex', flexDirection:'column', gap:4}}>
+                            <span style={{display:'inline-block', alignSelf:'flex-start', background:d.badge.bg, color:d.badge.fg, border:'1px solid #555', borderRadius:12, padding:'1px 8px', fontSize:'0.78em', fontWeight:700}}>{d.badge.text}</span>
+                            <span>{d.short}</span>
+                          </div>
                         </td>
                       );
                     }
@@ -1416,7 +1589,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                         ? Number(proposalInputBuffer[p.SKU])
                         : p.proposal;
                       let mpp = (proposalVal && p.Cost) ? ((proposalVal - p.Cost) / proposalVal) * 100 : 0;
-                      return <td key={col.key} style={{padding:"8px",color:"#eee"}}>{fmt(mpp)}%</td>;
+                      return <td key={col.key} style={{padding:"5px",color:"#eee", textAlign:"right", whiteSpace:"nowrap", fontVariantNumeric:"tabular-nums", fontSize:"0.92em"}}>{fmt(mpp)}%</td>;
                     }
                     if (col.key === "givenDiscount") {
                       let proposalVal = proposalInputBuffer[p.SKU] !== undefined && !isNaN(Number(proposalInputBuffer[p.SKU]))
@@ -1425,31 +1598,78 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                       const price = Number(p.Price) || 0;
                       const given = price > 0 ? ((price - Number(proposalVal)) / price) * 100 : 0;
                       const color = given > 0.001 ? "#ffb74d" : given < -0.001 ? "#81c784" : "#eee";
-                      return <td key={col.key} style={{padding:"8px", color, fontWeight: Math.abs(given) > 0.001 ? 700 : 400, whiteSpace:"nowrap"}}>{fmt(given)}%</td>;
+                      return <td key={col.key} style={{padding:"5px", color, fontWeight: Math.abs(given) > 0.001 ? 700 : 400, whiteSpace:"nowrap", textAlign:"right", fontVariantNumeric:"tabular-nums", fontSize:"0.92em"}}>{fmt(given)}%</td>;
+                    }
+                    if (col.key === "Name") {
+                      return (
+                        <td key={col.key} style={{padding:"5px",color:"#eee", fontSize:"0.92em", lineHeight:1.2, verticalAlign:"top"}}>
+                          <div style={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            overflowWrap: "anywhere"
+                          }} className="quote-name-cell" title={p[col.key] || ""}>
+                            {p[col.key]}
+                            <span className="quote-name-tooltip">{p[col.key] || ""}</span>
+                          </div>
+                        </td>
+                      );
+                    }
+                    if (["Discount","Discount%","Cost","M€","M%"].includes(col.key)) {
+                      const val = typeof p[col.key] === "number" ? fmt(p[col.key]) : p[col.key];
+                      return (
+                        <td key={col.key} style={{padding:"5px",color:"#eee", textAlign:"right", whiteSpace:"nowrap", fontVariantNumeric:"tabular-nums", fontSize:"0.92em"}}>
+                          {val}
+                        </td>
+                      );
                     }
                     return (
-                      <td key={col.key} style={{padding:"8px",color:"#eee"}}>
+                      <td key={col.key} style={{padding:"6px",color:"#eee", fontSize:"0.9em"}}>
                         {typeof p[col.key] === "number"
                           ? fmt(p[col.key])
                           : p[col.key]}
                       </td>
                     );
                   })}
-                  <td style={{ textAlign: "center", position: "relative" }}>
-                    <span
-                      style={{
-                        cursor: "pointer",
-                        fontSize: "1.2em",
-                        marginLeft: 4
-                      }}
-                      onMouseEnter={e => {
-                        setHoveredRow(i);
-                        setTooltipPosition({ x: e.clientX + 12, y: e.clientY + 24 });
-                      }}
-                      onMouseLeave={() => setHoveredRow(null)}
-                    >
-                      ℹ️
-                    </span>
+                  <td style={{ textAlign: "center", position: "relative", padding:"4px", width:76 }}>
+                    <div style={{display:"flex", alignItems:"center", justifyContent:"center", gap:8}}>
+                      <span
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "1.2em",
+                          marginLeft: 0
+                        }}
+                        onMouseEnter={e => {
+                          setHoveredRow(i);
+                          setTooltipPosition(getSafeTooltipPosition(e.clientX, e.clientY, { width: 360, height: 340 }));
+                        }}
+                        onMouseLeave={() => setHoveredRow(null)}
+                        title="Info"
+                      >
+                        ℹ️
+                      </span>
+                      <button
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "#e53935",
+                          fontSize: "1.55em",
+                          lineHeight: 1,
+                          width: 28,
+                          height: 28,
+                          cursor: "pointer",
+                          padding: 0
+                        }}
+                        title="Verwijder regel"
+                        onClick={() => {
+                          setProducts(products => products.filter((_, idx) => idx !== i));
+                        }}
+                      >
+                        &#10060;
+                      </button>
+                    </div>
                     {hoveredRow === i && (
                       <div
                         style={{
@@ -1475,23 +1695,6 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                       </div>
                     )}
                   </td>
-                  <td style={{ textAlign: "center" }}>
-                    <button
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#e53935",
-                        fontSize: "1.3em",
-                        cursor: "pointer"
-                      }}
-                      title="Verwijder regel"
-                      onClick={() => {
-                        setProducts(products => products.filter((_, idx) => idx !== i));
-                      }}
-                    >
-                      &#10060;
-                    </button>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -1499,9 +1702,9 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
           </div>
           {/* Totalen/offerte */}
           <h3 style={{ marginTop: 36 }}>Totalen/offerte</h3>
-          <div style={{display:'flex', gap:24, flexWrap:'wrap', margin:'0 0 24px'}}>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(320px, 1fr))', gap:24, margin:'0 0 24px', width:'100%'}}>
             {/* Globale korting */}
-            <div style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:320}}>
+            <div style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:0}}>
               <div style={{fontWeight:700, marginBottom:10}}>Globale korting</div>
               <div style={{display:'flex', gap:8, alignItems:'center', flexWrap:'wrap'}}>
                 <input type="number" min={0} step="0.5" value={discountValue}
@@ -1522,7 +1725,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
               {discountNote && <div style={{color:'#e57373', fontSize:'0.85em', marginTop:6}}>{discountNote}</div>}
             </div>
             {/* Klanttotaal met btw */}
-            <div style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:300}}>
+            <div style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:0}}>
               <div style={{fontWeight:700, marginBottom:10}}>Offertetotaal (klant)</div>
               <div style={{display:'flex', justifyContent:'space-between', padding:'4px 0'}}><span>Totaal excl. btw</span><b>€ {fmt(customerExcl)}</b></div>
               <div style={{display:'flex', justifyContent:'space-between', padding:'4px 0'}}><span>BTW ({vat.pct}%)</span><b>€ {fmt(customerBtw)}</b></div>
@@ -1530,14 +1733,14 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
               <div style={{fontSize:'0.85em', color: vat.intracommunautair ? '#2e7d32' : '#666', marginTop:8}}>{vat.label}</div>
             </div>
           </div>
-          <div style={{ display: "flex", gap: 32, alignItems: "flex-start", marginTop: 0 }}>
-            <div style={{ flex: 1, display: "flex", alignItems: "flex-start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(440px, 1fr))", gap: 24, alignItems: "stretch", marginTop: 0, width: "100%" }}>
+            <div style={{ minWidth: 0, display: "flex", alignItems: "stretch" }}>
               <div style={{
                 background: "#f6f8fa",
                 boxShadow: "0 4px 18px rgba(0,0,0,0.13)",
                 borderRadius: 24,
                 padding: 32,
-                maxWidth: 520,
+                width: "100%",
                 border: "1px solid #e3e8ee",
                 fontSize: "1.12rem",
                 color: "#222",
@@ -1546,28 +1749,28 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                 gridTemplateColumns: "1fr 1fr",
                 gap: "0px 18px"
               }}>
-                <div style={{ gridColumn: "1 / span 2", marginBottom: 18, display: "flex", gap: "32px", justifyContent: "center", width: "100%" }}>
-                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 32px", minWidth: "220px", textAlign: "center", boxSizing: "border-box" }}>
+                <div style={{ gridColumn: "1 / span 2", marginBottom: 18, display: "flex", gap: "16px", justifyContent: "center", width: "100%", flexWrap: "wrap" }}>
+                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 24px", minWidth: "200px", flex: 1, textAlign: "center", boxSizing: "border-box" }}>
                     <div style={{ fontWeight: 700, fontSize: "1.25rem", marginBottom: 2 }}>Current Price</div>
                     <div style={{ fontWeight: 700, fontSize: "2.1rem", color: "#222" }}>
                       € {fmt(totals.currentPrice)}
                     </div>
                   </div>
-                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 32px", minWidth: "220px", textAlign: "center", boxSizing: "border-box" }}>
+                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 24px", minWidth: "200px", flex: 1, textAlign: "center", boxSizing: "border-box" }}>
                     <div style={{ fontWeight: 700, fontSize: "1.25rem", marginBottom: 2 }}>New Price</div>
                     <div style={{ fontWeight: 700, fontSize: "2.1rem", color: "#222" }}>
                       € {fmt(totals.newPrice)}
                     </div>
                   </div>
                 </div>
-                <div style={{ gridColumn: "1 / span 2", marginBottom: 18, display: "flex", gap: "32px", justifyContent: "center", width: "100%" }}>
-                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 32px", minWidth: "220px", textAlign: "center", boxSizing: "border-box" }}>
+                <div style={{ gridColumn: "1 / span 2", marginBottom: 18, display: "flex", gap: "16px", justifyContent: "center", width: "100%", flexWrap: "wrap" }}>
+                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 24px", minWidth: "200px", flex: 1, textAlign: "center", boxSizing: "border-box" }}>
                     <div style={{ fontWeight: 700, fontSize: "1.25rem", marginBottom: 2 }}>Current Profit</div>
                     <div style={{ fontWeight: 700, fontSize: "2.1rem", color: "#222" }}>
                       € {fmt(totals.currentProfit)}
                     </div>
                   </div>
-                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 32px", minWidth: "220px", textAlign: "center", boxSizing: "border-box" }}>
+                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 24px", minWidth: "200px", flex: 1, textAlign: "center", boxSizing: "border-box" }}>
                     <div style={{ fontWeight: 700, fontSize: "1.25rem", marginBottom: 2 }}>New Profit</div>
                     <div style={{ fontWeight: 700, fontSize: "2.1rem", color: "#222" }}>
                       € {fmt(totals.newProfit)}
@@ -1613,7 +1816,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                             if (cdcTooltipTimer) clearTimeout(cdcTooltipTimer);
                             setHoveredRow("cdc-uitleg");
                             const rect = e.target.getBoundingClientRect();
-                            setTooltipPosition({ x: rect.right + 10, y: rect.top });
+                            setTooltipPosition(getSafeTooltipPosition(rect.right, rect.top, { width: 420, height: 340, offset: 10 }));
                           }}
                           onMouseLeave={e => {
                             const timer = setTimeout(() => setHoveredRow(null), 200);
@@ -1696,8 +1899,8 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                 </div>
               </div>
             </div>
-            <div style={{ flex: 1, minWidth: 320 }}>
-              <h3 style={{ margin: 0, padding: 0, color: '#222' }}>  Klantgegevens</h3>
+            <div style={{ minWidth: 0 }}>
+              <h3 style={{ margin: 0, padding: 0, color: '#222' }}>Klantgegevens</h3>
               <form style={{ background: "#ffffffff", boxShadow: "0 2px 10px rgba(0,0,0,0.10)", borderRadius: 16, padding: 26, border: "1px solid #eee", fontSize: "1.06rem", color: "#222", display: "flex", flexDirection: "column", justifyContent: "flex-start", marginTop: 0 }}>
                 <div style={{ fontWeight: 700, color: "#20264b", marginBottom: 10, fontSize: "1.05rem" }}>Factuurgegevens</div>
                 <div style={{ marginBottom: 12 }}>
@@ -1712,7 +1915,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                   <label><b>BTW-nummer:</b></label><br />
                   <input type="text" value={customerData.btw} onChange={e => setCustomerData({ ...customerData, btw: e.target.value })} placeholder="bv. BE0123456789" style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />
                 </div>
-                <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                <div style={{ display: "flex", gap: 12, marginBottom: 12, flexWrap: "wrap" }}>
                   <div style={{ flex: 3 }}>
                     <label><b>Straat:</b></label><br />
                     <input type="text" value={customerData.straat} onChange={e => setCustomerData({ ...customerData, straat: e.target.value })} style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />
@@ -1726,7 +1929,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                     <input type="text" value={customerData.bus} onChange={e => setCustomerData({ ...customerData, bus: e.target.value })} style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />
                   </div>
                 </div>
-                <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                <div style={{ display: "flex", gap: 12, marginBottom: 12, flexWrap: "wrap" }}>
                   <div style={{ flex: 1 }}>
                     <label><b>Postcode:</b></label><br />
                     <input type="text" value={customerData.postcode} onChange={e => setCustomerData({ ...customerData, postcode: e.target.value })} style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />
@@ -1774,7 +1977,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                       <label><b>Bedrijf:</b></label><br />
                       <input type="text" value={deliveryData.bedrijf} onChange={e => setDeliveryData({ ...deliveryData, bedrijf: e.target.value })} style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />
                     </div>
-                    <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                    <div style={{ display: "flex", gap: 12, marginBottom: 12, flexWrap: "wrap" }}>
                       <div style={{ flex: 3 }}>
                         <label><b>Straat:</b></label><br />
                         <input type="text" value={deliveryData.straat} onChange={e => setDeliveryData({ ...deliveryData, straat: e.target.value })} style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />
@@ -1788,7 +1991,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                         <input type="text" value={deliveryData.bus} onChange={e => setDeliveryData({ ...deliveryData, bus: e.target.value })} style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />
                       </div>
                     </div>
-                    <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                    <div style={{ display: "flex", gap: 12, marginBottom: 12, flexWrap: "wrap" }}>
                       <div style={{ flex: 1 }}>
                         <label><b>Postcode:</b></label><br />
                         <input type="text" value={deliveryData.postcode} onChange={e => setDeliveryData({ ...deliveryData, postcode: e.target.value })} style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />

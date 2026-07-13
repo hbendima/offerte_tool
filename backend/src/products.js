@@ -11,6 +11,11 @@ const FIELDS = [
   "SKU",
   "SUPPLIER_REFERENCE",
   "PRODUCT_NAME_H1.nl_BE",
+  "LEAD_TIME.KLIUM_LEAD_TIME_DATE",
+  "LEAD_TIME.CUSTOMER_LEAD_TIME_DAYS",
+  "LEAD_TIME.AVG_ERP_LEAD_TIME_DAYS",
+  "LEAD_TIME.THEORETICAL_LEAD_TIME_DAYS",
+  "LEAD_TIME.LAST_ACTUAL_LEAD_TIME_DAYS",
   "PRICE",
   "DISCOUNT",
   "DISCOUNT_PCT_INT",
@@ -48,8 +53,104 @@ function safeJson(obj) {
   return obj;
 }
 
+function toNumberOrNull(value) {
+  if (value === undefined || value === null || value === '') return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+function toDateOrNull(value) {
+  if (!value) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function startOfDay(d) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function addBusinessDays(date, days) {
+  const out = new Date(date);
+  let left = Math.max(0, Math.floor(days));
+  while (left > 0) {
+    out.setDate(out.getDate() + 1);
+    const wd = out.getDay();
+    if (wd !== 0 && wd !== 6) left -= 1;
+  }
+  return out;
+}
+
+function diffCalendarDays(fromDate, toDate) {
+  const from = startOfDay(fromDate).getTime();
+  const to = startOfDay(toDate).getTime();
+  return Math.ceil((to - from) / (1000 * 60 * 60 * 24));
+}
+
+function formatDateBE(date) {
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const y = date.getFullYear();
+  return `${d}/${m}/${y}`;
+}
+
+function computeLeadTime(product, stockValue) {
+  const stock = toNumberOrNull(stockValue) ?? 0;
+  const customerDays = toNumberOrNull(product["LEAD_TIME.CUSTOMER_LEAD_TIME_DAYS"]);
+  const kliumDate = toDateOrNull(product["LEAD_TIME.KLIUM_LEAD_TIME_DATE"]);
+  const today = startOfDay(new Date());
+
+  let leadDate = null;
+  let source = 'unknown';
+
+  if (!kliumDate) {
+    if (stock > 0) {
+      leadDate = today;
+      source = 'in_stock_no_klium_date';
+    } else if (customerDays !== null) {
+      leadDate = addBusinessDays(today, customerDays);
+      source = 'customer_days_no_klium_date';
+    }
+  } else if (stock > 0) {
+    leadDate = today;
+    source = 'in_stock';
+  } else {
+    const kliumDiff = diffCalendarDays(today, kliumDate);
+    if (customerDays !== null && kliumDiff <= customerDays) {
+      leadDate = addBusinessDays(today, customerDays);
+      source = 'customer_days_guard';
+    } else {
+      leadDate = kliumDate;
+      source = 'klium_date';
+    }
+  }
+
+  if (!leadDate) {
+    return {
+      leadDate: null,
+      leadInt: null,
+      label: '-',
+      source,
+      customerDays
+    };
+  }
+
+  const leadInt = Math.max(0, diffCalendarDays(today, leadDate));
+  const dateLabel = formatDateBE(leadDate);
+  let label = `Op bestelling: bezorgd vanaf ${dateLabel}`;
+  if (leadInt === 0 || stock > 0) label = `Uit voorraad: leverbaar vanaf ${dateLabel}`;
+
+  return {
+    leadDate,
+    leadInt,
+    label,
+    source,
+    customerDays
+  };
+}
+
 // Mapping macro/Excel veldnamen
 function mapProductFields(p, extra = {}) {
+  const lead = computeLeadTime(p, extra.Stock);
   return {
     SKU: p.SKU,
     SUPPLIER_REFERENCE: p.SUPPLIER_REFERENCE,
@@ -70,7 +171,16 @@ function mapProductFields(p, extra = {}) {
     "Op COM": p.VISIBILITY_COM == "1" ? "Yes" : "No",
     Stock: extra.Stock ?? "",
     MSQ: extra.MSQ ?? "",
-    UOM: extra.UOM ?? ""
+    UOM: extra.UOM ?? "",
+    KliumLeadTimeDate: p["LEAD_TIME.KLIUM_LEAD_TIME_DATE"] ?? "",
+    CustomerLeadTimeDays: p["LEAD_TIME.CUSTOMER_LEAD_TIME_DAYS"] ?? "",
+    AvgErpLeadTimeDays: p["LEAD_TIME.AVG_ERP_LEAD_TIME_DAYS"] ?? "",
+    TheoreticalLeadTimeDays: p["LEAD_TIME.THEORETICAL_LEAD_TIME_DAYS"] ?? "",
+    LastActualLeadTimeDays: p["LEAD_TIME.LAST_ACTUAL_LEAD_TIME_DAYS"] ?? "",
+    LeadTimeDate: lead.leadDate ? lead.leadDate.toISOString().slice(0, 10) : "",
+    LeadTimeInt: lead.leadInt,
+    LeadTimeLabel: lead.label,
+    LeadTimeSource: lead.source
   };
 }
 
