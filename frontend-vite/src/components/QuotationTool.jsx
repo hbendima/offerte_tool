@@ -1191,18 +1191,30 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
           layout: infoLayout, margin: [0, 0, 0, 22]
         },
         {
-          table: { headerRows: 1, widths: [52, "*", 38, 62, 30, 68], body: productBody },
+          table: {
+            headerRows: 1,
+            widths: [52, "*", 38, 62, 30, 68],
+            body: productBody,
+            dontBreakRows: true,
+            keepWithHeaderRows: 1
+          },
           layout: tableLayout, margin: [0, 0, 0, 18]
         },
         {
           columns: [
-            { width: "*", text: "" },
+            {
+              width: "*",
+              text: vat.intracommunautair ? t.intracom : "",
+              italics: true,
+              color: "#2e7d32",
+              fontSize: 9,
+              margin: [0, 10, 0, 0]
+            },
             { width: "auto", table: { body: totalsRows }, layout: "noBorders" }
-          ]
-        },
-        vat.intracommunautair
-          ? { text: t.intracom, italics: true, color: "#2e7d32", fontSize: 9, margin: [0, 16, 0, 0] }
-          : { text: "" }
+          ],
+          columnGap: 16,
+          unbreakable: true
+        }
       ],
       images: { logo: logoBase64 },
       defaultStyle: { fontSize: 10, color: "#222" },
@@ -1587,12 +1599,12 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
           </select>
         </span>
       </div>
-      {hasFetchedProducts && missingSkus.length > 0 && (
+      {hasFetchedProducts && !loading && missingSkus.length > 0 && (
         <div style={{color: "#e53935", fontWeight: 600, margin: "18px 0"}}>
           Niet gevonden: {missingSkus.join(", ")}. Controleer je invoer.
         </div>
       )}
-      {hasFetchedProducts && products.length === 0 && (
+      {hasFetchedProducts && !loading && products.length === 0 && (
         <div style={{color: "#e53935", fontWeight: 600, margin: "18px 0"}}>
           Geen producten gevonden voor de opgegeven SKU(s). Controleer je invoer.
         </div>

@@ -2848,5 +2848,170 @@
         "prijs": 334.21
       }
     ]
+  },
+  {
+    "id": 75,
+    "customer": "Siba Sahabi",
+    "total": 6332.26,
+    "date": "2026-07-13",
+    "bedrijf": "Siba Sahabi",
+    "btw": "NL002450491B59",
+    "adres": "Nieuwe Teertuinen 17 bus R",
+    "postcode": "1013 LV",
+    "gemeente": "Amsterdam",
+    "land": "NL",
+    "email": "info@sibasahabi.com",
+    "producten": [
+      {
+        "sku": "03035204",
+        "naam": "FESTOOL Box 50x50x68/10 inzetbakje (10 st.) - 204858",
+        "aantal": 2,
+        "prijs": 12.35
+      },
+      {
+        "sku": "41969606",
+        "naam": "FESTOOL FSZ 120 schroefklem voor FS/2, FS/2-KP, FSK, MFT (2 st.) - 489570",
+        "aantal": 2,
+        "prijs": 35.37
+      },
+      {
+        "sku": "47995189",
+        "naam": "FESTOOL FS-HZ 160 snelspanklem - 491594",
+        "aantal": 6,
+        "prijs": 45.95
+      },
+      {
+        "sku": "03056246",
+        "naam": "FESTOOL STM 1800 mobiele zaag- en werktafel - 205183",
+        "aantal": 1,
+        "prijs": 1361.82
+      },
+      {
+        "sku": "02341576",
+        "naam": "FESTOOL 491513 stofkap",
+        "aantal": 1,
+        "prijs": 13.88
+      },
+      {
+        "sku": "08093828",
+        "naam": "FESTOOL TSV 60 KEBQ-PLUS-FS invalcirkelzaag 168mm 1500W met voorritser in SYS3 M 437 - 577743",
+        "aantal": 1,
+        "prijs": 953.25
+      },
+      {
+        "sku": "03250350",
+        "naam": "FESTOOL HW 168x1,8x20 W28 cirkelzaagblad WOOD UNIVERSAL - 205764",
+        "aantal": 1,
+        "prijs": 34.88
+      },
+      {
+        "sku": "08115491",
+        "naam": "FESTOOL CTM 26 EI Mobiele stofzuiger CLEANTEC 1200W M-klasse - 577918",
+        "aantal": 1,
+        "prijs": 803.91
+      },
+      {
+        "sku": "03270763",
+        "naam": "FESTOOL MFT-HZ 80 snelspanklem voor mobiele werkplaats MW 1000 en MFT/3 - 577132",
+        "aantal": 4,
+        "prijs": 36.2
+      },
+      {
+        "sku": "03222476",
+        "naam": "FESTOOL RS-ST D 27/36-PLUS standaard reinigingsset voor alle CT's in SYS3 M 137 - 577257",
+        "aantal": 1,
+        "prijs": 75.04
+      },
+      {
+        "sku": "03250353",
+        "naam": "FESTOOL HW 168x1,8x20 WD42 cirkelzaagblad WOOD fijn CUT - 205765",
+        "aantal": 1,
+        "prijs": 44.46
+      },
+      {
+        "sku": "03076896",
+        "naam": "FESTOOL SYS-STF-D225 systainer³ - 576786",
+        "aantal": 1,
+        "prijs": 52.73
+      },
+      {
+        "sku": "03240870",
+        "naam": "FESTOOL FS 1400/2-KP geleiderail 1,4m met kleefpad - 577043",
+        "aantal": 2,
+        "prijs": 127.6
+      },
+      {
+        "sku": "03222438",
+        "naam": "FESTOOL D 27/32X3,5M-AS/CTR stofzuigslang - 577158",
+        "aantal": 1,
+        "prijs": 142.93
+      },
+      {
+        "sku": "03031270",
+        "naam": "FESTOOL ETS EC 150/5 EQ-PLUS excenterschuurmachine 400W in systainer SYS3 M 187 - 576329",
+        "aantal": 1,
+        "prijs": 587.96
+      },
+      {
+        "sku": "02339676",
+        "naam": "FESTOOL FS 800/2 geleiderail 0,8m - 491499",
+        "aantal": 1,
+        "prijs": 75.37
+      },
+      {
+        "sku": "02049295",
+        "naam": "FESTOOL SC FIS-CT 26/5 SELFCLEAN filterzak (5 st.) - 496187",
+        "aantal": 1,
+        "prijs": 40.66
+      },
+      {
+        "sku": "08102319",
+        "naam": "FESTOOL SYS3 S 76-DBL-Set pluggenset in Systainer³ SYS3 S 76 - 578113",
+        "aantal": 1,
+        "prijs": 78.35
+      },
+      {
+        "sku": "41940389",
+        "naam": "FESTOOL D 36 SP zuigkwast - 440404",
+        "aantal": 1,
+        "prijs": 11.73
+      },
+      {
+        "sku": "08102326",
+        "naam": "FESTOOL SYS-STF D150 GR-Set schuurmiddel-systainer³ granat 120-delig in Systainer SYS3 M 237 - 578192",
+        "aantal": 1,
+        "prijs": 80.83
+      },
+      {
+        "sku": "02331831",
+        "naam": "FESTOOL MFT/3 multifunctionele tafel - 495315",
+        "aantal": 1,
+        "prijs": 752
+      },
+      {
+        "sku": "03056327",
+        "naam": "FESTOOL FS-WA/90° hoekaanslag - 205229",
+        "aantal": 1,
+        "prijs": 118.02
+      },
+      {
+        "sku": "03225184",
+        "naam": "FESTOOL SYS3 M 137 FS/2-Set accessoireset voor FS/2 - 577157",
+        "aantal": 1,
+        "prijs": 189.21
+      },
+      {
+        "sku": "02339706",
+        "naam": "FESTOOL FS 1400/2 geleiderail 1,4m - 491498",
+        "aantal": 1,
+        "prijs": 102.44
+      },
+      {
+        "sku": "03034946",
+        "naam": "FESTOOL SYS3 M 187 systainer³ - 204842",
+        "aantal": 1,
+        "prijs": 41.65
+      }
+    ]
   }
 ]
