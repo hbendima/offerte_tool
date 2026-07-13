@@ -54,6 +54,9 @@ function mapProductFields(p, extra = {}) {
     SKU: p.SKU,
     SUPPLIER_REFERENCE: p.SUPPLIER_REFERENCE,
     Name: p["PRODUCT_NAME_H1.nl_BE"] ?? "",
+    Name_nl: p["PRODUCT_NAME_H1.nl_BE"] ?? "",
+    Name_fr: extra.Name_fr ?? "",
+    Name_en: extra.Name_en ?? "",
     Price: p.PRICE ?? 0,
     Discount: p.DISCOUNT ?? 0,
     "Discount%": p.DISCOUNT_PCT_INT ?? 0,
@@ -69,6 +72,48 @@ function mapProductFields(p, extra = {}) {
     MSQ: extra.MSQ ?? "",
     UOM: extra.UOM ?? ""
   };
+}
+
+// Vertaalde productnamen (FR/EN). We kennen de exacte veldnaam niet zeker, dus we
+// detecteren die één keer uit een lijst kandidaten. Alles gebeurt defensief in try/catch,
+// zodat een ontbrekend veld de hoofdquery nooit breekt.
+const FR_NAME_CANDIDATES = ["PRODUCT_NAME_H1.fr_BE", "PRODUCT_NAME_H1.fr_FR"];
+const EN_NAME_CANDIDATES = ["PRODUCT_NAME_H1.en_GB", "PRODUCT_NAME_H1.en_US", "PRODUCT_NAME_H1.en_BE"];
+let _namesDetected = false, _frField = null, _enField = null;
+
+async function detectNameFields(connection, sampleSkus) {
+  if (_namesDetected) return;
+  const list = (sampleSkus && sampleSkus.length ? sampleSkus.slice(0, 3) : ["00000000"]).map(s => `'${s}'`).join(',');
+  for (const f of FR_NAME_CANDIDATES) {
+    try { await connection.query(`SELECT ${quoteIdentifier(f)} FROM business WHERE ${quoteIdentifier('SKU')} IN (${list})`); _frField = f; break; } catch (e) { /* veld bestaat niet */ }
+  }
+  for (const f of EN_NAME_CANDIDATES) {
+    try { await connection.query(`SELECT ${quoteIdentifier(f)} FROM business WHERE ${quoteIdentifier('SKU')} IN (${list})`); _enField = f; break; } catch (e) { /* veld bestaat niet */ }
+  }
+  _namesDetected = true;
+  console.log('Vertaalde naamvelden gedetecteerd:', { fr: _frField, en: _enField });
+}
+
+async function fetchTranslatedNames(connection, skus) {
+  if (!skus || !skus.length) return {};
+  await detectNameFields(connection, skus);
+  const fields = [];
+  if (_frField) fields.push(_frField);
+  if (_enField) fields.push(_enField);
+  if (!fields.length) return {};
+  const list = skus.map(s => `'${s}'`).join(',');
+  const sel = ['SKU', ...fields].map(quoteIdentifier).join(',');
+  try {
+    const rows = await connection.query(`SELECT ${sel} FROM business WHERE ${quoteIdentifier('SKU')} IN (${list})`);
+    const map = {};
+    rows.forEach(r => {
+      map[r.SKU] = {
+        fr: _frField ? (r[_frField] ?? "") : "",
+        en: _enField ? (r[_enField] ?? "") : ""
+      };
+    });
+    return map;
+  } catch (e) { return {}; }
 }
 
 // GET /products?skus=... of /products?supref=...
@@ -132,6 +177,7 @@ router.get('/products', async (req, res) => {
         // Geen MSQ/UOM mogelijk
       }
     }
+    const nameMap = await fetchTranslatedNames(connection, batchSkus);
     await connection.close();
 
     // Combineer de extra velden per SKU
@@ -139,7 +185,9 @@ router.get('/products', async (req, res) => {
       mapProductFields(p, {
         Stock: stockMap[p.SKU],
         MSQ: msqMap[p.SKU],
-        UOM: uomMap[p.SKU]
+        UOM: uomMap[p.SKU],
+        Name_fr: (nameMap[p.SKU] || {}).fr,
+        Name_en: (nameMap[p.SKU] || {}).en
       })
     );
     res.json({ products: safeJson(mappedProducts) });

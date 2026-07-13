@@ -1,0 +1,17 @@
+{
+  "name": "offerte-tool",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offerte Tool — start backend (Node/Express) en frontend (Vite) samen in één venster.",
+  "scripts": {
+    "postinstall": "npm --prefix backend install && npm --prefix frontend-vite install",
+    "install:all": "npm install",
+    "backend": "npm --prefix backend run start",
+    "frontend": "npm --prefix frontend-vite run dev",
+    "start": "concurrently -n backend,frontend -c blue,green -k \"npm run backend\" \"npm run frontend\"",
+    "dev": "npm run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

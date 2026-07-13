@@ -2545,5 +2545,308 @@
         "prijs": 369
       }
     ]
+  },
+  {
+    "id": 67,
+    "customer": "Eric Faase",
+    "total": 17120.41,
+    "date": "2026-06-10",
+    "bedrijf": "Utrecht Universiteit ",
+    "btw": "",
+    "adres": "",
+    "postcode": "",
+    "gemeente": "",
+    "land": "NL",
+    "email": "e.j.faase@uu-nl.com",
+    "producten": [
+      {
+        "sku": "02136645",
+        "naam": "FLUKE 87-5/E2K True-RMS digitale multimeter kit voor industrieel gebruik - 3947864",
+        "aantal": 1,
+        "prijs": 719.89
+      },
+      {
+        "sku": "41972786",
+        "naam": "FLUKE 179 EGFID digitale RMS multimeter tot 1000V AC/DC - 10A AC/DC - 400°C - 1592842",
+        "aantal": 1,
+        "prijs": 478.24
+      },
+      {
+        "sku": "02953713",
+        "naam": "FLUKE 810 trillingsmeter - 3542635",
+        "aantal": 1,
+        "prijs": 15286.28
+      },
+      {
+        "sku": "03395511",
+        "naam": "FLUKE 376 FC True RMS AC/DC-stroomtang met iFlex - 5065965",
+        "aantal": 1,
+        "prijs": 636
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "customer": "dirk-jan van de werken",
+    "total": 10798.8,
+    "date": "2026-06-10",
+    "bedrijf": "autobedrijf hoefnagel",
+    "btw": "",
+    "adres": "nederveenweg 3",
+    "postcode": "5161 PA",
+    "gemeente": " Sprang-capelle",
+    "land": "Nederland",
+    "email": "djvandewerken@gmail.com",
+    "producten": [
+      {
+        "sku": "03183910",
+        "naam": "MILWAUKEE M12 NRG-302 accu-laadset (2x 3,0Ah accu + C12 C lader) - 4933451902",
+        "aantal": 12,
+        "prijs": 114.13
+      },
+      {
+        "sku": "03356124",
+        "naam": "MILWAUKEE M12 FCIWF12G3-502X FUEL accu-slagmoersleutel 1/2\" met frictiering in HD Box (2x 5,0Ah accu + lader) - 4933493455",
+        "aantal": 12,
+        "prijs": 309.86
+      },
+      {
+        "sku": "08083248",
+        "naam": "MILWAUKEE M12 FDD2-602X FUEL subcompacte accu-schroefboormachine in HD Box (2x 6,0Ah accu + lader) - 4933479875",
+        "aantal": 12,
+        "prijs": 251.76
+      },
+      {
+        "sku": "08142523",
+        "naam": "MILWAUKEE M12 FIR38G2-0 FUEL accu-ratelsleutel 3/8\" Gen 2 in doos (zonder accu en lader) - 4933498936",
+        "aantal": 12,
+        "prijs": 224.15
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "customer": "Angel Tomas",
+    "total": 93805.70999999999,
+    "date": "2026-06-10",
+    "bedrijf": "Pegasus Trading bvba (n-gix.com)",
+    "btw": "",
+    "adres": "De Leiteweg 22, zone B2",
+    "postcode": "8020",
+    "gemeente": " Oostkamp (Ruddervoorde) ",
+    "land": "België",
+    "email": "angel@n-gix.com",
+    "producten": [
+      {
+        "sku": "03066625",
+        "naam": "MILWAUKEE MXF XC406 FUEL REDLITHIUM accu 6,0Ah - 4933471837",
+        "aantal": 19,
+        "prijs": 615.05
+      },
+      {
+        "sku": "03067256",
+        "naam": "MILWAUKEE MXF-C lader - 4933471839",
+        "aantal": 14,
+        "prijs": 266.84
+      },
+      {
+        "sku": "03067262",
+        "naam": "MILWAUKEE MXF TL-601 MX FUEL torenlamp - 4933471844",
+        "aantal": 16,
+        "prijs": 4899
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "customer": "Linders Jorrit",
+    "total": 17488.8,
+    "date": "2026-06-10",
+    "bedrijf": "Acecore Technologies JL B.V.",
+    "btw": "NL854129935B01",
+    "adres": "Hoogstraat 8",
+    "postcode": "5406 TH",
+    "gemeente": "Uden",
+    "land": "Nederland",
+    "email": "purchasing@acecoretechnologies.com",
+    "producten": [
+      {
+        "sku": "08103692",
+        "naam": "WERA 6005 Joker 4 set 1 dubbele steeksleutelset 4-delig - 05020314001",
+        "aantal": 63,
+        "prijs": 30
+      },
+      {
+        "sku": "41299732",
+        "naam": "FACOM B.J16A1 vierkante dop 3/8\" voor bougies van 16 mm, 90 mm",
+        "aantal": 63,
+        "prijs": 21
+      },
+      {
+        "sku": "08131819",
+        "naam": "WERA Tool-Check PLUS 2 gereedschapsset, 39-delig - 05049056001",
+        "aantal": 63,
+        "prijs": 69.5
+      },
+      {
+        "sku": "11010319",
+        "naam": "LOCTITE 431 universele snellijm (20g) - 1921879",
+        "aantal": 63,
+        "prijs": 18.5
+      },
+      {
+        "sku": "03176897",
+        "naam": "WERA 6003 Joker ringsteeksleutel (5.5 x 105 mm) - 05020190001",
+        "aantal": 63,
+        "prijs": 7.6
+      },
+      {
+        "sku": "02865665",
+        "naam": "WERA Click-Torque A 5 draaimomentsleutel met omschakelratel, 2,5-25 Nm, 1/4\" x 2.5-25 nm - 05075604001",
+        "aantal": 63,
+        "prijs": 115.5
+      },
+      {
+        "sku": "41190837",
+        "naam": "KNIPEX 78 61 125 electronic Super Knips met meer-componentengrepen gebruineerd 125 mm",
+        "aantal": 63,
+        "prijs": 15.5
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "customer": "Richard Damman",
+    "total": 5624.64,
+    "date": "2026-06-17",
+    "bedrijf": "Dikken",
+    "btw": "NL818319471B01",
+    "adres": "Ambachtsweg 4",
+    "postcode": "8061 RN",
+    "gemeente": "Hasselt",
+    "land": "Nederland",
+    "email": "richard@dikkenhasselt.nl",
+    "producten": [
+      {
+        "sku": "12940297",
+        "naam": "MOTIP 000563 remmenreiniger 500 ml",
+        "aantal": 3024,
+        "prijs": 1.86
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "customer": "Axel Hacquard",
+    "total": 13279.789999999999,
+    "date": "2026-06-24",
+    "bedrijf": "SAS EQA INDUSTRIES",
+    "btw": "FR82994134658",
+    "adres": "Appt B29 59 AV ROGER GUICHARD",
+    "postcode": "95610 ",
+    "gemeente": "ERAGNY SUR OISE",
+    "land": "Frankrijk",
+    "email": "axel@eqa-industries.fr",
+    "producten": [
+      {
+        "sku": "02865665",
+        "naam": "WERA Click-Torque A 5 draaimomentsleutel met omschakelratel, 2,5-25 Nm, 1/4\" x 2.5-25 nm - 05075604001",
+        "aantal": 7,
+        "prijs": 119.67
+      },
+      {
+        "sku": "08092591",
+        "naam": "FACOM S.307A100 Digical momentsleutel 1/2 20-100nm",
+        "aantal": 5,
+        "prijs": 342.48
+      },
+      {
+        "sku": "03229728",
+        "naam": "WERA 7461 ESD Kraftform draaimomentschroevendraaier 1,2-3,0 Nm - 05074842010",
+        "aantal": 21,
+        "prijs": 78
+      },
+      {
+        "sku": "02953106",
+        "naam": "WERA Click-Torque XP 1 draaimomentsleutel met standaardinstellingen voor insteekgereedschappen, 2,5-25 Nm, 2,5 Nm - 05075670001",
+        "aantal": 42,
+        "prijs": 111
+      },
+      {
+        "sku": "02836013",
+        "naam": "WERA 7460 ESD Kraftform draaimomentschroevendraaier met standaardinstelling en Rapidaptor snelwisselhouder 0,3 Nm x 0,3-1,2 Nm - 05074840001",
+        "aantal": 45,
+        "prijs": 65.59
+      },
+      {
+        "sku": "02953110",
+        "naam": "WERA Click-Torque XP 2 draaimomentsleutel met standaardinstellingen voor insteekgereedschappen, 10-50 Nm, 10 Nm - 05075671001",
+        "aantal": 11,
+        "prijs": 109.59
+      },
+      {
+        "sku": "02865663",
+        "naam": "WERA Click-Torque B 1 draaimomentsleutel met omschakelratel, 10-50 Nm, 3/8\" x 10-50 Nm - 05075610001",
+        "aantal": 2,
+        "prijs": 136.33
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "customer": "Axel Hacquard",
+    "total": 13199.8,
+    "date": "2026-07-07",
+    "bedrijf": "SAS EQA INDUSTRIES",
+    "btw": "FR82994134658",
+    "adres": "Appt B29 59 AV ROGER GUICHARD",
+    "postcode": "95610 ",
+    "gemeente": "ERAGNY SUR OISE",
+    "land": "Frankrijk",
+    "email": "axel@eqa-industries.fr",
+    "producten": [
+      {
+        "sku": "02865665",
+        "naam": "WERA Click-Torque A 5 draaimomentsleutel met omschakelratel, 2,5-25 Nm, 1/4\" x 2.5-25 nm - 05075604001",
+        "aantal": 7,
+        "prijs": 119.67
+      },
+      {
+        "sku": "02865663",
+        "naam": "WERA Click-Torque B 1 draaimomentsleutel met omschakelratel, 10-50 Nm, 3/8\" x 10-50 Nm - 05075610001",
+        "aantal": 2,
+        "prijs": 136.33
+      },
+      {
+        "sku": "02953110",
+        "naam": "WERA Click-Torque XP 2 draaimomentsleutel met standaardinstellingen voor insteekgereedschappen, 10-50 Nm, 10 Nm - 05075671001",
+        "aantal": 11,
+        "prijs": 109.59
+      },
+      {
+        "sku": "03229728",
+        "naam": "WERA 7461 ESD Kraftform draaimomentschroevendraaier 1,2-3,0 Nm - 05074842010",
+        "aantal": 21,
+        "prijs": 78
+      },
+      {
+        "sku": "02953106",
+        "naam": "WERA Click-Torque XP 1 draaimomentsleutel met standaardinstellingen voor insteekgereedschappen, 2,5-25 Nm, 2,5 Nm - 05075670001",
+        "aantal": 42,
+        "prijs": 110.08
+      },
+      {
+        "sku": "02836013",
+        "naam": "WERA 7460 ESD Kraftform draaimomentschroevendraaier met standaardinstelling en Rapidaptor snelwisselhouder 0,3 Nm x 0,3-1,2 Nm - 05074840001",
+        "aantal": 45,
+        "prijs": 65.59
+      },
+      {
+        "sku": "08092591",
+        "naam": "FACOM S.307A100 Digical momentsleutel 1/2 20-100nm",
+        "aantal": 5,
+        "prijs": 334.21
+      }
+    ]
   }
 ]

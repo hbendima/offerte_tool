@@ -5,6 +5,24 @@ Hiermee kun je snel productdata ophalen, marges berekenen en resultaten tonen in
 
 ---
 
+## **Snel starten (aanbevolen)**
+
+Dubbelklik op **`start-offerte-tool.bat`** — of run in de projectmap:
+
+```sh
+npm install   # enkel de eerste keer (installeert root + backend + frontend)
+npm start     # start backend + frontend samen in één venster
+```
+
+- Backend (Node/Express) draait op `http://localhost:3000`.
+- Frontend (Vite) opent op `http://localhost:5173` — open dit in de browser.
+- De uitvoer van backend en frontend staat samen in één venster, met de labels `[backend]` en `[frontend]`.
+- Stoppen: sluit het venster of druk `Ctrl+C`.
+
+> De Python-API (`product_api.py`) is **legacy** en niet meer nodig: de Node-backend praat rechtstreeks met Elastic via ODBC. De onderstaande beschrijving van drie aparte servers is enkel nog referentie.
+
+---
+
 ## **Architectuur & Servers**
 
 De tool bestaat uit drie onderdelen die als aparte servers draaien:
@@ -77,5 +95,24 @@ De tool bestaat uit drie onderdelen die als aparte servers draaien:
 - Uitleg over berekeningen en logica
 - Exportmogelijkheden (Excel/PDF)
 - FAQ: veelvoorkomende fouten en oplossingen
+
+---
+
+## **Status Aanpassingen (uitgevoerd)**
+
+- ~~Mogelijkheid om offerte in Engels en Frans op te maken.~~
+- ~~Algemene korting met marge-gewogen verdeling.~~
+- ~~CDC info-blok rework voor betere bruikbaarheid bij veel producten.~~
+- ~~Qty kan numeriek ingegeven/gewijzigd worden (niet enkel + / -).~~
+- ~~PDF-export meer in stijl van pro-forma.~~
+- ~~BTW-regels aangepast: BE altijd incl. 21%; niet-BE met btw-nummer intracommunautair excl.~~
+- ~~Bij invoer SKU + aantal wordt productnaam getoond.~~
+- ~~Search/slimme resolve grondig herwerkt.~~
+- ~~Opstart vereenvoudigd naar 1 commando/venster.~~
+
+Nog openstaand:
+
+- Nieuwe offerte starten zonder volledige reload.
+- Levertijdinformatie verfijnen (meer dan enkel uit voorraad/backorder).
 
 ---
