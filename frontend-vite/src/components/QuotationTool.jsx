@@ -838,12 +838,15 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     }
   };
 
-  // GLOBALE KORTING — verdeeld naar rato van de marge (hoogste marge draagt meest).
-  // Elk product verliest dezelfde fractie van zijn marge, zodat de prijs nooit onder kostprijs zakt.
+  // GLOBALE KORTING — 2 fasen:
+  // 1) Eerst op producten met marge boven 12% (tot ze richting 12% zakken).
+  // 2) Is er daarna nog korting over, dan verdelen over alle resterende marge.
+  // Prijzen gaan nooit onder kostprijs.
   function applyGlobalDiscount() {
     const val = Number(discountValue);
     if (!val || val <= 0) { setDiscountNote("Geef een korting groter dan 0 in."); return; }
     if (!products.length) { setDiscountNote("Maak eerst de offerte (voeg producten toe)."); return; }
+    const TARGET_MARGIN = 0.12;
     const totalExcl = products.reduce((s, p) => s + (Number(p.proposal) || 0) * (p.amount || 1), 0);
     const totalMargin = products.reduce((s, p) => s + ((Number(p.proposal) || 0) - (Number(p.Cost) || 0)) * (p.amount || 1), 0);
     let target = discountMode === "pct" ? (val / 100) * totalExcl : val;
@@ -852,12 +855,57 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
       target = Math.max(0, totalMargin);
       note = "Korting begrensd tot de totale marge (prijzen kunnen niet onder kostprijs).";
     }
-    const ratio = totalMargin > 0 ? target / totalMargin : 0;
-    const updated = products.map(p => {
+
+    const base = products.map((p, idx) => {
+      const amount = Math.max(1, Number(p.amount) || 1);
       const cost = Number(p.Cost) || 0;
       const prop = Number(p.proposal) || 0;
-      const newProp = Math.round((cost + (prop - cost) * (1 - ratio)) * 100) / 100;
-      return { ...p, proposal: newProp };
+      const marginPerUnit = Math.max(0, prop - cost);
+      const marginValue = marginPerUnit * amount;
+      const priceAt12 = cost / (1 - TARGET_MARGIN);
+      const excessPerUnit = Math.max(0, prop - priceAt12);
+      const excessValue = excessPerUnit * amount;
+      return { idx, amount, cost, prop, marginPerUnit, marginValue, excessValue, discountValue: 0 };
+    });
+
+    // Fase 1: alles boven 12% krijgt voorrang.
+    let remaining = target;
+    const phase1Pool = base.reduce((s, x) => s + x.excessValue, 0);
+    if (phase1Pool > 0 && remaining > 0) {
+      const take = Math.min(remaining, phase1Pool);
+      base.forEach(x => {
+        if (x.excessValue > 0) x.discountValue += (x.excessValue / phase1Pool) * take;
+      });
+      remaining -= take;
+    }
+
+    // Fase 2: als er nog korting over is, verdeel over alle resterende marge.
+    if (remaining > 0) {
+      const phase2Pool = base.reduce((s, x) => {
+        const left = Math.max(0, x.marginValue - x.discountValue);
+        return s + left;
+      }, 0);
+      if (phase2Pool > 0) {
+        const take = Math.min(remaining, phase2Pool);
+        base.forEach(x => {
+          const left = Math.max(0, x.marginValue - x.discountValue);
+          if (left > 0) x.discountValue += (left / phase2Pool) * take;
+        });
+        remaining -= take;
+      }
+    }
+
+    if (remaining > 0.01) {
+      note = (note ? `${note} ` : "") + "Niet alle gevraagde korting kon verdeeld worden zonder onder kostprijs te gaan.";
+    }
+
+    const updated = products.map((p, i) => {
+      const x = base[i];
+      const unitDiscount = x.discountValue / x.amount;
+      const rawProposal = x.prop - unitDiscount;
+      const boundedProposal = Math.max(x.cost, rawProposal);
+      const rounded = Math.round(boundedProposal * 100) / 100;
+      return { ...p, proposal: rounded };
     });
     const newProposals = {};
     updated.forEach(p => { newProposals[p.SKU] = Number(p.proposal).toFixed(2); });
@@ -1007,7 +1055,8 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     const vat = computeVat(customerData.btw, destCountry);
     const prodName = p => p[`Name_${docLang}`] || p.Name || "";
     const locale = docLang === "fr" ? "fr-BE" : docLang === "en" ? "en-GB" : "nl-BE";
-    const euro = n => "€ " + Number(n || 0).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const normalizePdfText = s => String(s || "").replace(/[\u00A0\u202F]/g, " ");
+    const euro = n => "€ " + normalizePdfText(Number(n || 0).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
     const dateStr = new Date().toLocaleDateString(locale);
     const quoteNr = "OFF-" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + "-" + Math.floor(1000 + Math.random() * 9000);
 
@@ -1022,18 +1071,59 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     const leveringLines = addrBlock(sameDelivery ? customerData : deliveryData);
 
     const th = (txt, align) => ({ text: txt, bold: true, fontSize: 9, color: "#20264b", fillColor: "#f0f1f5", alignment: align || "left", margin: [2, 5, 2, 5] });
-    const td = (txt, align) => ({ text: txt, fontSize: 9, alignment: align || "left", margin: [2, 4, 2, 4] });
+    const td = (txt, align, opts = {}) => ({ text: txt, fontSize: opts.fontSize ?? 8.6, alignment: align || "left", margin: [2, 3, 2, 3], noWrap: !!opts.noWrap, lineHeight: opts.lineHeight ?? 1.08 });
+    const clampTwoLines = (txt, charsPerLine = 34) => {
+      const clean = String(txt || "").replace(/\s+/g, " ").trim();
+      if (!clean) return "";
+      const maxChars = charsPerLine * 2;
+      if (clean.length <= maxChars) return clean;
+      return clean.slice(0, Math.max(0, maxChars - 1)).trimEnd() + "…";
+    };
+    const tdProduct = txt => {
+      const clean = String(txt || "").replace(/\s+/g, " ").trim();
+      const clamped = clampTwoLines(clean, 34);
+      const compact = clean.length > 50;
+      return td(clamped, "left", { fontSize: compact ? 8 : 9, lineHeight: 1.05 });
+    };
+    const translatedLeadForPdf = p => {
+      const d = deliveryInfo(p);
+      if (d.inStockOnly) {
+        if (docLang === "fr") return "En stock";
+        if (docLang === "en") return "In stock";
+        return "Uit voorraad";
+      }
+      const date = d.backOrderDate ? fmtDateBE(d.backOrderDate) : "";
+      if (d.inStock > 0) {
+        if (docLang === "fr") return `${d.inStock} en stock + ${d.backOrder} sur commande${date ? ` a partir du ${date}` : ""}`;
+        if (docLang === "en") return `${d.inStock} in stock + ${d.backOrder} to order${date ? ` from ${date}` : ""}`;
+        return `${d.inStock} uit voorraad + ${d.backOrder} op bestelling${date ? ` vanaf ${date}` : ""}`;
+      }
+      if (docLang === "fr") return date ? `Sur commande: livre a partir du ${date}` : "Sur commande";
+      if (docLang === "en") return date ? `To order: delivered from ${date}` : "To order";
+      return date ? `Op bestelling: bezorgd vanaf ${date}` : "Op bestelling";
+    };
+    const tdProductWithLead = p => {
+      const clean = String(prodName(p) || "").replace(/\s+/g, " ").trim();
+      const clampedName = clampTwoLines(clean, 34);
+      const compact = clean.length > 50;
+      return {
+        stack: [
+          { text: clampedName, fontSize: compact ? 8 : 8.8, lineHeight: 1.04 },
+          { text: translatedLeadForPdf(p), fontSize: 7.7, color: "#5f6672", italics: true, margin: [0, 1, 0, 0], lineHeight: 1.02 }
+        ],
+        margin: [2, 3, 2, 3]
+      };
+    };
 
     const productBody = [
-      [th(t.colRef), th(t.colProduct), th(t.colDelivery), th(t.colVat, "center"), th(t.colUnit, "right"), th(t.colQty, "center"), th(t.colLineTotal, "right")],
+      [th(t.colRef), th(t.colProduct), th(t.colVat, "center"), th(t.colUnit, "right"), th(t.colQty, "center"), th(t.colLineTotal, "right")],
       ...products.map(p => [
-        td(p.SKU),
-        td(prodName(p)),
-        td(deliveryInfo(p).pdf),
-        td(`${vat.pct} %`, "center"),
-        td(euro(p.proposal), "right"),
-        td(String(p.amount), "center"),
-        td(euro((Number(p.proposal) || 0) * (p.amount || 1)), "right")
+        td(p.SKU, "left", { noWrap: true }),
+        tdProductWithLead(p),
+        td(`${vat.pct} %`, "center", { noWrap: true, fontSize: 8.4 }),
+        td(euro(p.proposal), "right", { noWrap: true, fontSize: 8.4 }),
+        td(String(p.amount), "center", { noWrap: true, fontSize: 8.4 }),
+        td(euro((Number(p.proposal) || 0) * (p.amount || 1)), "right", { noWrap: true, fontSize: 8.4 })
       ])
     ];
 
@@ -1101,7 +1191,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
           layout: infoLayout, margin: [0, 0, 0, 22]
         },
         {
-          table: { headerRows: 1, widths: ["auto", "*", "auto", "auto", "auto", "auto", "auto"], body: productBody },
+          table: { headerRows: 1, widths: [52, "*", 38, 62, 30, 68], body: productBody },
           layout: tableLayout, margin: [0, 0, 0, 18]
         },
         {
@@ -1720,7 +1810,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                 <button onClick={resetPrices} style={{padding:'8px 16px', borderRadius:6, background:'#eee', color:'#333', border:'1px solid #ccc', cursor:'pointer'}}>Reset prijzen</button>
               </div>
               <div style={{fontSize:'0.85em', color:'#666', marginTop:8}}>
-                Verdeeld naar rato van de marge: producten met de hoogste marge dragen het meeste van de korting. Marge blijft altijd ≥ 0.
+                Eerst op marge boven 12%, daarna eventueel over alle producten. Prijs gaat nooit onder kostprijs.
               </div>
               {discountNote && <div style={{color:'#e57373', fontSize:'0.85em', marginTop:6}}>{discountNote}</div>}
             </div>
