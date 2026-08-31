@@ -60,6 +60,7 @@ router.post("/offerte", (req, res) => {
       aantal: p.aantal,
       prijs: p.prijs
     })) : [],
+    interneOpmerking: data.interneOpmerking || "",
   };
   offertes.push(nieuweOfferte);
   writeOffertes(offertes);

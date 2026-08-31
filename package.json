@@ -4,11 +4,11 @@
   "private": true,
   "description": "Offerte Tool — start backend (Node/Express) en frontend (Vite) samen in één venster.",
   "scripts": {
-    "postinstall": "npm --prefix backend install && npm --prefix frontend-vite install",
+    "postinstall": "npm.cmd --prefix backend install && npm.cmd --prefix frontend-vite install",
     "install:all": "npm install",
     "backend": "npm --prefix backend run start",
     "frontend": "npm --prefix frontend-vite run dev",
-    "start": "concurrently -n backend,frontend -c blue,green -k \"npm run backend\" \"npm run frontend\"",
+    "start": "concurrently -n backend,frontend -c blue,green --kill-others-on-fail --restart-tries 5 --restart-after 1000 \"set NODE_OPTIONS=--no-deprecation && npm run backend\" \"npm run frontend\"",
     "dev": "npm run start"
   },
   "devDependencies": {

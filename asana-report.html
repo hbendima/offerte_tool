@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIM Work Requests – Dashboard</title>
+    <style>
+      :root {
+        --bg: #eef3fa;
+        --panel: #ffffff;
+        --ink: #10203a;
+        --muted: #64758c;
+        --line: #dce6f2;
+        --primary: #2b6ef3;
+        --primary-2: #74a2ff;
+        --success: #10a06a;
+        --success-2: #57d6a2;
+        --warning: #e0851d;
+        --warning-2: #f7bd6d;
+        --purple: #7a50d8;
+        --purple-2: #ac8ff2;
+        --danger: #dc4b63;
+        --pink: #d6499b;
+        --pink-2: #f18bc7;
+        --shadow: 0 14px 30px rgba(13, 25, 45, 0.09);
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(1200px 600px at 12% -10%, #e6f0ff 0%, var(--bg) 45%);
+        color: var(--ink);
+      }
+
+      .container {
+        max-width: 1560px;
+        margin: 26px auto;
+        padding: 0 22px 70px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 18px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.9rem, 3vw, 3rem);
+        letter-spacing: -0.02em;
+      }
+
+      .subhead { color: var(--muted); margin-top: 8px; font-size: 0.98rem; }
+      .subhead strong { color: var(--ink); }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 12px 14px;
+        box-shadow: var(--shadow);
+      }
+
+      .controls .drop {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px dashed #a8c2f0;
+        border-radius: 12px;
+        padding: 8px 12px;
+        background: #f6f9ff;
+      }
+
+      input[type="file"], select, button { font: inherit; }
+      input[type="file"] { max-width: 220px; }
+      select {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 9px 10px;
+        background: #fff;
+        min-width: 150px;
+      }
+      button {
+        border: none;
+        cursor: pointer;
+        border-radius: 10px;
+        padding: 10px 14px;
+        background: #eaf1ff;
+        color: var(--ink);
+        font-weight: 700;
+      }
+      button.ghost { background: #f2f5fa; }
+
+      .filters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 12px;
+        margin: 18px 0 24px;
+      }
+      .filter {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 12px 14px;
+      }
+      .filter-label {
+        display: block;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.68rem;
+        margin-bottom: 8px;
+      }
+      .filter select { width: 100%; }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 22px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 18px 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .card .label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .card .value { font-size: clamp(1.7rem, 2vw, 2.5rem); font-weight: 800; line-height: 1.05; }
+      .card .sub { color: var(--muted); font-size: 0.78rem; margin-top: 6px; }
+      .card::after {
+        content: "";
+        position: absolute;
+        right: -30px; top: -30px;
+        width: 90px; height: 90px;
+        border-radius: 50%;
+        opacity: 0.14;
+      }
+      .card.primary::after { background: var(--primary); }
+      .card.success::after { background: var(--success); }
+      .card.warning::after { background: var(--warning); }
+      .card.purple::after { background: var(--purple); }
+      .card.pink::after { background: var(--pink); }
+      .card.neutral::after { background: #55708f; }
+
+      .grid-2 { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 18px; margin-bottom: 18px; }
+      .grid-2b { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+      .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 18px; }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+      .panel h2 { margin: 0 0 4px; font-size: 1.05rem; }
+      .panel .hint { color: var(--muted); font-size: 0.78rem; margin-bottom: 14px; }
+
+      .legend { display: flex; gap: 16px; margin-bottom: 10px; font-size: 0.76rem; color: var(--muted); }
+      .legend span { display: inline-flex; align-items: center; gap: 6px; }
+      .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+      .dot.req { background: var(--primary); }
+      .dot.done { background: var(--success); }
+
+      .bars, .stack-list { display: flex; flex-direction: column; gap: 11px; }
+
+      .bar-row { display: grid; grid-template-columns: 74px 1fr 70px; gap: 10px; align-items: center; }
+      .bar-label { font-size: 0.8rem; color: var(--muted); }
+      .double-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+      .bar-shell, .stack-shell { height: 15px; border-radius: 999px; background: #eef3fb; overflow: hidden; }
+      .bar-fill { height: 100%; border-radius: 999px; }
+      .bar-fill.requested { background: linear-gradient(90deg, var(--primary), var(--primary-2)); }
+      .bar-fill.completed { background: linear-gradient(90deg, var(--success), var(--success-2)); }
+      .bar-value { text-align: right; font-weight: 700; font-size: 0.78rem; }
+
+      .stack-item { display: grid; grid-template-columns: 150px 1fr 46px; gap: 10px; align-items: center; }
+      .stack-label { font-size: 0.82rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .stack-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), var(--primary-2)); }
+      .stack-fill.success { background: linear-gradient(90deg, var(--success), var(--success-2)); }
+      .stack-fill.purple  { background: linear-gradient(90deg, var(--purple), var(--purple-2)); }
+      .stack-fill.warning { background: linear-gradient(90deg, var(--warning), var(--warning-2)); }
+      .stack-fill.pink    { background: linear-gradient(90deg, var(--pink), var(--pink-2)); }
+      .stack-value { text-align: right; font-weight: 700; font-size: 0.8rem; }
+
+      .donut-wrap { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+      .donut { width: 150px; height: 150px; border-radius: 50%; flex: 0 0 auto; position: relative; }
+      .donut::after {
+        content: ""; position: absolute; inset: 22px; border-radius: 50%; background: var(--panel);
+      }
+      .donut-center {
+        position: absolute; inset: 0; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; z-index: 2;
+      }
+      .donut-center b { font-size: 1.5rem; }
+      .donut-center small { color: var(--muted); font-size: 0.7rem; }
+      .donut-legend { display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem; }
+      .donut-legend .row { display: flex; align-items: center; gap: 8px; }
+      .donut-legend .sw { width: 12px; height: 12px; border-radius: 4px; }
+      .donut-legend .cnt { margin-left: auto; font-weight: 700; color: var(--muted); }
+
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border-bottom: 1px solid var(--line); padding: 10px 8px; text-align: left; vertical-align: top; }
+      th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); position: sticky; top: 0; background: var(--panel); }
+      td { font-size: 0.9rem; }
+      tr:hover td { background: #f7faff; }
+
+      .chip {
+        display: inline-block; border-radius: 999px; padding: 3px 8px;
+        font-size: 0.68rem; font-weight: 700; background: #eef3ff; color: #2145a7;
+      }
+      .chip.done { background: #e7f8ef; color: #0f6b43; }
+      .chip.open { background: #fff2e4; color: #97590f; }
+      .chip.prog { background: #eef1ff; color: #3b40b0; }
+      .chip.wait { background: #fff8e1; color: #937400; }
+      .chip.high { background: #fdeaed; color: #b3283e; }
+      .chip.med { background: #fff2e4; color: #97590f; }
+      .chip.low { background: #eef8ee; color: #2e7d32; }
+
+      .table-scroll { max-height: 520px; overflow: auto; border-radius: 12px; }
+      .search {
+        border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px;
+        width: 260px; max-width: 100%; font: inherit; margin-bottom: 12px;
+      }
+      .empty { color: var(--muted); font-style: italic; padding: 8px 0; }
+      .row-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+      @media (max-width: 1050px) {
+        .grid-2, .grid-2b, .grid-3 { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <h1>PIM Work Requests</h1>
+          <div class="subhead" id="subhead">Laad je Asana JSON-export om het volledige dashboard te vullen.</div>
+        </div>
+        <div class="controls">
+          <div class="drop">
+            <label for="fileInput">📂 Asana JSON / CSV</label>
+            <input id="fileInput" type="file" accept=".json,.csv" />
+          </div>
+          <button id="demoBtn" class="ghost">Demo-data</button>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="filter"><label class="filter-label" for="fYear">Jaar</label><select id="fYear"></select></div>
+        <div class="filter"><label class="filter-label" for="fRequester">Aanvrager</label><select id="fRequester"></select></div>
+        <div class="filter"><label class="filter-label" for="fAssignee">Medewerker</label><select id="fAssignee"></select></div>
+        <div class="filter"><label class="filter-label" for="fStatus">Status</label><select id="fStatus"></select></div>
+        <div class="filter"><label class="filter-label" for="fPriority">Prioriteit</label><select id="fPriority"></select></div>
+        <div class="filter"><label class="filter-label" for="fTag">Leverancier / merk</label><select id="fTag"></select></div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="card primary"><div class="label">Totaal taken</div><div class="value" id="kTotal">0</div><div class="sub" id="kTotalSub">in selectie</div></div>
+        <div class="card neutral"><div class="label">Aangevraagd</div><div class="value" id="kRequested">0</div><div class="sub" id="kReqSub">met aanvraagdatum</div></div>
+        <div class="card success"><div class="label">Afgewerkt</div><div class="value" id="kCompleted">0</div><div class="sub" id="kCompSub">0% van aangevraagd</div></div>
+        <div class="card warning"><div class="label">Nog open</div><div class="value" id="kOpen">0</div><div class="sub" id="kOpenSub">backlog</div></div>
+        <div class="card purple"><div class="label">Gem. doorlooptijd</div><div class="value" id="kCycle">0 d</div><div class="sub" id="kCycleSub">aanvraag → afgewerkt</div></div>
+        <div class="card pink"><div class="label">Mediaan doorlooptijd</div><div class="value" id="kMedian">0 d</div><div class="sub">helft sneller dan dit</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Volume per maand</h2>
+          <div class="hint">Aangevraagd vs. afgewerkt per maand</div>
+          <div class="legend"><span><i class="dot req"></i>Aangevraagd</span><span><i class="dot done"></i>Afgewerkt</span></div>
+          <div id="monthBars" class="bars"></div>
+        </div>
+        <div class="panel">
+          <h2>Status</h2>
+          <div class="hint">Verdeling op basis van Task Progress</div>
+          <div class="donut-wrap">
+            <div class="donut" id="statusDonut"><div class="donut-center"><b id="donutTotal">0</b><small>taken</small></div></div>
+            <div class="donut-legend" id="statusLegend"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Overzicht per jaar</h2>
+          <div class="hint">Aangevraagd vs. afgewerkt per jaar</div>
+          <div class="legend"><span><i class="dot req"></i>Aangevraagd</span><span><i class="dot done"></i>Afgewerkt</span></div>
+          <div id="yearBars" class="bars"></div>
+        </div>
+        <div class="panel">
+          <h2>Prioriteit</h2>
+          <div class="hint">Aangevraagde prioriteit van tickets</div>
+          <div id="priorityBars" class="stack-list"></div>
+        </div>
+      </div>
+
+      <div class="grid-2b">
+        <div class="panel">
+          <h2>Top aanvragers</h2>
+          <div class="hint">Wie stuurt de meeste PIM-verzoeken in</div>
+          <div id="requesterBars" class="stack-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Top medewerkers</h2>
+          <div class="hint">Wie werkt de meeste taken af</div>
+          <div id="assigneeBars" class="stack-list"></div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="panel">
+          <h2>Top leveranciers / merken</h2>
+          <div class="hint">Op basis van tags</div>
+          <div id="tagBars" class="stack-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Doorlooptijd</h2>
+          <div class="hint">Verdeling afgewerkte taken</div>
+          <div id="cycleBars" class="stack-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Kerncijfers</h2>
+          <div class="hint">Snelle indicatoren</div>
+          <div id="kpiList" class="stack-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:18px;">
+        <div class="row-head">
+          <div><h2>Open backlog</h2><div class="hint">Taken zonder afgewerkt-datum, oudste eerst</div></div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Taak</th><th>Aanvrager</th><th>Medewerker</th><th>Status</th><th>Prioriteit</th><th>Aangevraagd</th><th>Leeftijd</th></tr></thead>
+            <tbody id="backlogRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="row-head">
+          <div><h2>Alle taken</h2><div class="hint" id="allCount">0 records</div></div>
+          <input id="tableSearch" class="search" type="search" placeholder="Zoek op taak, aanvrager, ticket…" />
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Taak</th><th>Ticket</th><th>Aanvrager</th><th>Medewerker</th><th>Status</th><th>Prioriteit</th><th>Merk</th><th>Aangevraagd</th><th>Afgewerkt</th><th>Doorloop</th></tr></thead>
+            <tbody id="allRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const state = {
+        tasks: [],
+        filters: { year: "all", requester: "all", assignee: "all", status: "all", priority: "all", tag: "all" },
+        search: ""
+      };
+
+      const STATUS_COLORS = {
+        "Done": "#10a06a",
+        "In Progress": "#2b6ef3",
+        "Not Started": "#8091a8",
+        "Waiting": "#e0851d",
+        "Deferred": "#d6499b",
+        "Cancelled": "#dc4b63",
+        "Open": "#8091a8"
+      };
+
+      /* ---------- Parsing ---------- */
+
+      function customField(item, fieldName) {
+        if (!Array.isArray(item?.custom_fields)) return null;
+        return item.custom_fields.find((f) => f && f.name === fieldName) || null;
+      }
+
+      function cfEnum(item, fieldName) {
+        const f = customField(item, fieldName);
+        if (!f) return "";
+        if (f.display_value) return String(f.display_value);
+        if (f.enum_value && f.enum_value.name) return String(f.enum_value.name);
+        return "";
+      }
+
+      function cfText(item, fieldName) {
+        const f = customField(item, fieldName);
+        if (!f) return "";
+        if (f.text_value) return String(f.text_value);
+        if (f.display_value) return String(f.display_value);
+        return "";
+      }
+
+      function cfNumber(item, fieldName) {
+        const f = customField(item, fieldName);
+        if (!f) return "";
+        if (f.number_value !== undefined && f.number_value !== null) return String(f.number_value);
+        if (f.display_value) return String(f.display_value);
+        return "";
+      }
+
+      function inferStatus(item) {
+        const progress = cfEnum(item, "Task Progress");
+        if (progress) return progress;
+        if (item?.completed) return "Done";
+        const section = item?.memberships?.[0]?.section?.name;
+        if (section) return section;
+        return "Not Started";
+      }
+
+      function normalizeAsanaTask(item) {
+        const requester = cfText(item, "name") || "Onbekend";
+        const priority = cfEnum(item, "Priority level?") || "Geen";
+        const status = inferStatus(item);
+        const ticket = cfNumber(item, "Zendesk ticket");
+        const tags = Array.isArray(item?.tags) ? item.tags.map((t) => t?.name).filter(Boolean) : [];
+        const project = item?.projects?.[0]?.name || item?.workspace?.name || "PIM Work";
+        const completed = Boolean(item?.completed) || String(status).toLowerCase() === "done";
+
+        return {
+          taskName: item?.name || "Naamloze taak",
+          requester,
+          assignee: item?.assignee?.name || "Niet toegewezen",
+          status,
+          priority,
+          ticket,
+          tags,
+          tag: tags[0] || "—",
+          project,
+          createdAt: item?.created_at || "",
+          completedAt: item?.completed_at || "",
+          dueOn: item?.due_on || "",
+          completed
+        };
+      }
+
+      function parseJsonText(text) {
+        const parsed = JSON.parse(text);
+        const items = Array.isArray(parsed) ? parsed
+          : Array.isArray(parsed.data) ? parsed.data
+          : Array.isArray(parsed.tasks) ? parsed.tasks
+          : Array.isArray(parsed.items) ? parsed.items
+          : [];
+        return items.map(normalizeAsanaTask).filter((t) => t.taskName || t.createdAt || t.requester);
+      }
+
+      /* CSV fallback */
+      function normalizeHeader(h) { return String(h || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim(); }
+
+      function parseCSV(text) {
+        const rows = []; let cur = "", row = [], q = false;
+        for (let i = 0; i < text.length; i++) {
+          const c = text[i], n = text[i + 1];
+          if (c === '"') { if (q && n === '"') { cur += '"'; i++; } else q = !q; }
+          else if (c === ',' && !q) { row.push(cur); cur = ""; }
+          else if ((c === '\n' || c === '\r') && !q) { if (c === '\r' && n === '\n') i++; row.push(cur); if (row.some((v) => v !== "")) rows.push(row); row = []; cur = ""; }
+          else cur += c;
+        }
+        if (cur !== "" || row.length) { row.push(cur); if (row.some((v) => v !== "")) rows.push(row); }
+        return rows;
+      }
+
+      function parseCsvText(text) {
+        const rows = parseCSV(text);
+        if (!rows.length) return [];
+        const map = new Map();
+        rows[0].forEach((h, i) => map.set(normalizeHeader(h), i));
+        const find = (...keys) => { for (const k of keys) { const i = map.get(k); if (i !== undefined) return i; } return -1; };
+        const cName = find("task name", "name", "title", "task");
+        const cReq = find("requester", "aanvrager", "created by", "submitted by", "name 2");
+        const cAss = find("assignee", "owner");
+        const cStatus = find("task progress", "status", "state");
+        const cPrio = find("priority level", "priority", "prioriteit");
+        const cTag = find("tags", "tag", "merk", "leverancier");
+        const cTicket = find("zendesk ticket", "ticket");
+        const cCreated = find("created at", "created", "created on");
+        const cCompleted = find("completed at", "completed", "completed on", "done at");
+        return rows.slice(1).map((r) => {
+          const tags = (r[cTag] || "").split(/[;,|]/).map((s) => s.trim()).filter(Boolean);
+          const status = r[cStatus] || "Not Started";
+          return {
+            taskName: r[cName] || "Naamloze taak",
+            requester: r[cReq] || "Onbekend",
+            assignee: r[cAss] || "Niet toegewezen",
+            status,
+            priority: r[cPrio] || "Geen",
+            ticket: r[cTicket] || "",
+            tags, tag: tags[0] || "—",
+            project: "PIM Work",
+            createdAt: r[cCreated] || "",
+            completedAt: r[cCompleted] || "",
+            dueOn: "",
+            completed: Boolean(r[cCompleted]) || String(status).toLowerCase() === "done"
+          };
+        }).filter((t) => t.taskName || t.createdAt);
+      }
+
+      /* ---------- Helpers ---------- */
+
+      function getYear(v) { if (!v) return null; const d = new Date(v); return Number.isNaN(d.getTime()) ? null : d.getFullYear(); }
+      function monthKey(v) { if (!v) return null; const d = new Date(v); if (Number.isNaN(d.getTime())) return null; return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; }
+      function fmtDate(v) { if (!v) return ""; const d = new Date(v); return Number.isNaN(d.getTime()) ? v : d.toLocaleDateString("nl-NL", { day: "2-digit", month: "2-digit", year: "numeric" }); }
+      function dayDiff(a, b) { if (!a || !b) return null; const d1 = new Date(a), d2 = new Date(b); if (Number.isNaN(d1.getTime()) || Number.isNaN(d2.getTime())) return null; return Math.max(0, (d2 - d1) / 86400000); }
+      function ageDays(v) { if (!v) return null; const d = new Date(v); if (Number.isNaN(d.getTime())) return null; return Math.max(0, (Date.now() - d) / 86400000); }
+      function round1(n) { return Math.round(n * 10) / 10; }
+
+      function statusClass(s) {
+        const l = String(s).toLowerCase();
+        if (l.includes("done")) return "done";
+        if (l.includes("progress")) return "prog";
+        if (l.includes("wait") || l.includes("defer")) return "wait";
+        return "open";
+      }
+      function priorityClass(p) {
+        const l = String(p).toLowerCase();
+        if (l.includes("high")) return "high";
+        if (l.includes("medium")) return "med";
+        if (l.includes("low")) return "low";
+        return "";
+      }
+
+      function setOptions(id, values, current) {
+        const el = document.getElementById(id);
+        el.innerHTML = "";
+        const all = document.createElement("option");
+        all.value = "all"; all.textContent = "Alle";
+        el.appendChild(all);
+        [...new Set(values.filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), "nl")).forEach((v) => {
+          const o = document.createElement("option"); o.value = v; o.textContent = v; el.appendChild(o);
+        });
+        el.value = current || "all";
+      }
+
+      function buildFilterOptions() {
+        const t = state.tasks;
+        setOptions("fYear", t.map((x) => getYear(x.createdAt)).filter(Boolean).map(String), state.filters.year);
+        setOptions("fRequester", t.map((x) => x.requester), state.filters.requester);
+        setOptions("fAssignee", t.map((x) => x.assignee), state.filters.assignee);
+        setOptions("fStatus", t.map((x) => x.status), state.filters.status);
+        setOptions("fPriority", t.map((x) => x.priority), state.filters.priority);
+        setOptions("fTag", t.flatMap((x) => x.tags), state.filters.tag);
+      }
+
+      function filteredTasks() {
+        const f = state.filters;
+        return state.tasks.filter((t) => {
+          if (f.year !== "all" && String(getYear(t.createdAt)) !== String(f.year)) return false;
+          if (f.requester !== "all" && t.requester !== f.requester) return false;
+          if (f.assignee !== "all" && t.assignee !== f.assignee) return false;
+          if (f.status !== "all" && t.status !== f.status) return false;
+          if (f.priority !== "all" && t.priority !== f.priority) return false;
+          if (f.tag !== "all" && !t.tags.includes(f.tag)) return false;
+          return true;
+        });
+      }
+
+      /* ---------- Renderers ---------- */
+
+      function renderSummary(rows) {
+        const total = rows.length;
+        const requested = rows.filter((t) => t.createdAt).length;
+        const completed = rows.filter((t) => t.completedAt || t.completed).length;
+        const open = total - completed;
+        const cycles = rows.map((t) => dayDiff(t.createdAt, t.completedAt)).filter((v) => v !== null).sort((a, b) => a - b);
+        const avg = cycles.length ? round1(cycles.reduce((s, v) => s + v, 0) / cycles.length) : 0;
+        const median = cycles.length ? round1(cycles[Math.floor(cycles.length / 2)]) : 0;
+        const rate = requested ? Math.round((completed / requested) * 100) : 0;
+
+        document.getElementById("kTotal").textContent = total;
+        document.getElementById("kRequested").textContent = requested;
+        document.getElementById("kCompleted").textContent = completed;
+        document.getElementById("kCompSub").textContent = `${rate}% van aangevraagd`;
+        document.getElementById("kOpen").textContent = open;
+        document.getElementById("kCycle").textContent = `${avg} d`;
+        document.getElementById("kMedian").textContent = `${median} d`;
+        document.getElementById("donutTotal").textContent = total;
+      }
+
+      function renderBarsRequestedCompleted(containerId, entries, labelFn) {
+        const max = Math.max(1, ...entries.map(([, v]) => Math.max(v.requested, v.completed)));
+        const target = document.getElementById(containerId);
+        if (!entries.length) { target.innerHTML = '<div class="empty">Geen data</div>'; return; }
+        target.innerHTML = entries.map(([key, v]) => `
+          <div class="bar-row">
+            <div class="bar-label">${labelFn(key)}</div>
+            <div class="double-bar">
+              <div class="bar-shell"><div class="bar-fill requested" style="width:${(v.requested / max) * 100}%"></div></div>
+              <div class="bar-shell"><div class="bar-fill completed" style="width:${(v.completed / max) * 100}%"></div></div>
+            </div>
+            <div class="bar-value">${v.requested}/${v.completed}</div>
+          </div>`).join("");
+      }
+
+      function renderMonth(rows) {
+        const m = new Map();
+        const bump = (key, field) => { if (!key) return; if (!m.has(key)) m.set(key, { requested: 0, completed: 0 }); m.get(key)[field]++; };
+        rows.forEach((t) => bump(monthKey(t.createdAt), "requested"));
+        rows.forEach((t) => bump(monthKey(t.completedAt), "completed"));
+        const entries = [...m.entries()].sort((a, b) => a[0].localeCompare(b[0])).slice(-18);
+        renderBarsRequestedCompleted("monthBars", entries, (k) => k);
+      }
+
+      function renderYear(rows) {
+        const m = new Map();
+        const bump = (key, field) => { if (!key) return; const k = String(key); if (!m.has(k)) m.set(k, { requested: 0, completed: 0 }); m.get(k)[field]++; };
+        rows.forEach((t) => bump(getYear(t.createdAt), "requested"));
+        rows.forEach((t) => bump(getYear(t.completedAt), "completed"));
+        const entries = [...m.entries()].sort((a, b) => Number(a[0]) - Number(b[0]));
+        renderBarsRequestedCompleted("yearBars", entries, (k) => k);
+      }
+
+      function renderStackList(containerId, records, cls, max) {
+        const target = document.getElementById(containerId);
+        if (!records.length) { target.innerHTML = '<div class="empty">Geen data</div>'; return; }
+        const m = max || Math.max(...records.map((r) => r.value));
+        target.innerHTML = records.map((r) => `
+          <div class="stack-item">
+            <div class="stack-label" title="${r.label}">${r.label}</div>
+            <div class="stack-shell"><div class="stack-fill ${cls || ""}" style="width:${(r.value / m) * 100}%"></div></div>
+            <div class="stack-value">${r.value}</div>
+          </div>`).join("");
+      }
+
+      function countBy(rows, keyFn) {
+        const m = new Map();
+        rows.forEach((t) => { const k = keyFn(t) || "Onbekend"; m.set(k, (m.get(k) || 0) + 1); });
+        return [...m.entries()].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+      }
+
+      function renderStatusDonut(rows) {
+        const counts = countBy(rows, (t) => t.status);
+        const total = rows.length || 1;
+        let acc = 0;
+        const segments = counts.map((c) => {
+          const start = (acc / total) * 360; acc += c.value;
+          const end = (acc / total) * 360;
+          const color = STATUS_COLORS[c.label] || "#9fb0c6";
+          return `${color} ${start}deg ${end}deg`;
+        });
+        document.getElementById("statusDonut").style.background =
+          segments.length ? `conic-gradient(${segments.join(",")})` : "#eef3fb";
+        document.getElementById("statusLegend").innerHTML = counts.map((c) => `
+          <div class="row">
+            <span class="sw" style="background:${STATUS_COLORS[c.label] || "#9fb0c6"}"></span>
+            <span>${c.label}</span>
+            <span class="cnt">${c.value} · ${Math.round((c.value / total) * 100)}%</span>
+          </div>`).join("") || '<div class="empty">Geen data</div>';
+      }
+
+      function renderPriority(rows) {
+        const order = ["High priority", "Medium priority", "Low priority", "Geen"];
+        const counts = countBy(rows, (t) => t.priority)
+          .sort((a, b) => (order.indexOf(a.label) + 99) % 100 - (order.indexOf(b.label) + 99) % 100 || b.value - a.value);
+        renderStackList("priorityBars", counts, "warning");
+      }
+
+      function renderCycle(rows) {
+        const buckets = [
+          { label: "Zelfde dag", test: (d) => d < 1 },
+          { label: "1–3 dagen", test: (d) => d >= 1 && d < 3 },
+          { label: "3–7 dagen", test: (d) => d >= 3 && d < 7 },
+          { label: "1–2 weken", test: (d) => d >= 7 && d < 14 },
+          { label: "> 2 weken", test: (d) => d >= 14 }
+        ];
+        const cycles = rows.map((t) => dayDiff(t.createdAt, t.completedAt)).filter((v) => v !== null);
+        const records = buckets.map((b) => ({ label: b.label, value: cycles.filter((d) => b.test(d)).length }));
+        renderStackList("cycleBars", records, "purple", Math.max(1, ...records.map((r) => r.value)));
+      }
+
+      function renderKpiList(rows) {
+        const now = new Date();
+        const thisMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+        const reqThisMonth = rows.filter((t) => monthKey(t.createdAt) === thisMonth).length;
+        const doneThisMonth = rows.filter((t) => monthKey(t.completedAt) === thisMonth).length;
+        const open = rows.filter((t) => !(t.completedAt || t.completed));
+        const oldest = open.map((t) => ageDays(t.createdAt)).filter((v) => v !== null).sort((a, b) => b - a)[0];
+        const uniqueReq = new Set(rows.map((t) => t.requester)).size;
+        const uniqueTags = new Set(rows.flatMap((t) => t.tags)).size;
+        const records = [
+          { label: "Aangevraagd deze maand", value: reqThisMonth },
+          { label: "Afgewerkt deze maand", value: doneThisMonth },
+          { label: "Actieve aanvragers", value: uniqueReq },
+          { label: "Merken / leveranciers", value: uniqueTags },
+          { label: "Oudste open (dagen)", value: oldest ? Math.round(oldest) : 0 }
+        ];
+        renderStackList("kpiList", records, "success", Math.max(1, ...records.map((r) => r.value)));
+      }
+
+      function renderBacklog(rows) {
+        const open = rows.filter((t) => !(t.completedAt || t.completed))
+          .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0)).slice(0, 40);
+        const tbody = document.getElementById("backlogRows");
+        if (!open.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">Geen openstaande taken 🎉</td></tr>'; return; }
+        tbody.innerHTML = open.map((t) => {
+          const age = ageDays(t.createdAt);
+          return `<tr>
+            <td>${t.taskName}</td>
+            <td>${t.requester}</td>
+            <td>${t.assignee}</td>
+            <td><span class="chip ${statusClass(t.status)}">${t.status}</span></td>
+            <td><span class="chip ${priorityClass(t.priority)}">${t.priority}</span></td>
+            <td>${fmtDate(t.createdAt)}</td>
+            <td>${age !== null ? Math.round(age) + " d" : "—"}</td>
+          </tr>`;
+        }).join("");
+      }
+
+      function renderAllTable(rows) {
+        const q = state.search.trim().toLowerCase();
+        const list = q ? rows.filter((t) =>
+          [t.taskName, t.requester, t.assignee, t.status, t.priority, t.tag, t.ticket].join(" ").toLowerCase().includes(q)
+        ) : rows;
+        const sorted = [...list].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        document.getElementById("allCount").textContent = `${sorted.length} records`;
+        const tbody = document.getElementById("allRows");
+        if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty">Geen resultaten</td></tr>'; return; }
+        tbody.innerHTML = sorted.slice(0, 500).map((t) => {
+          const cyc = dayDiff(t.createdAt, t.completedAt);
+          return `<tr>
+            <td>${t.taskName}</td>
+            <td>${t.ticket || "—"}</td>
+            <td>${t.requester}</td>
+            <td>${t.assignee}</td>
+            <td><span class="chip ${statusClass(t.status)}">${t.status}</span></td>
+            <td><span class="chip ${priorityClass(t.priority)}">${t.priority}</span></td>
+            <td>${t.tag}</td>
+            <td>${fmtDate(t.createdAt)}</td>
+            <td>${fmtDate(t.completedAt)}</td>
+            <td>${cyc !== null ? round1(cyc) + " d" : "—"}</td>
+          </tr>`;
+        }).join("");
+      }
+
+      function updateSubhead(rows) {
+        const dates = rows.map((t) => t.createdAt).filter(Boolean).map((d) => new Date(d)).filter((d) => !Number.isNaN(d.getTime()));
+        if (!dates.length) { document.getElementById("subhead").innerHTML = `<strong>${rows.length}</strong> taken geladen.`; return; }
+        const min = new Date(Math.min(...dates)), max = new Date(Math.max(...dates));
+        document.getElementById("subhead").innerHTML =
+          `<strong>${state.tasks.length}</strong> taken · periode <strong>${fmtDate(min)}</strong> – <strong>${fmtDate(max)}</strong>`;
+      }
+
+      function render() {
+        const rows = filteredTasks();
+        renderSummary(rows);
+        renderMonth(rows);
+        renderYear(rows);
+        renderStatusDonut(rows);
+        renderPriority(rows);
+        renderStackList("requesterBars", countBy(rows, (t) => t.requester).slice(0, 10), "purple");
+        renderStackList("assigneeBars", countBy(rows, (t) => t.assignee).slice(0, 10), "success");
+        renderStackList("tagBars", countBy(rows.filter((t) => t.tag !== "—"), (t) => t.tag).slice(0, 10), "pink");
+        renderCycle(rows);
+        renderKpiList(rows);
+        renderBacklog(rows);
+        renderAllTable(rows);
+        updateSubhead(rows);
+      }
+
+      function loadTasks(tasks) {
+        state.tasks = tasks;
+        state.filters = { year: "all", requester: "all", assignee: "all", status: "all", priority: "all", tag: "all" };
+        buildFilterOptions();
+        render();
+      }
+
+      /* ---------- Events ---------- */
+
+      document.getElementById("fileInput").addEventListener("change", (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const text = ev.target.result;
+          const ext = (file.name.split(".").pop() || "").toLowerCase();
+          try {
+            const tasks = ext === "csv" ? parseCsvText(text) : parseJsonText(text);
+            if (!tasks.length) { alert("Geen taken gevonden in dit bestand."); return; }
+            loadTasks(tasks);
+          } catch (err) {
+            alert("Het bestand kon niet worden gelezen: " + err.message);
+          }
+        };
+        reader.readAsText(file, "utf-8");
+      });
+
+      ["fYear", "fRequester", "fAssignee", "fStatus", "fPriority", "fTag"].forEach((id) => {
+        document.getElementById(id).addEventListener("change", (e) => {
+          const key = id.replace("f", "").toLowerCase();
+          state.filters[key] = e.target.value;
+          render();
+        });
+      });
+
+      document.getElementById("tableSearch").addEventListener("input", (e) => {
+        state.search = e.target.value;
+        renderAllTable(filteredTasks());
+      });
+
+      document.getElementById("demoBtn").addEventListener("click", () => loadTasks(buildDemo()));
+
+      /* ---------- Demo data ---------- */
+      function buildDemo() {
+        const requesters = ["Engin", "Kathleen", "Sofie", "Niels", "Hakim"];
+        const assignees = ["Ellie Rutten", "Marco", "Sara", "Nina"];
+        const priorities = ["High priority", "Medium priority", "Low priority"];
+        const statuses = ["Done", "Done", "Done", "In Progress", "Waiting", "Not Started"];
+        const brands = ["METABO", "BOSCH", "MAKITA", "DEWALT", "FESTOOL"];
+        const out = [];
+        for (let i = 0; i < 120; i++) {
+          const created = new Date(2026, Math.floor(Math.random() * 8), 1 + Math.floor(Math.random() * 27), 9);
+          const status = statuses[Math.floor(Math.random() * statuses.length)];
+          const done = status === "Done";
+          const completed = done ? new Date(created.getTime() + Math.random() * 12 * 86400000) : null;
+          out.push({
+            taskName: `0215${7000 + i} - ${brands[i % brands.length]} - foto/tekst aanpassen`,
+            requester: requesters[i % requesters.length],
+            assignee: assignees[i % assignees.length],
+            status,
+            priority: priorities[i % priorities.length],
+            ticket: String(740000 + i),
+            tags: [brands[i % brands.length]],
+            tag: brands[i % brands.length],
+            project: "PIM Work Requests",
+            createdAt: created.toISOString(),
+            completedAt: completed ? completed.toISOString() : "",
+            dueOn: "",
+            completed: done
+          });
+        }
+        return out;
+      }
+
+      loadTasks(buildDemo());
+    </script>
+  </body>
+</html>

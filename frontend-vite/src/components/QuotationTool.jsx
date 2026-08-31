@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
@@ -13,7 +13,8 @@ const I18N = {
     totalProducts: "Totaal producten", shipping: "Verzendkosten", freeShipping: "Gratis verzending",
     totalExcl: "Totaal (excl. btw)", vat: "BTW", total: "Totaal",
     intracom: "Intracommunautaire levering — btw verlegd naar de afnemer (0%).",
-    customer: "Klant", company: "Bedrijf", email: "E-mail", price: "Prijs (excl. btw)"
+    customer: "Klant", company: "Bedrijf", email: "E-mail", price: "Prijs (excl. btw)",
+    remark: "Opmerking"
   },
   fr: {
     fileName: "devis", title: "DEVIS", reference: "Référence",
@@ -24,7 +25,8 @@ const I18N = {
     totalProducts: "Total produits", shipping: "Frais de livraison", freeShipping: "Livraison gratuite",
     totalExcl: "Total (hors TVA)", vat: "TVA", total: "Total",
     intracom: "Livraison intracommunautaire — autoliquidation de la TVA (0%).",
-    customer: "Client", company: "Société", email: "E-mail", price: "Prix (hors TVA)"
+    customer: "Client", company: "Société", email: "E-mail", price: "Prix (hors TVA)",
+    remark: "Remarque"
   },
   en: {
     fileName: "quotation", title: "QUOTATION", reference: "Reference",
@@ -35,7 +37,8 @@ const I18N = {
     totalProducts: "Total products", shipping: "Shipping", freeShipping: "Free shipping",
     totalExcl: "Total (excl. VAT)", vat: "VAT", total: "Total",
     intracom: "Intra-community supply — VAT reverse charged (0%).",
-    customer: "Customer", company: "Company", email: "Email", price: "Price (excl. VAT)"
+    customer: "Customer", company: "Company", email: "Email", price: "Price (excl. VAT)",
+    remark: "Remark"
   }
 };
 
@@ -113,13 +116,65 @@ function streetLine(d) {
   return s || d.adres || "";
 }
 
-export default function QuotationTool({ onOfferteSaved, offerteData }) {
+function splitAddressLine(address) {
+  const raw = String(address || "").trim();
+  if (!raw) return { straat: "", nummer: "", bus: "" };
+
+  const busMatch = raw.match(/\b(?:bus|bte|box)\s+(.+)$/i);
+  const bus = busMatch ? busMatch[1].trim() : "";
+  const core = busMatch ? raw.slice(0, busMatch.index).trim() : raw;
+
+  const numberMatch = core.match(/^(.*?)(?:\s+(\d+[A-Za-z]?|\d+\/\d+[A-Za-z]?))$/);
+  if (!numberMatch || !numberMatch[1].trim()) {
+    return { straat: core, nummer: "", bus };
+  }
+
+  return {
+    straat: numberMatch[1].trim(),
+    nummer: numberMatch[2].trim(),
+    bus
+  };
+}
+
+function splitInternalSections(text) {
+  const raw = String(text || '').trim();
+  if (!raw) return { manual: '', generated: '' };
+  const markers = ['\n\nSlimme import opvolging:', '\n\nOpen importregels bij opslaan:'];
+  let cutIndex = raw.length;
+  for (const marker of markers) {
+    const idx = raw.indexOf(marker);
+    if (idx >= 0) cutIndex = Math.min(cutIndex, idx);
+  }
+  if (cutIndex === raw.length) {
+    if (raw.startsWith('Slimme import opvolging:') || raw.startsWith('Open importregels bij opslaan:')) {
+      return {
+        manual: '',
+        generated: raw.includes('[object Object]') ? '' : raw
+      };
+    }
+    return { manual: raw, generated: '' };
+  }
+  const generated = raw.slice(cutIndex).trim();
+  return {
+    manual: raw.slice(0, cutIndex).trim(),
+    generated: generated.includes('[object Object]') ? '' : generated
+  };
+}
+
+export default function QuotationTool({ onOfferteSaved, offerteData, onOffertePrefillDone }) {
   const CDC_LINE_COST = 5.33;
+  const PCT_ZERO_EPSILON = 0.015;
   const fmt = (val, decimals = 2) => {
     if (val === undefined || val === null || val === "") return "";
     let num = Number(val);
     if (isNaN(num)) return val;
     return num.toFixed(decimals);
+  };
+
+  const normalizePct = (val, epsilon = PCT_ZERO_EPSILON) => {
+    const num = Number(val);
+    if (!Number.isFinite(num)) return val;
+    return Math.abs(num) < epsilon ? 0 : num;
   };
 
   function toNumOrNull(v) {
@@ -307,10 +362,20 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   const [proposals, setProposals] = useState({});
   const [proposalInputBuffer, setProposalInputBuffer] = useState({});
   const proposalRefs = useRef({});
+  const prefillDoneCallbackRef = useRef(onOffertePrefillDone);
   const batchRef = useRef(null);
   const gutterRef = useRef(null);
   const [batchInput, setBatchInput] = useState("");
   const [importResult, setImportResult] = useState(null);
+  const [showOnlyOpenImport, setShowOnlyOpenImport] = useState(false);
+  const [openManualSku, setOpenManualSku] = useState({});
+  const [openItemSuggestions, setOpenItemSuggestions] = useState({});
+  const [openItemSuggestionStatus, setOpenItemSuggestionStatus] = useState({});
+  const [importAuditNotes, setImportAuditNotes] = useState([]);
+  const [internalComment, setInternalComment] = useState("");
+  const [zichtbareNota, setZichtbareNota] = useState("");
+  const [shippingCost, setShippingCost] = useState(""); // verzendkosten (excl. btw)
+  const [savedGeneratedComment, setSavedGeneratedComment] = useState("");
   const [importLoading, setImportLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -322,6 +387,18 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   const [discountMode, setDiscountMode] = useState("pct"); // 'pct' | 'eur'
   const [discountNote, setDiscountNote] = useState("");
   const [docLang, setDocLang] = useState("nl"); // taal voor PDF/Excel: 'nl' | 'fr' | 'en'
+  const [prefillLoading, setPrefillLoading] = useState(false);
+  const [tableMode, setTableMode] = useState("compact");
+  const [articleSearch, setArticleSearch] = useState("");
+  const [articleStatusFilter, setArticleStatusFilter] = useState("all");
+  const [articleSortBy, setArticleSortBy] = useState("input-order");
+  const [quickAddSku, setQuickAddSku] = useState("");
+  const [quickAddAmount, setQuickAddAmount] = useState(1);
+  const [quickAddLoading, setQuickAddLoading] = useState(false);
+
+  useEffect(() => {
+    prefillDoneCallbackRef.current = onOffertePrefillDone;
+  }, [onOffertePrefillDone]);
 
   function getSafeTooltipPosition(clientX, clientY, opts = {}) {
     const margin = 12;
@@ -365,6 +442,12 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     { key: "givenDiscount", label: "Geg. korting (%)" }
   ];
 
+  const compactHiddenColumns = new Set(["Discount", "Discount%", "Cost", "M€", "M%"]);
+  const visibleColumns = useMemo(
+    () => columns.filter((col) => tableMode === "extended" || !compactHiddenColumns.has(col.key)),
+    [tableMode]
+  );
+
   const colWidths = {
     SKU: "6%",
     amount: "7%",
@@ -382,11 +465,99 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     givenDiscount: "4%"
   };
 
+  const compactColWidths = {
+    SKU: "8%",
+    amount: "7%",
+    SUPPLIER_REFERENCE: "10%",
+    Name: "36%",
+    LeadTimeLabel: "12%",
+    Price: "7%",
+    proposal: "8%",
+    mpp: "6%",
+    givenDiscount: "8%"
+  };
+
+  const getColumnWidth = (key) => {
+    if (tableMode === "compact" && compactColWidths[key]) {
+      return compactColWidths[key];
+    }
+    return colWidths[key] || "auto";
+  };
+
+  const getColumnLabel = (col) => {
+    if (tableMode === "compact" && col.key === "givenDiscount") {
+      return "Geg. kort. (%)";
+    }
+    return col.label;
+  };
+
+  const visibleProductIndices = useMemo(() => {
+    const term = articleSearch.trim().toLowerCase();
+
+    let items = products.map((product, index) => {
+      const amount = Math.max(1, Math.floor(toNumOrNull(product.amount) ?? 1));
+      const stock = Math.max(0, Math.floor(toNumOrNull(product.Stock) ?? 0));
+      const inStock = Math.min(stock, amount);
+      const backOrder = Math.max(amount - stock, 0);
+
+      const proposalVal = proposalInputBuffer[product.SKU] !== undefined && !Number.isNaN(Number(proposalInputBuffer[product.SKU]))
+        ? Number(proposalInputBuffer[product.SKU])
+        : Number(product.proposal) || 0;
+      const price = Number(product.Price) || 0;
+      const mpp = proposalVal > 0 && Number(product.Cost)
+        ? ((proposalVal - Number(product.Cost)) / proposalVal) * 100
+        : 0;
+
+      return { index, product, inStock, backOrder, price, proposalVal, mpp };
+    });
+
+    if (term) {
+      items = items.filter(({ product }) => {
+        const haystack = [
+          product.SKU,
+          product.SUPPLIER_REFERENCE,
+          product.Name,
+          product.LeadTimeLabel,
+        ].filter(Boolean).join(" ").toLowerCase();
+        return haystack.includes(term);
+      });
+    }
+
+    if (articleStatusFilter !== "all") {
+      items = items.filter((item) => {
+        if (articleStatusFilter === "stock") return item.backOrder === 0;
+        if (articleStatusFilter === "order") return item.backOrder > 0;
+        if (articleStatusFilter === "split") return item.inStock > 0 && item.backOrder > 0;
+        return true;
+      });
+    }
+
+    const sorted = [...items].sort((a, b) => {
+      switch (articleSortBy) {
+        case "name-asc":
+          return String(a.product.Name || "").localeCompare(String(b.product.Name || ""), "nl", { sensitivity: "base" });
+        case "sku-asc":
+          return String(a.product.SKU || "").localeCompare(String(b.product.SKU || ""), "nl", { sensitivity: "base" });
+        case "price-desc":
+          return b.price - a.price;
+        case "proposal-desc":
+          return b.proposalVal - a.proposalVal;
+        case "mpp-desc":
+          return b.mpp - a.mpp;
+        case "input-order":
+        default:
+          return a.index - b.index;
+      }
+    });
+
+    return sorted.map((item) => item.index);
+  }, [products, articleSearch, articleStatusFilter, articleSortBy, proposalInputBuffer]);
+
   // FETCH RECENT OFFERTES
   useEffect(() => {
     async function fetchRecentOffertes() {
       try {
-        const res = await fetch("http://localhost:3000/api/offertes");
+        const res = await fetch("/api/offertes");
         const data = await res.json();
         setRecentOffertes(Array.isArray(data.offertes) ? data.offertes : []);
       } catch {
@@ -400,47 +571,68 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   useEffect(() => {
     async function prefillFromOfferte() {
       if (offerteData && offerteData.id) {
-        setCustomerData({
-          naam: offerteData.customer || '',
-          bedrijf: offerteData.bedrijf || '',
-          btw: offerteData.btw || '',
-          straat: offerteData.straat || offerteData.adres || '',
-          nummer: offerteData.nummer || '',
-          bus: offerteData.bus || '',
-          postcode: offerteData.postcode || '',
-          gemeente: offerteData.gemeente || '',
-          land: countryCode(offerteData.land) || 'BE',
-          email: offerteData.email || ''
-        });
-        const skus = Array.isArray(offerteData.producten) ? offerteData.producten.map(p => p.sku).join(",") : "";
-        if (skus) {
-          try {
-            const res = await fetch(`http://localhost:3000/api/products?skus=${skus}`);
-            const data = await res.json();
-            const prodMap = {};
-            offerteData.producten.forEach(p => { prodMap[p.sku] = p; });
-            const merged = (data.products || []).map(p => {
-              const o = prodMap[p.SKU] || {};
-              return {
-                ...p,
-                amount: o.aantal ?? 1,
-                proposal: o.prijs ?? p.Price,
-                Name: o.naam ?? p.Name
-              };
-            });
-            setProducts(merged);
-          } catch {
-            setProducts(
-              offerteData.producten.map(p => ({
-                SKU: p.sku,
-                Name: p.naam,
-                amount: p.aantal,
-                proposal: p.prijs
-              }))
-            );
+        setPrefillLoading(true);
+        try {
+          const internalSections = splitInternalSections(offerteData.interneOpmerking || '');
+          const addressSource = offerteData.straat || offerteData.adres || '';
+          const addressParts = (!offerteData.nummer && !offerteData.bus)
+            ? splitAddressLine(addressSource)
+            : { straat: offerteData.straat || '', nummer: offerteData.nummer || '', bus: offerteData.bus || '' };
+          setCustomerData({
+            naam: offerteData.customer || '',
+            bedrijf: offerteData.bedrijf || '',
+            btw: offerteData.btw || '',
+            straat: addressParts.straat,
+            nummer: addressParts.nummer,
+            bus: addressParts.bus,
+            postcode: offerteData.postcode || '',
+            gemeente: offerteData.gemeente || '',
+            land: countryCode(offerteData.land) || 'BE',
+            email: offerteData.email || ''
+          });
+          setInternalComment(internalSections.manual);
+          setZichtbareNota(offerteData.zichtbareNota || '');
+          setShippingCost(offerteData.shippingCost ? String(offerteData.shippingCost) : '');
+          setSavedGeneratedComment(internalSections.generated);
+          setArticleSearch("");
+          setArticleStatusFilter("all");
+          setArticleSortBy("input-order");
+
+          const skus = Array.isArray(offerteData.producten) ? offerteData.producten.map(p => p.sku).join(",") : "";
+          if (skus) {
+            try {
+              const res = await fetch(`/api/products?skus=${skus}`);
+              const data = await res.json();
+              const prodMap = {};
+              offerteData.producten.forEach(p => { prodMap[p.sku] = p; });
+              const merged = (data.products || []).map(p => {
+                const o = prodMap[p.SKU] || {};
+                return {
+                  ...p,
+                  amount: o.aantal ?? 1,
+                  proposal: o.prijs ?? p.Price,
+                  Name: o.naam ?? p.Name
+                };
+              });
+              setProducts(merged);
+            } catch {
+              setProducts(
+                offerteData.producten.map(p => ({
+                  SKU: p.sku,
+                  Name: p.naam,
+                  amount: p.aantal,
+                  proposal: p.prijs
+                }))
+              );
+            }
+          } else {
+            setProducts([]);
           }
-        } else {
-          setProducts([]);
+        } finally {
+          setPrefillLoading(false);
+          if (typeof prefillDoneCallbackRef.current === "function") {
+            prefillDoneCallbackRef.current(offerteData.id);
+          }
         }
       }
     }
@@ -464,6 +656,15 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     setHasFetchedProducts(false);
     setBatchInput("");
     setImportResult(null);
+    setShowOnlyOpenImport(false);
+    setOpenManualSku({});
+    setOpenItemSuggestions({});
+    setOpenItemSuggestionStatus({});
+    setImportAuditNotes([]);
+    setInternalComment("");
+    setZichtbareNota("");
+    setShippingCost("");
+    setSavedGeneratedComment("");
     setSearchInput("");
     setSearchResults([]);
     setTooManyResults(false);
@@ -472,6 +673,10 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     setDiscountValue("");
     setDiscountMode("pct");
     setDiscountNote("");
+    setArticleSearch("");
+    setArticleStatusFilter("all");
+    setArticleSortBy("input-order");
+    setTableMode("compact");
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -502,6 +707,71 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   // zodat naam + aantal op één logische regel staan. Gewone lijsten blijven ongewijzigd.
   function preprocessLines(text) {
     const raw = text.split(/\r?\n/);
+    
+    // Detecteer tab-gescheiden tabelformat
+    const tabLines = raw.filter(l => l.includes('\t'));
+    const isTableFormat = tabLines.length > 2; // Meerdere regels met tabs = waarschijnlijk tabel
+    
+    if (isTableFormat) {
+      // Parse tabel: identificeer kolommen via header-rij
+      const headerCandidates = raw.slice(0, Math.min(3, raw.length))
+        .map((l, idx) => ({ line: l, index: idx, parts: l.split('\t').map(p => p.trim()) }))
+        .filter(h => h.parts.length >= 2);
+      
+      let headerIdx = -1;
+      let refColIdx = -1;
+      let qtyColIdx = -1;
+      let descColIdx = -1;
+      
+      for (const hc of headerCandidates) {
+        const lowerParts = hc.parts.map(p => p.toLowerCase());
+        const isLikelyHeader = lowerParts.some(p => 
+          /omschrijving|description|product|artikel|artikelnummer|supplier|reference|qty|aantal|quantity/.test(p)
+        );
+        
+        if (isLikelyHeader) {
+          headerIdx = hc.index;
+          // Zoek kolom-indices
+          for (let i = 0; i < lowerParts.length; i++) {
+            const p = lowerParts[i];
+            if (/artikel|referentie|supplier|art\.?nr|sku/.test(p) && refColIdx === -1) refColIdx = i;
+            if (/qty|aantal|quantity|hoeveelheid/.test(p) && qtyColIdx === -1) qtyColIdx = i;
+            if (/omschrijving|description|product|naam/.test(p) && descColIdx === -1) descColIdx = i;
+          }
+          break;
+        }
+      }
+      
+      if (headerIdx >= 0) {
+        // Filter header en lege rijen, parse data
+        const out = [];
+        raw.forEach((l, lineIdx) => {
+          if (lineIdx <= headerIdx || !l.trim()) return;
+          
+          const cols = l.split('\t').map(c => c.trim()).filter(Boolean);
+          if (cols.length < 2) return;
+          
+          // Reconstruct regel: beschrijving | merk | referentie | hoeveelheid
+          const desc = descColIdx >= 0 && cols[descColIdx] ? cols[descColIdx] : '';
+          const ref = refColIdx >= 0 && cols[refColIdx] ? cols[refColIdx] : '';
+          const qty = qtyColIdx >= 0 && cols[qtyColIdx] ? cols[qtyColIdx] : '1';
+          
+          // Fallback: als ref niet gevonden, neem de langste kolom (waarschijnlijk referentie)
+          const refFinal = ref || cols.reduce((a, b) => a.length > b.length ? a : b, '');
+          
+          // Reconstitueer de regel als: "Qty× Omschrijving Referentie"
+          // Altijd de qty prefix plaatsen (ook bij 1) zodat parseSmartLines
+          // de hoeveelheid betrouwbaar van het begin pakt en niet uit de
+          // productnaam (bv. "202X" in "FID2-202X" zou anders als 202 herkend worden).
+          const reconstructed = `${qty}× ${desc} ${refFinal}`.trim();
+          
+          out.push({ text: reconstructed, line: lineIdx });
+        });
+        return out;
+      }
+    }
+    
+    // Niet-tabel format: standaard verwerking
     const startsNewItem = l =>
       /^\s*\d{8}\b/.test(l) ||            // 8-cijferige SKU vooraan
       /^\s*\d+\s*[x×]\s+/i.test(l) ||     // "2x ..."
@@ -525,24 +795,171 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   }
 
   function parseSmartLines(text) {
+    const looksLikeMeasurement = (value) => {
+      const v = String(value || '').trim().toLowerCase().replace(/\s+/g, '');
+      return /^(?:\d+(?:[.,]\d+)?)(?:mm|cm|dm|m|km|kg|g|gr|ml|cl|l|bar|v|w|hz)$/.test(v);
+    };
+    const normalizeImportLine = (value) => String(value || '')
+      .replace(/[\u2022*☐]/g, ' ')
+      .replace(/[–—]/g, '-')
+      .replace(/\s+/g, ' ')
+      .trim();
+    const cleanRefCandidate = (value) => String(value || '')
+      .replace(/^[^A-Za-z0-9]+/, '')
+      .replace(/[.,;:!?)\]"']+$/, '')
+      .trim();
+    const isGroupedNumericRef = (value) => {
+      const candidate = cleanRefCandidate(value);
+      if (!candidate) return false;
+      if (!/^\d{1,4}(?:[.,/\- ]\d{1,4})+$/.test(candidate)) return false;
+      const digitsOnly = candidate.replace(/\D+/g, '');
+      return digitsOnly.length >= 6;
+    };
+    const isTooGenericModelPhrase = (value) => {
+      const normalized = cleanRefCandidate(value).toLowerCase().replace(/[^a-z0-9]+/g, '');
+      if (!normalized) return false;
+      return new Set([
+        'm18double',
+        'm12fuel',
+        'm4fuel',
+        'shockwave12',
+        'holedozerquiklok'
+      ]).has(normalized);
+    };
+    const isWeakRefCandidate = (value) => {
+      const candidate = cleanRefCandidate(value);
+      if (!candidate) return true;
+      if (/^\d{6,14}$/.test(candidate)) return false;
+      if (isGroupedNumericRef(candidate)) return false;
+      if (isTooGenericModelPhrase(candidate)) return true;
+      if (looksLikeMeasurement(candidate)) return true;
+      if (/^\d+(?:[.,]\d+)?$/.test(candidate)) return true;
+      if (/^\d+(?:\/\d+)+$/.test(candidate)) return true;
+      return false;
+    };
+    const extractModelPhrase = (value) => {
+      const source = String(value || '');
+      const patterns = [
+        /\b((?:M(?:12|18|4)|MXF)\s+FORGE\s+FB\d{1,3})\b/i,
+        /\b((?:M(?:12|18|4)|MXF)\s+TRUEVIEW\s+\d{3,5})\b/i,
+        /\b((?:MILWAUKEE\s+)?ROLL-ON\s+\d{3,5}(?:\/\d{3,5})?)\b/i,
+        /\b((?:M(?:12|18|4)|MXF)\s+[A-Z0-9]+(?:[./-][A-Z0-9]+)+)\b/i,
+        /\b((?:M(?:12|18|4)|MXF)\s+(?:FORGE|FUEL)\b(?:[^\dA-Za-z]+\b\d\/\d\b)?)\b/i,
+        /\b((?:M(?:12|18|4)|MXF)\s+[A-Z]{1,10}\d*[A-Z0-9]*)\b/i,
+        /\b(HOLE\s+DOZER\s+QUIK-LOK)\b/i,
+        /\b(SHOCKWAVE\s+1\/2)\b/i
+      ];
+      for (const pattern of patterns) {
+        const match = source.match(pattern);
+        if (!match) continue;
+        const candidate = cleanRefCandidate(match[1]);
+        if (candidate) return candidate;
+      }
+      return '';
+    };
+
     const rows = preprocessLines(text);
     const items = [];
     rows.forEach(({ text: rawLine, line: idx }) => {
-      const line = rawLine.trim();
+      const line = normalizeImportLine(rawLine);
       if (!line) return;
+      const strippedLine = line.replace(/^[\-\s]+/, '').trim();
+      const leadingQtyMatch = strippedLine.match(/^(\d{1,5})\s*[x×]\s+(.*)$/i);
+      const contentLine = leadingQtyMatch ? leadingQtyMatch[2].trim() : strippedLine;
 
       // ----- Referentie bepalen -----
       let ref = null;
-      const artMatch = line.match(/art(?:ikel|\.?nr|\.|:)?\.?\s*[:.]?\s*([0-9][0-9A-Za-z\-./]{2,})/i);
+      const artMatch = contentLine.match(/(?:art(?:ikel|\.?nr|\.|:)?|ref(?:erence)?|ref\.)\.?\s*[:.]?\s*([0-9][0-9A-Za-z\-./]{2,})/i);
       if (artMatch) ref = artMatch[1].replace(/[.\-/]+$/, "");
       if (!ref) {
-        const skuMatch = line.match(/\b(\d{8})\b/);
+        const skuMatch = contentLine.match(/\b(\d{8})\b/);
         if (skuMatch) ref = skuMatch[1];
+      }
+      // PRIORITEIT: Zoek naar 10-cijferige leverancierscodes (Milwaukee, FACOM, etc.)
+      // Deze zijn zeer betrouwbaar voor opzoeken in database
+      if (!ref) {
+        const supplierCodeMatch = contentLine.match(/\b(\d{10})\b/);
+        if (supplierCodeMatch) ref = supplierCodeMatch[1];
+      }
+      // Fallback: andere langere numerieke codes (6-14 cijfers, niet 8)
+      if (!ref) {
+        const numericCodeMatch = contentLine.match(/\b(\d{6,14})\b/);
+        if (numericCodeMatch && numericCodeMatch[1].length !== 8 && numericCodeMatch[1].length !== 10) {
+          ref = numericCodeMatch[1];
+        }
+      }
+      if (!ref) {
+        const modelPhrase = extractModelPhrase(contentLine);
+        if (modelPhrase) ref = modelPhrase;
+      }
+      // Fallback: leveranciersreferentie met gescheiden groepen,
+      // bv. "98 00 12" of "117.23.13".
+      if (!ref) {
+        const lineNoLeadingQty = contentLine
+          .replace(/^\s*\d{1,5}\s+/, '');
+        // Kolomvorm: "aantal merk referentie omschrijving" (bv. "1 FACOM S.12H Dop 1/2 12mm").
+        const qtyBrandRefMatch = contentLine.match(/^\s*[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ.&'-]{1,}\s+([A-Za-z0-9]+(?:[./-][A-Za-z0-9]+)+|[A-Za-z]{1,4}\d+[A-Za-z0-9./-]*|\d+[A-Za-z][A-Za-z0-9./-]*)\b/i);
+        if (qtyBrandRefMatch) {
+          const candidate = qtyBrandRefMatch[1].replace(/[./-]+$/, '').trim();
+          if (!looksLikeMeasurement(candidate)) {
+            ref = candidate;
+          }
+        }
+        // Pattern zoals "BAHCO 9072 P" of "9072 P" (code met losse suffix-letter).
+        const splitSuffixRefMatch = !ref ? lineNoLeadingQty.match(/^(?:[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ.&'-]{1,}\s+)?(\d{3,10}\s+[A-Za-z]{1,3})\b/) : null;
+        if (!ref && splitSuffixRefMatch) {
+          const candidate = splitSuffixRefMatch[1].replace(/\s+/g, ' ').trim();
+          if (!looksLikeMeasurement(candidate)) {
+            ref = candidate;
+          }
+        }
+        // Referentie met numerieke groepen en separators, bv. "110.400", "98 00 12".
+        if (!ref) {
+          const numericGroupedMatch = lineNoLeadingQty.match(/\b(\d{1,4}(?:[ ./-]\d{1,4}){1,4})\b/);
+          if (numericGroupedMatch) {
+            const candidate = numericGroupedMatch[1].replace(/\s+/g, ' ').trim();
+            if (!looksLikeMeasurement(candidate)) {
+              ref = candidate;
+            }
+          }
+        }
+        // Token met letters+cijfers zonder scheiding, bv. "9072P" of "44A10X11".
+        // Let op: niet afkappen als er direct nog een code-deel volgt zoals "177A.18".
+        if (!ref) {
+          const compactAlphaNumMatch = lineNoLeadingQty.match(/\b(?=[A-Za-z0-9]*\d)(?=[A-Za-z0-9]*[A-Za-z])[A-Za-z0-9]{4,}\b(?![./-]\d)/);
+          if (compactAlphaNumMatch) {
+            const candidate = compactAlphaNumMatch[0].replace(/[./-]+$/, '');
+            if (!looksLikeMeasurement(candidate)) {
+              ref = candidate;
+            }
+          }
+        }
+        // Eerst codes binnen één token (bv. ETS.104, BLDDRC-402C).
+        const tokenCodeMatch = !ref ? lineNoLeadingQty.match(/\b(?=[A-Za-z0-9./-]*\d)[A-Za-z0-9]+(?:[./-][A-Za-z0-9]+)+\b/) : null;
+        if (!ref && tokenCodeMatch) {
+          ref = tokenCodeMatch[0].replace(/[./-]+$/, "");
+        }
+      }
+      // Laatste fallback voor supplier refs zonder vast patroon: neem na hoeveelheid
+      // en merk de eerstvolgende code-achtige token(s).
+      if (!ref) {
+        const tail = contentLine
+          .replace(/^\s*\d{1,5}\s+/, '')
+          .replace(/^\s*[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ.&'-]{1,}\s+/, '')
+          .trim();
+        const tokens = tail
+          .split(/\s+/)
+          .map(t => cleanRefCandidate(t))
+          .filter(Boolean);
+        if (tokens.length) {
+          const candidates = tokens.filter(t => /[A-Za-z]/.test(t) && /\d/.test(t) && !looksLikeMeasurement(t));
+          if (candidates.length) ref = candidates.sort((a, b) => b.length - a.length)[0];
+        }
       }
       let amountFromParts = null;
       if (!ref) {
         // "SKU,aantal" — enkel als het eerste token een plausibele SKU is (6-8 cijfers)
-        const parts = line.split(/[\t,;]+/).map(s => s.trim()).filter(Boolean);
+        const parts = contentLine.split(/[\t,;]+/).map(s => s.trim()).filter(Boolean);
         const first = parts.length ? parts[0].split(/\s+/)[0] : "";
         if (/^\d{6,8}$/.test(first)) {
           ref = first;
@@ -553,33 +970,33 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
       // (bv. een 10-cijferige Milwaukee-code zoals 4932430483). Wordt via de
       // leveranciersreferentie opgezocht.
       if (!ref) {
-        const numMatch = line.match(/\b(\d{6,14})\b/);
+        const numMatch = contentLine.match(/\b(\d{6,14})\b/);
         if (numMatch && numMatch[1].length !== 8) ref = numMatch[1];
       }
       // Fallback: alfanumerieke leveranciersreferentie/modelcode die zowel letters als
       // cijfers bevat, bv. "41/KIT360", "MFT/3", "SYS3". Wordt via LIKE + scoring opgezocht.
       if (!ref) {
-        const codeTokens = (line.match(/[A-Za-z0-9][A-Za-z0-9/.\-]{3,}/g) || [])
+        const codeTokens = (contentLine.match(/[A-Za-z0-9][A-Za-z0-9/.\-]{3,}/g) || [])
           .filter(t => /[A-Za-z]/.test(t) && /\d/.test(t));
         if (codeTokens.length) {
           ref = codeTokens.sort((a, b) => b.length - a.length)[0].replace(/[.\-/]+$/, "");
         }
       }
+      if (isWeakRefCandidate(ref)) ref = null;
 
       // ----- Aantal bepalen (meerdere formaten) -----
-      let amount = 1;
+      let amount = leadingQtyMatch ? (Number(leadingQtyMatch[1]) || 1) : 1;
       const isRefNum = n => ref && String(n) === String(ref);
       let m =
         line.match(/€\s*[\d.,]+\s+(\d{1,5})\s+€\s*[\d.,]+/) ||                       // proforma: stukprijs  Aantal  totaal
-        line.match(/^\s*(\d{1,5})\s*[x×]\s+/i) ||                                    // "2x ..."
         line.match(/\b(?:pcs?|pieces?|stuks?|stk?|qty|aantal|ea)\.?\s*[:.]?\s*(\d{1,5})\b/i) || // "Pcs. 350"
-        line.match(/\b(\d{1,5})\s*(?:pcs?|pieces?|stuks?|stk?|x)\b/i) ||             // "350 pcs"
+        line.match(/\b(\d{1,5})\s*(?:pcs?|pieces?|stuks?|stk?)\b/i) ||               // "350 pcs" (geen x!)
         line.match(/^[\s\-–—•*]*(\d{1,4})\s+\D/);                                    // "- 350 borstels"
       if (m && !isRefNum(m[1])) amount = Number(m[1]) || 1;
       else if (amountFromParts && !isRefNum(amountFromParts)) amount = amountFromParts;
 
       // ----- Merk (hulp bij keuze; scoring op backend is leidend) -----
-      let head = line.replace(/^[\s\-–—•*]*/, "");
+      let head = strippedLine;
       head = head.replace(/^(?:pcs?|pieces?|stuks?|stk?|qty|aantal|ea)\.?\s*[:.]?\s*/i, "");
       head = head.replace(/^\d[\d.,/xX]*\s*/, "");
       head = head.replace(/^(?:pcs?|pieces?|stuks?|stk?)\.?\s*/i, "");
@@ -601,11 +1018,15 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     const recognized = parsed.filter(i => i.recognized);
     const unrecognized = parsed.filter(i => !i.recognized);
     setImportLoading(true);
+    setShowOnlyOpenImport(false);
     setImportResult(null);
+    setOpenItemSuggestions({});
+    setOpenItemSuggestionStatus({});
+    setSavedGeneratedComment("");
     try {
       let data = { resolved: [], ambiguous: [], unresolved: [] };
       if (recognized.length) {
-        const res = await fetch("http://localhost:3000/api/products/resolve", {
+        const res = await fetch("/api/products/resolve", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -620,8 +1041,11 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
         unresolved: data.unresolved || [],
         unrecognized: unrecognized.map(i => ({ line: i.line, raw: i.raw, amount: i.amount })),
         parsedCount: parsed.length,
+        addedResolved: 0,
         truncated: !!data.truncated
       });
+      fetchSuggestionsForOpenItems('unresolved', data.unresolved || []);
+      fetchSuggestionsForOpenItems('unrecognized', unrecognized.map(i => ({ line: i.line, raw: i.raw, amount: i.amount })));
     } catch {
       alert("Fout bij slimme import.");
     }
@@ -644,12 +1068,22 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   }
 
   // Klikbaar knopje dat naar de originele invoerregel springt en die selecteert
-  function renderLineRef(lineNo) {
+  function getInputLineValue(lineNo) {
+    if (lineNo === null || lineNo === undefined) return "";
+    const lines = batchInput.split(/\r?\n/);
+    return String(lines[lineNo] || '').trim();
+  }
+
+  function renderLineRef(lineNo, lineValue = "") {
     if (lineNo === null || lineNo === undefined) return null;
+    const preview = String(lineValue || getInputLineValue(lineNo) || '').trim();
+    const title = preview
+      ? `Toon deze regel in de invoer\nWaarde: ${preview}`
+      : 'Toon deze regel in de invoer';
     return (
       <button
         onClick={() => highlightInputLine(lineNo)}
-        title="Toon deze regel in de invoer"
+        title={title}
         style={{ background:'#0077cc', color:'white', border:'none', borderRadius:5, padding:'1px 8px', fontSize:'0.8em', fontWeight:700, cursor:'pointer', whiteSpace:'nowrap' }}
       >
         regel {lineNo + 1}
@@ -672,7 +1106,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     if (Object.prototype.hasOwnProperty.call(skuNames, key)) return;
     setSkuNames(prev => ({ ...prev, [key]: false }));
     try {
-      const res = await fetch(`http://localhost:3000/api/products?skus=${key}`);
+      const res = await fetch(`/api/products?skus=${key}`);
       const data = await res.json();
       const norm = s => String(s).replace(/^0+/, "");
       const prod = (data.products || []).find(p => norm(p.SKU) === norm(key)) || (data.products || [])[0];
@@ -684,6 +1118,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
 
   function addResolvedRows() {
     if (!importResult) return;
+    const addedNow = importResult.resolved.length;
     // Namen uit de import meteen cachen zodat ze naast de rijen verschijnen.
     setSkuNames(prev => {
       const next = { ...prev };
@@ -691,8 +1126,11 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
       return next;
     });
     appendRows(importResult.resolved.map(r => ({ sku: r.sku, amount: r.amount })));
-    setBatchInput("");
-    setImportResult(null);
+    setImportResult(prev => prev ? {
+      ...prev,
+      resolved: [],
+      addedResolved: Number(prev.addedResolved || 0) + addedNow
+    } : prev);
   }
 
   function addCandidateRow(sku, amount, name) {
@@ -706,6 +1144,439 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     } : prev);
   }
 
+  function closeImportResult() {
+    setImportResult(null);
+    setShowOnlyOpenImport(false);
+    setOpenManualSku({});
+    setOpenItemSuggestions({});
+    setOpenItemSuggestionStatus({});
+  }
+
+  function importLineText(item) {
+    if (!item) return "";
+    return String(item.text || item.raw || getInputLineValue(item.line) || item.ref || '').trim();
+  }
+
+  function openItemKey(kind, index, item) {
+    const linePart = Number.isInteger(item && item.line) ? String(item.line) : String(index);
+    const textPart = String((item && (item.raw || item.text || item.ref)) || '')
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .slice(0, 80);
+    return `${kind}-${linePart}-${textPart}`;
+  }
+
+  function normalizeSearchText(value) {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+  }
+
+  function extractSuggestionTerms(rawLine, ref = '') {
+    const source = normalizeSearchText(rawLine)
+      .replace(/[()\[\]{}]/g, ' ')
+      .replace(/["'`]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (!source) return [];
+
+    const terms = new Set();
+    const modelPatterns = [
+      /\b((?:m(?:12|18|4)|mxf)\s+forge\s+fb\d{1,3})\b/g,
+      /\b((?:m(?:12|18|4)|mxf)\s+trueview\s+\d{3,5})\b/g,
+      /\b((?:m(?:12|18|4)|mxf)\s+[a-z0-9]+(?:[./-][a-z0-9]+)+)\b/g,
+      /\b((?:milwaukee\s+)?roll-on\s+\d{3,5}(?:\/\d{3,5})?)\b/g,
+      /\b(\d{8,12})\b/g
+    ];
+
+    for (const pattern of modelPatterns) {
+      let match;
+      while ((match = pattern.exec(source)) !== null) {
+        terms.add(match[1].trim());
+      }
+    }
+
+    const stopWords = new Set([
+      'super', 'chargeur', 'coffret', 'jeu', 'de', 'des', 'avec', 'pour', 'sur',
+      'double', 'courtes', 'longues', 'lampe', 'pompe', 'foret', 'etage', 'milwaukee',
+      'fuel', 'forge', 'station', 'portable', 'energie', 'scies', 'cloches'
+    ]);
+    const tokens = source.match(/[a-z0-9][a-z0-9./-]{2,}/g) || [];
+    tokens.forEach(token => {
+      if (stopWords.has(token)) return;
+      if (/^\d+(?:[.,]\d+)?$/.test(token)) return;
+      if (/^\d+(?:\/\d+)+$/.test(token)) return;
+      const shortCodeLike = token.length >= 3 && token.length <= 4 && /[a-z]/.test(token) && /\d/.test(token);
+      if (token.length < 4 && !shortCodeLike) return;
+      terms.add(token);
+    });
+
+    // Korte modelcodes (bv. FB8, FB12) en compacte referentie-token expliciet meenemen.
+    const compactCodeTokens = source.match(/\b[a-z]{1,3}\d{1,4}\b/g) || [];
+    compactCodeTokens.forEach(token => terms.add(token));
+
+    const compactRef = source.replace(/[^a-z0-9]+/g, '');
+    if (compactRef.length >= 5 && /[a-z]/.test(compactRef) && /\d/.test(compactRef)) {
+      terms.add(compactRef);
+    }
+
+    const refNorm = normalizeSearchText(ref).replace(/[^a-z0-9./-]+/g, '').trim();
+    if (refNorm && refNorm.length >= 4) terms.add(refNorm);
+    terms.add(source);
+    return Array.from(terms).slice(0, 6);
+  }
+
+  function scoreSuggestion(item, product) {
+    const line = normalizeSearchText(item && item.ref ? item.ref : importLineText(item));
+    const name = normalizeSearchText(product && (product["PRODUCT_NAME_H1.nl_BE"] || product.Name || ''));
+    const supref = normalizeSearchText(product && product.SUPPLIER_REFERENCE);
+    const suprefNoBrand = normalizeSearchText(product && product.SUPPLIER_REF_NO_BRAND);
+    if (!line || (!name && !supref && !suprefNoBrand)) return { score: 0, reasons: [] };
+
+    const weakTokens = new Set([
+      'milwaukee', 'makita', 'dewalt', 'facom', 'knipex', 'bahco', 'wera', 'wiha', 'fluke', 'stanley',
+      'fuel', 'forge', 'm18', 'm12', 'm4', 'mxf', 'tool', 'set', 'jeu', 'coffret'
+    ]);
+
+    let score = 0;
+    const reasons = [];
+    let matchedTokenCount = 0;
+    let hasHardSignal = false;
+    const combined = `${suprefNoBrand} ${supref} ${name}`;
+    const combinedCompact = combined.replace(/[^a-z0-9]+/g, '');
+    const combinedTokens = new Set((combined.match(/[a-z0-9]+/g) || []).filter(Boolean));
+
+    const refNorm = normalizeSearchText(item && item.ref ? item.ref : '').replace(/[^a-z0-9]+/g, '');
+    if (refNorm && refNorm.length >= 4 && combinedCompact.includes(refNorm)) {
+      score += 18;
+      hasHardSignal = true;
+      reasons.push('ref match');
+    }
+
+    const refPartTokens = String(item && item.ref ? item.ref : '')
+      .toLowerCase()
+      .match(/[a-z0-9][a-z0-9./-]{1,}/g) || [];
+    const meaningfulRefParts = refPartTokens.filter(token => token.length >= 3 && !/^\d+$/.test(token));
+    if (meaningfulRefParts.length >= 2) {
+      const covered = meaningfulRefParts.filter(token => combinedTokens.has(token)).length;
+      if (covered >= 2) {
+        score += 10;
+        hasHardSignal = true;
+        reasons.push('ref tokens aanwezig');
+      }
+    }
+
+    const modelTokens = line.match(/(?:m(?:12|18|4)|mxf)[\s-]*[a-z0-9]+(?:[./-][a-z0-9]+)*/g) || [];
+    modelTokens.forEach(token => {
+      const normalizedToken = token.replace(/\s+/g, ' ').trim();
+      if (normalizedToken && combined.includes(normalizedToken)) {
+        score += 9;
+        hasHardSignal = true;
+        matchedTokenCount += 1;
+        reasons.push(`model ${normalizedToken}`);
+      }
+    });
+
+    const strongTokens = (line.match(/[a-z0-9][a-z0-9./-]{2,}/g) || [])
+      .filter(token => token.length >= 3)
+      .filter(token => !weakTokens.has(token))
+      .filter(token => !/^\d+(?:[.,]\d+)?$/.test(token))
+      .filter(token => !/^\d+(?:\/\d+)+$/.test(token));
+    strongTokens.forEach((token) => {
+      if (/^\d+(?:\/\d+)+$/.test(token)) return;
+      if (!combined.includes(token)) return;
+      matchedTokenCount += 1;
+      const tokenWeight = /\d/.test(token) ? 6 : 3;
+      score += tokenWeight;
+      if (reasons.length < 3) reasons.push(`token ${token}`);
+
+      if (token.length >= 3 && token.length <= 6 && /[a-z]/.test(token) && /\d/.test(token)) {
+        score += 6;
+        hasHardSignal = true;
+        if (reasons.length < 3) reasons.push(`code ${token}`);
+      }
+    });
+
+    if (supref && line && supref.includes(line)) {
+      score += 10;
+      hasHardSignal = true;
+      reasons.push('supref bevat zin');
+    }
+    if (name && line && name.includes(line)) {
+      score += 7;
+      reasons.push('naam bevat zin');
+    }
+
+    const hasRefAnchor = refPartTokens.some(token =>
+      token.length >= 3 &&
+      /[a-z]/.test(token) &&
+      /\d/.test(token) &&
+      combined.includes(token)
+    );
+
+    if (!hasHardSignal && matchedTokenCount < 2 && !hasRefAnchor) {
+      return { score: 0, reasons: [] };
+    }
+
+    if (hasRefAnchor) {
+      score += 8;
+      hasHardSignal = true;
+      if (reasons.length < 3) reasons.push('ref anker');
+    }
+
+    return { score, reasons: reasons.slice(0, 3) };
+  }
+
+  function meetsSuggestionThreshold(kind, suggestion) {
+    if (!suggestion || !Number.isFinite(suggestion.score)) return false;
+    if (kind === 'unresolved') return suggestion.score >= 12;
+    return suggestion.score >= 8;
+  }
+
+  async function fetchSuggestionsForOpenItems(kind, openItems) {
+    const items = Array.isArray(openItems) ? openItems : [];
+    if (!items.length) {
+      return;
+    }
+
+    const loadingPatch = {};
+    items.forEach((item, index) => {
+      loadingPatch[openItemKey(kind, index, item)] = 'loading';
+    });
+    setOpenItemSuggestionStatus(prev => ({ ...prev, ...loadingPatch }));
+
+    try {
+      const termSet = new Set();
+      items.forEach(item => {
+        extractSuggestionTerms(item.raw || item.text || '', item.ref || '').forEach(term => termSet.add(term));
+      });
+      const terms = Array.from(termSet).slice(0, 40);
+      if (!terms.length) {
+        setOpenItemSuggestionStatus(prev => {
+          const next = { ...prev };
+          items.forEach((item, index) => {
+            next[openItemKey(kind, index, item)] = 'ready';
+          });
+          return next;
+        });
+        return;
+      }
+
+      const res = await fetch('/api/products/batch-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ suprefs: terms, names: terms })
+      });
+      const data = await res.json();
+      const products = Array.isArray(data.products) ? data.products : [];
+
+      const byItemPatch = {};
+      const statusPatch = {};
+      items.forEach((item, index) => {
+        const key = openItemKey(kind, index, item);
+        const rankedBase = products
+          .map(p => {
+            const scored = scoreSuggestion(item, p);
+            return {
+              sku: p.SKU,
+              supref: p.SUPPLIER_REFERENCE || '',
+              name: p["PRODUCT_NAME_H1.nl_BE"] || p.Name || '',
+              score: scored.score,
+              reasons: scored.reasons || []
+            };
+          });
+
+        let ranked = rankedBase
+          .filter(s => meetsSuggestionThreshold(kind, s))
+          .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return String(a.sku).localeCompare(String(b.sku));
+          });
+
+        if (!ranked.length && kind === 'unresolved') {
+          const refAnchors = normalizeSearchText(item && item.ref ? item.ref : '')
+            .match(/[a-z0-9][a-z0-9./-]{1,}/g) || [];
+          const meaningfulAnchors = Array.from(new Set(refAnchors.filter(token =>
+            token.length >= 3 && (/[a-z]/.test(token) || /\d/.test(token))
+          )));
+
+          if (meaningfulAnchors.length) {
+            ranked = rankedBase
+              .map(s => {
+                const combined = normalizeSearchText(`${s.supref} ${s.name}`);
+                const anchorHits = meaningfulAnchors.filter(token => combined.includes(token)).length;
+                return {
+                  ...s,
+                  anchorHits
+                };
+              })
+              .filter(s => s.anchorHits >= 1)
+              .sort((a, b) => {
+                if (b.anchorHits !== a.anchorHits) return b.anchorHits - a.anchorHits;
+                if (b.score !== a.score) return b.score - a.score;
+                return String(a.sku).localeCompare(String(b.sku));
+              })
+              .slice(0, 5)
+              .map(s => ({
+                sku: s.sku,
+                supref: s.supref,
+                name: s.name,
+                score: Math.max(Number(s.score) || 0, 7 + (s.anchorHits * 3)),
+                reasons: [...(s.reasons || []), `fallback ${s.anchorHits} ref-token(s)`].slice(0, 3)
+              }));
+          }
+        }
+
+        const unique = [];
+        const seen = new Set();
+        ranked.forEach(s => {
+          const sku = String(s.sku || '');
+          if (!sku || seen.has(sku)) return;
+          seen.add(sku);
+          unique.push(s);
+        });
+
+        byItemPatch[key] = unique.slice(0, 3);
+        statusPatch[key] = 'ready';
+      });
+
+      setOpenItemSuggestions(prev => ({ ...prev, ...byItemPatch }));
+      setOpenItemSuggestionStatus(prev => ({ ...prev, ...statusPatch }));
+    } catch {
+      setOpenItemSuggestionStatus(prev => {
+        const next = { ...prev };
+        items.forEach((item, index) => {
+          next[openItemKey(kind, index, item)] = 'error';
+        });
+        return next;
+      });
+    }
+  }
+
+  function suggestionStrengthLabel(score) {
+    if (score >= 16) return 'sterke match';
+    if (score >= 9) return 'mogelijke match';
+    return 'voorbeeld-SKU';
+  }
+
+  function formatImportAuditNote(note) {
+    if (!note) return '';
+    if (typeof note === 'string') return note.trim();
+    const lineLabel = Number.isInteger(note.line) ? `regel ${note.line + 1}` : 'regel onbekend';
+    const sourceText = importLineText(note);
+    if (note.type === 'manual-sku') {
+      return `${lineLabel}: handmatig toegevoegd als SKU ${note.sku} (bron: ${sourceText}).`;
+    }
+    if (note.type === 'not-in-range') {
+      return `${lineLabel}: niet in assortiment gemarkeerd (bron: ${sourceText}).`;
+    }
+    return String(note.text || '').trim();
+  }
+
+  function pushImportAuditNote(note) {
+    const txt = formatImportAuditNote(note);
+    if (!txt) return;
+    setImportAuditNotes(prev => [...prev, note]);
+  }
+
+  function removeUnresolvedAt(index) {
+    setImportResult(prev => {
+      if (!prev) return prev;
+      return { ...prev, unresolved: prev.unresolved.filter((_, i) => i !== index) };
+    });
+  }
+
+  function removeUnrecognizedAt(index) {
+    setImportResult(prev => {
+      if (!prev) return prev;
+      return { ...prev, unrecognized: prev.unrecognized.filter((_, i) => i !== index) };
+    });
+  }
+
+  function setManualSkuValue(key, value) {
+    setOpenManualSku(prev => ({ ...prev, [key]: value }));
+  }
+
+  function addManualSkuFromOpen(kind, index, item) {
+    const key = `${kind}-${index}`;
+    const skuRaw = String(openManualSku[key] || '').trim();
+    if (!/^\d{5,8}$/.test(skuRaw)) {
+      alert('Geef een geldige SKU in (5-8 cijfers).');
+      return;
+    }
+    appendRows([{ sku: skuRaw, amount: Number(item.amount) || 1 }]);
+    lookupSkuName(skuRaw);
+    if (kind === 'unresolved') removeUnresolvedAt(index);
+    if (kind === 'unrecognized') removeUnrecognizedAt(index);
+    setOpenManualSku(prev => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+    const suggestionKey = openItemKey(kind, index, item);
+    setOpenItemSuggestions(prev => {
+      const next = { ...prev };
+      delete next[suggestionKey];
+      return next;
+    });
+    setOpenItemSuggestionStatus(prev => {
+      const next = { ...prev };
+      delete next[suggestionKey];
+      return next;
+    });
+    pushImportAuditNote({ ...item, type: 'manual-sku', sku: skuRaw });
+  }
+
+  function addSuggestionSkuFromOpen(kind, index, item, suggestion) {
+    const sku = String((suggestion && suggestion.sku) || '').trim();
+    if (!/^\d{5,8}$/.test(sku)) return;
+    appendRows([{ sku, amount: Number(item.amount) || 1 }]);
+    setSkuNames(prev => ({
+      ...prev,
+      [sku]: suggestion.name || null,
+      [String(sku).replace(/^0+/, '')]: suggestion.name || null
+    }));
+    if (kind === 'unrecognized') removeUnrecognizedAt(index);
+    if (kind === 'unresolved') removeUnresolvedAt(index);
+
+    const suggestionKey = openItemKey(kind, index, item);
+    setOpenItemSuggestions(prev => {
+      const next = { ...prev };
+      delete next[suggestionKey];
+      return next;
+    });
+    setOpenItemSuggestionStatus(prev => {
+      const next = { ...prev };
+      delete next[suggestionKey];
+      return next;
+    });
+
+    pushImportAuditNote({ ...item, type: 'manual-sku', sku, text: `${importLineText(item)} (suggestie)` });
+  }
+
+  function ignoreOpenItem(kind, index, item) {
+    if (kind === 'unresolved') removeUnresolvedAt(index);
+    if (kind === 'unrecognized') removeUnrecognizedAt(index);
+    setOpenManualSku(prev => {
+      const next = { ...prev };
+      delete next[`${kind}-${index}`];
+      return next;
+    });
+    const suggestionKey = openItemKey(kind, index, item);
+    setOpenItemSuggestions(prev => {
+      const next = { ...prev };
+      delete next[suggestionKey];
+      return next;
+    });
+    setOpenItemSuggestionStatus(prev => {
+      const next = { ...prev };
+      delete next[suggestionKey];
+      return next;
+    });
+    pushImportAuditNote({ ...item, type: 'not-in-range' });
+  }
+
   // PRODUCT SEARCH
   async function handleProductSearch() {
     const queries = searchInput.split(/[\t,; ]+/).map(x => x.trim()).filter(Boolean);
@@ -714,7 +1585,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     setLoadingSearch(true);
     try {
       // Stuur alle queries in één keer naar de batch-search endpoint
-      const res = await fetch('http://localhost:3000/api/products/batch-search', {
+      const res = await fetch('/api/products/batch-search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ suprefs: queries, names: queries })
@@ -776,7 +1647,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     try {
       const inputSkus = rows.map(r => r.sku).filter(Boolean);
       const skuString = inputSkus.join(",");
-      const res = await fetch(`http://localhost:3000/api/products?skus=${skuString}`);
+      const res = await fetch(`/api/products?skus=${skuString}`);
       const data = await res.json();
       const skuAmounts = rows.reduce((acc, r) => {
         if (!r.sku) return acc;
@@ -836,6 +1707,66 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
         proposalRefs.current[sku].blur();
       }
     }
+  };
+
+  // QUICK ADD ARTIKEL AAN OFFERTE (vanuit tabel)
+  const handleQuickAddArticle = async () => {
+    const skuRaw = (quickAddSku || "").trim();
+    if (!skuRaw || !/^\d{5,8}$/.test(skuRaw)) {
+      alert("Geef een geldige SKU in (5-8 cijfers).");
+      return;
+    }
+    
+    const amount = Math.max(1, Math.floor(Number(quickAddAmount) || 1));
+    setQuickAddLoading(true);
+    
+    try {
+      const res = await fetch(`/api/products?skus=${skuRaw}`);
+      const data = await res.json();
+      
+      if (!data.products || data.products.length === 0) {
+        alert(`Artikel met SKU ${skuRaw} niet gevonden.`);
+        setQuickAddLoading(false);
+        return;
+      }
+      
+      const product = data.products[0];
+      const defaultProposal = product.Price ? Number(product.Price).toFixed(2) : "0.00";
+      const proposalVal = proposals[product.SKU] !== undefined ? proposals[product.SKU] : defaultProposal;
+      
+      // Voeg toe aan bestaande producten (merge als SKU al bestaat)
+      setProducts(prev => {
+        const existing = prev.findIndex(p => p.SKU === product.SKU);
+        if (existing >= 0) {
+          // SKU bestaat al, voeg aantal toe
+          return prev.map((p, i) => 
+            i === existing ? { ...p, amount: (p.amount || 1) + amount } : p
+          );
+        } else {
+          // Nieuwe SKU, voeg toe
+          return [...prev, {
+            ...product,
+            amount,
+            proposal: Number(proposalVal)
+          }];
+        }
+      });
+      
+      // Cache de naam
+      setSkuNames(prev => ({ 
+        ...prev, 
+        [skuRaw]: product["PRODUCT_NAME_H1.nl_BE"] || product.Name || null,
+        [String(skuRaw).replace(/^0+/, "")]: product["PRODUCT_NAME_H1.nl_BE"] || product.Name || null
+      }));
+      
+      // Reset inputs
+      setQuickAddSku("");
+      setQuickAddAmount(1);
+    } catch {
+      alert("Fout bij ophalen artikel. Controleer je verbinding.");
+    }
+    
+    setQuickAddLoading(false);
   };
 
   // GLOBALE KORTING — 2 fasen:
@@ -1038,7 +1969,15 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     const ws = window.XLSX.utils.aoa_to_sheet(wsData);
     const wb = window.XLSX.utils.book_new();
     window.XLSX.utils.book_append_sheet(wb, ws, t.title);
-    window.XLSX.writeFile(wb, `${t.fileName}_${customerData.naam || 'klant'}.xlsx`);
+    const quoteNrXlsx = "OFF-" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + "-" + Math.floor(1000 + Math.random() * 9000);
+    const buildFileName = (ext) => {
+      const ref = quoteNrXlsx ? `(${quoteNrXlsx}) ` : '';
+      const klant = (customerData.bedrijf || customerData.naam)
+        ? `_${(customerData.bedrijf || customerData.naam).replace(/[\/\\:*?"<>|]/g, '-').trim()}`
+        : '';
+      return `KLIUM ${ref}${t.fileName}${klant}.${ext}`;
+    };
+    window.XLSX.writeFile(wb, buildFileName('xlsx'));
   }
 
   // PDF EXPORT HERSTELD
@@ -1128,16 +2067,18 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
     ];
 
     const totaalExcl = products.reduce((sum, p) => sum + (Number(p.proposal) || 0) * (p.amount || 1), 0);
-    const btw = totaalExcl * vat.pct / 100;
-    const totaalIncl = totaalExcl + btw;
+    const shippingExcl = Number(shippingCost) || 0;
+    const subtotalExcl = totaalExcl + shippingExcl;
+    const btw = subtotalExcl * vat.pct / 100;
+    const totaalIncl = subtotalExcl + btw;
 
     const totLbl = (txt, bold) => ({ text: txt, fontSize: bold ? 11 : 10, bold: !!bold, alignment: "left", margin: [0, 3, 16, 3], border: [false, false, false, false] });
     const totVal = (txt, bold) => ({ text: txt, fontSize: bold ? 11 : 10, bold: !!bold, alignment: "right", margin: [0, 3, 0, 3], border: [false, false, false, false] });
 
     const totalsRows = [
       [totLbl(t.totalProducts), totVal(euro(totaalExcl))],
-      [totLbl(t.shipping), totVal(t.freeShipping)],
-      [totLbl(t.totalExcl), totVal(euro(totaalExcl))],
+      ...(shippingExcl > 0 ? [[totLbl(t.shipping), totVal(euro(shippingExcl))]] : [[totLbl(t.shipping), totVal(t.freeShipping)]]),
+      [totLbl(t.totalExcl), totVal(euro(subtotalExcl))],
       vat.intracommunautair
         ? [totLbl(`${t.vat} (0%)`), totVal("—")]
         : [totLbl(`${t.vat} ${vat.pct}%`), totVal(euro(btw))],
@@ -1204,23 +2145,33 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
           columns: [
             {
               width: "*",
-              text: vat.intracommunautair ? t.intracom : "",
-              italics: true,
-              color: "#2e7d32",
-              fontSize: 9,
-              margin: [0, 10, 0, 0]
+              stack: [
+                ...(vat.intracommunautair ? [{ text: t.intracom, italics: true, color: "#2e7d32", fontSize: 9, margin: [0, 10, 0, 0] }] : [{ text: '', margin: [0, 10, 0, 0] }]),
+                ...(zichtbareNota.trim() ? [
+                  { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 340, y2: 0, lineWidth: 1, lineColor: '#d0d7e2' }], margin: [0, 10, 0, 0] },
+                  { text: t.remark, fontSize: 8.5, bold: true, color: '#2563eb', margin: [0, 8, 0, 2] },
+                  { text: normalizePdfText(zichtbareNota.trim()), fontSize: 9.5, color: '#1e293b', lineHeight: 1.45 }
+                ] : [])
+              ]
             },
             { width: "auto", table: { body: totalsRows }, layout: "noBorders" }
           ],
           columnGap: 16,
           unbreakable: true
-        }
+        },
       ],
       images: { logo: logoBase64 },
       defaultStyle: { fontSize: 10, color: "#222" },
       footer: () => ({ text: "Klium N.V. · Ekkelgaarden 26 · 3500 Hasselt · België", alignment: "center", fontSize: 8, color: "#999", margin: [0, 20, 0, 0] })
     };
-    window.pdfMake.createPdf(docDefinition).download(`${t.fileName}_${customerData.naam || "klant"}.pdf`);
+    const buildFileName = (ext) => {
+      const ref = quoteNr ? `(${quoteNr}) ` : '';
+      const klant = (customerData.bedrijf || customerData.naam)
+        ? `_${(customerData.bedrijf || customerData.naam).replace(/[\/\\:*?"<>|]/g, '-').trim()}`
+        : '';
+      return `KLIUM ${ref}${t.fileName}${klant}.${ext}`;
+    };
+    window.pdfMake.createPdf(docDefinition).download(buildFileName('pdf'));
   }
 
   // SAVE OFFERTE
@@ -1230,6 +2181,25 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
       setSaveStatus("Vul klantgegevens en producten in.");
       return;
     }
+    const internalLines = [];
+    if (internalComment.trim()) internalLines.push(internalComment.trim());
+    if (importAuditNotes.length > 0) {
+      internalLines.push(
+        [
+          'Slimme import opvolging:',
+          ...importAuditNotes.map(n => `- ${formatImportAuditNote(n)}`)
+        ].join('\n')
+      );
+    }
+    if (openImportSummary.length > 0) {
+      internalLines.push(
+        [
+          'Open importregels bij opslaan:',
+          ...openImportSummary.map(n => `- ${n}`)
+        ].join('\n')
+      );
+    }
+    const interneOpmerking = internalLines.join('\n\n').trim();
     const offerte = {
       klant: customerData.naam,
       bedrijf: customerData.bedrijf,
@@ -1256,11 +2226,14 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
         aantal: p.amount,
         prijs: p.proposal
       })),
+      interneOpmerking,
+      zichtbareNota: zichtbareNota.trim(),
+      shippingCost: shippingCost ? Number(shippingCost) : 0,
       totaal: totals.newPrice,
       datum: new Date().toISOString().slice(0, 10)
     };
     try {
-      const res = await fetch("http://localhost:3000/api/offerte", {
+      const res = await fetch("/api/offerte", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(offerte)
@@ -1279,12 +2252,38 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
   // UI
   const destCountry = sameDelivery ? customerData.land : deliveryData.land;
   const vat = computeVat(customerData.btw, destCountry);
-  const customerExcl = totals.newPrice || 0;
+  const shippingExcl = Number(shippingCost) || 0;
+  const customerExcl = (totals.newPrice || 0) + shippingExcl;
   const customerBtw = customerExcl * vat.pct / 100;
   const customerIncl = customerExcl + customerBtw;
+  const pendingImportCount = importResult
+    ? importResult.ambiguous.length + importResult.unresolved.length + importResult.unrecognized.length
+    : 0;
+  const openImportSummary = importResult
+    ? [
+      ...importResult.ambiguous.map(a => `keuze nodig: ${importLineText(a)}${Number.isInteger(a.line) ? ` (regel ${a.line + 1})` : ''}`),
+      ...importResult.unresolved.map(u => `niet gevonden: ${importLineText(u)}${Number.isInteger(u.line) ? ` (regel ${u.line + 1})` : ''}`),
+      ...importResult.unrecognized.map(u => `geen referentie: ${importLineText(u)}${Number.isInteger(u.line) ? ` (regel ${u.line + 1})` : ''}`)
+    ]
+    : [];
+  const autoImportNoteSections = [];
+  if (importAuditNotes.length > 0) {
+    autoImportNoteSections.push([
+      'Slimme import opvolging:',
+      ...importAuditNotes.map(n => `- ${formatImportAuditNote(n)}`)
+    ].join('\n'));
+  }
+  if (openImportSummary.length > 0) {
+    autoImportNoteSections.push([
+      'Open importregels bij opslaan:',
+      ...openImportSummary.map(n => `- ${n}`)
+    ].join('\n'));
+  }
+  const generatedPreview = autoImportNoteSections.length ? autoImportNoteSections.join('\n\n') : savedGeneratedComment;
+  const internalSavePreview = [internalComment.trim(), generatedPreview].filter(Boolean).join('\n\n');
   return (
-    <div style={{padding: 24, color: "white", width: "100%", maxWidth: 1700, margin: "0 auto", boxSizing: "border-box"}}>
-      <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:12}}>
+    <div className="quotation-page" style={{width: "100%", maxWidth: 1700, margin: "0 auto", boxSizing: "border-box"}}>
+      <div className="quote-page-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:12}}>
         <h1 style={{margin:0}}>Offerte Tool</h1>
         <button
           onClick={startNewOfferte}
@@ -1294,11 +2293,20 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
           + Nieuwe offerte
         </button>
       </div>
+      {prefillLoading && (
+        <div className="quote-prefill-banner" role="status" aria-live="polite">
+          <span className="quote-prefill-spinner" aria-hidden="true"></span>
+          <span>Offerte wordt geladen... even geduld.</span>
+        </div>
+      )}
       {/* Slimme import block */}
       <div style={{marginBottom: 25}}>
         <b>Slimme invoer (plak een offerteaanvraag):</b><br />
         <div style={{color:'#aaa', fontSize:'0.85em', margin:'4px 0 8px'}}>
           Herkent automatisch artikelnummers (bv. <code>art. 577743</code>), 8-cijferige SKU's en aantallen (bv. <code>2x</code>). Ook <code>SKU,aantal</code> per regel werkt.
+        </div>
+        <div style={{color:'#999', fontSize:'0.8em', marginBottom:12, background:'#2a2a2a', padding:'10px 12px', borderRadius:6, lineHeight:'1.5'}}>
+          💡 <strong>Hoe slim herkennen gebruiken:</strong> Plak de volledige aanvraag, mail of offerte direct hier in. De tool zoekt automatisch SKU's en aantallen. Ambigue regels verschijnen dan apart voor handmatige verificatie. Perfecte aanvulling bij import uit PDF of e-mail.
         </div>
         <div style={{ display:'flex', border:'1px solid #444', borderRadius:6, overflow:'hidden', width:640, height:170, maxWidth:'100%', minWidth:340, minHeight:110, resize:'both', background:'#1a1a1a', marginTop:4 }}>
           <div
@@ -1328,14 +2336,19 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
         </div>
 
         {importResult && (
-          <div style={{marginTop: 14, background:'#1e1e1e', padding:18, borderRadius:12, maxWidth:900, boxShadow:'0 2px 18px #000a'}}>
+          <div style={{marginTop: 14, background:'#1e1e1e', color:'#e5e7eb', padding:18, borderRadius:12, width:'100%', maxWidth:'min(1240px, 96vw)', boxShadow:'0 2px 18px #000a'}}>
             <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:12}}>
               <b style={{fontSize:'1.05em'}}>Resultaat slimme import</b>
-              <button onClick={() => setImportResult(null)} style={{background:'none', border:'none', color:'white', fontSize:'1.3em', cursor:'pointer'}} title="Sluiten">&#10005;</button>
+              <button onClick={closeImportResult} style={{background:'none', border:'none', color:'white', fontSize:'1.3em', cursor:'pointer'}} title="Sluiten">&#10005;</button>
             </div>
 
             {/* Samenvattingsbalk */}
             <div style={{display:'flex', gap:10, flexWrap:'wrap', marginBottom:16}}>
+              {Number(importResult.addedResolved || 0) > 0 && (
+                <span style={{background:'#16304a', color:'#8ecbff', border:'1px solid #2d6fa8', borderRadius:20, padding:'5px 14px', fontWeight:700, fontSize:'0.9em'}}>
+                  + {importResult.addedResolved} toegevoegd
+                </span>
+              )}
               <span style={{background:'#173d20', color:'#7ee08a', border:'1px solid #2e7d32', borderRadius:20, padding:'5px 14px', fontWeight:700, fontSize:'0.9em'}}>
                 ✓ {importResult.resolved.length} herkend
               </span>
@@ -1361,7 +2374,24 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
               </div>
             )}
 
-            {importResult.resolved.length > 0 && (
+            {pendingImportCount > 0 && (
+              <div style={{display:'flex', gap:10, marginBottom:12, flexWrap:'wrap'}}>
+                <button
+                  onClick={() => setShowOnlyOpenImport(v => !v)}
+                  style={{padding:'7px 12px', borderRadius:7, border:'1px solid #2d6fa8', background: showOnlyOpenImport ? '#2d6fa8' : '#16304a', color:'#d5ecff', fontWeight:700, cursor:'pointer'}}
+                >
+                  {showOnlyOpenImport ? 'Toon volledig overzicht' : `Toon alleen nog open regels (${pendingImportCount})`}
+                </button>
+              </div>
+            )}
+
+            {showOnlyOpenImport && pendingImportCount === 0 && (
+              <div style={{background:'#173d20', color:'#7ee08a', border:'1px solid #2e7d32', borderRadius:8, padding:'8px 12px', marginBottom:14, fontSize:'0.9em'}}>
+                Alle open regels zijn verwerkt.
+              </div>
+            )}
+
+            {!showOnlyOpenImport && importResult.resolved.length > 0 && (
               <div style={{marginBottom:16}}>
                 <div style={{color:'#7ee08a', fontWeight:700, marginBottom:6}}>✓ Herkend</div>
                 <ul style={{listStyle:'none', padding:0, margin:0}}>
@@ -1391,19 +2421,21 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
             {importResult.ambiguous.length > 0 && (
               <div style={{marginBottom:16}}>
                 <div style={{color:'#ffd166', fontWeight:700, marginBottom:6}}>⚠ Keuze nodig — meerdere producten matchen deze referentie</div>
+                <div style={{color:'#b9c3d4', fontSize:'0.85em', marginBottom:8}}>Groene rij = aanbevolen keuze op basis van beste score.</div>
                 {importResult.ambiguous.map((a, i) =>
                   <div key={a.ref + i} style={{marginBottom:10, padding:'8px 10px', background:'#241f10', borderRadius:8}}>
                     <div style={{color:'#ffd166', marginBottom:6, fontWeight:600, display:'flex', alignItems:'center', gap:8, flexWrap:'wrap'}}>
                       <span>{a.amount}× &nbsp;referentie “{a.ref}”</span>
                       {a.brand && <span style={{color:'#aaa', fontWeight:400, fontSize:'0.85em'}}>merk gevraagd: {a.brand}</span>}
-                      {renderLineRef(a.line)}
+                      {renderLineRef(a.line, a.text)}
                     </div>
                     {a.candidates.map(c =>
-                      <div key={c.sku} style={{display:'grid', gridTemplateColumns:'100px 1fr 80px', gap:10, alignItems:'center', padding:'4px 0', background: c.recommended ? '#1c2e14' : 'transparent', borderRadius:6}}>
+                      <div key={c.sku} style={{display:'grid', gridTemplateColumns:'100px 1fr 80px', gap:10, alignItems:'center', padding:'4px 0', background: c.recommended ? '#1c2e14' : 'transparent', borderRadius:6, color:'#e5e7eb'}}>
                         <span style={{fontWeight:700, paddingLeft: c.recommended ? 6 : 0}}>{c.sku}</span>
                         <span style={{overflowWrap:'anywhere'}}>
                           {c.name}
-                          {c.recommended && <span style={{color:'#7ee08a', fontSize:'0.8em', marginLeft:8, fontWeight:700}}>✓ merk match</span>}
+                          {c.exactMatch && <span style={{background:'#1f5f39', color:'#d9ffe7', border:'1px solid #4caf50', borderRadius:11, padding:'1px 7px', fontSize:'0.74em', marginLeft:8, fontWeight:700}}>✓ exact match</span>}
+                          {c.brandMatch && <span style={{color:'#7ee08a', fontSize:'0.8em', marginLeft:8, fontWeight:700}}>✓ merk match</span>}
                         </span>
                         <button style={{padding:'3px 10px', borderRadius:6, border: c.recommended ? '2px solid #4caf50' : '2px solid #0077cc', background:'white', color: c.recommended ? '#2e7d32' : '#0077cc', fontWeight:600, cursor:'pointer'}} onClick={() => addCandidateRow(c.sku, a.amount, c.name)}>Kies</button>
                       </div>
@@ -1415,27 +2447,129 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
 
             {importResult.unresolved.length > 0 && (
               <div style={{marginBottom:16}}>
-                <div style={{color:'#ff9b9b', fontWeight:700, marginBottom:6}}>✗ Niet gevonden — geen product met deze referentie (handmatig nakijken)</div>
-                <div style={{display:'flex', gap:8, flexWrap:'wrap'}}>
-                  {importResult.unresolved.map((u, i) =>
-                    <span key={u.ref + i} style={{background:'#3d1717', color:'#ff9b9b', border:'1px solid #c0392b', borderRadius:6, padding:'4px 10px', fontSize:'0.9em', display:'inline-flex', alignItems:'center', gap:8}}>
-                      {u.amount}× {u.ref} {renderLineRef(u.line)}
-                    </span>
-                  )}
+                <div style={{color:'#ff9b9b', fontWeight:700, marginBottom:6}}>✗ Niet gevonden — voeg manueel een SKU toe of markeer met X</div>
+                <div style={{display:'flex', flexDirection:'column', gap:8}}>
+                  {importResult.unresolved.map((u, i) => {
+                    const k = `unresolved-${i}`;
+                    const suggestionKey = openItemKey('unresolved', i, u);
+                    const suggestionStatus = openItemSuggestionStatus[suggestionKey] || 'idle';
+                    const suggestions = openItemSuggestions[suggestionKey] || [];
+                    return (
+                    <div key={u.ref + i} style={{background: u.inactive ? '#2a1f00' : '#3d1717', color: u.inactive ? '#ffd580' : '#ff9b9b', border: `1px solid ${u.inactive ? '#b8860b' : '#c0392b'}`, borderRadius:6, padding:'7px 10px', fontSize:'0.9em', display:'flex', alignItems:'center', gap:10, justifyContent:'space-between', flexWrap:'wrap'}}>
+                      <span style={{display:'inline-flex', alignItems:'center', gap:8, flexWrap:'wrap', flex:1, minWidth:230}}>
+                        <span>{u.amount}× {u.ref || u.raw}</span>
+                        {u.inactive && <span title={`SKU: ${u.inactiveSku}`} style={{background:'#5c3d00', color:'#ffd580', borderRadius:4, padding:'1px 6px', fontSize:'0.85em', fontWeight:700}}>⚠ Inactief artikel</span>}
+                        {renderLineRef(u.line, u.text)}
+                        {suggestionStatus === 'loading' && (
+                          <span style={{color:'#8ecbff', fontSize:'0.82em'}}>Suggesties ophalen...</span>
+                        )}
+                        {suggestionStatus === 'error' && (
+                          <span style={{color:'#ffd1d1', fontSize:'0.82em'}}>Suggesties laden mislukte.</span>
+                        )}
+                        {suggestionStatus === 'ready' && suggestions.length > 0 && (
+                          <span style={{display:'flex', flexDirection:'column', gap:5, width:'100%', marginTop:4}}>
+                            {suggestions.map((s, si) => (
+                              <span key={`${s.sku}-${si}`} style={{display:'grid', gridTemplateColumns:'90px 1fr auto auto', gap:8, alignItems:'center', background:'#2a1111', border:'1px solid #5b2a2a', borderRadius:6, padding:'4px 6px'}}>
+                                <span style={{fontWeight:700, color:'#ffd9d9'}}>{s.sku}</span>
+                                <span style={{overflowWrap:'anywhere'}}>
+                                  {s.name || <em style={{color:'#cc9999'}}>geen naam</em>}
+                                  {!!(s.reasons && s.reasons.length) && (
+                                    <span style={{display:'block', color:'#e7bebe', fontSize:'0.78em'}}>{s.reasons.join(' · ')}</span>
+                                  )}
+                                </span>
+                                <span style={{fontSize:'0.78em', borderRadius:10, padding:'1px 7px', background:'#5b2020', color:'#ffd3d3', fontWeight:700}}>{suggestionStrengthLabel(s.score)}</span>
+                                <button onClick={() => addSuggestionSkuFromOpen('unresolved', i, u, s)} style={{padding:'3px 8px', borderRadius:6, border:'1px solid #4caf50', background:'#1c2e14', color:'#7ee08a', cursor:'pointer', fontWeight:700}}>
+                                  Kies
+                                </button>
+                              </span>
+                            ))}
+                          </span>
+                        )}
+                        {suggestionStatus === 'ready' && suggestions.length === 0 && (
+                          <span style={{color:'#f7b0b0', fontSize:'0.82em'}}>Geen bruikbare suggestie gevonden voor deze regel.</span>
+                        )}
+                      </span>
+                      <span style={{display:'inline-flex', alignItems:'center', gap:8, flexWrap:'wrap'}}>
+                        <input
+                          value={openManualSku[k] || ''}
+                          onChange={e => setManualSkuValue(k, e.target.value)}
+                          placeholder="SKU"
+                          style={{width:90, padding:'4px 8px', borderRadius:6, border:'1px solid #666', background:'#1e1e1e', color:'#fff'}}
+                        />
+                        <button onClick={() => addManualSkuFromOpen('unresolved', i, u)} style={{padding:'4px 9px', borderRadius:6, border:'1px solid #4caf50', background:'#1c2e14', color:'#7ee08a', cursor:'pointer', fontWeight:700}}>
+                          Toevoegen
+                        </button>
+                        <button onClick={() => ignoreOpenItem('unresolved', i, u)} title="Niet in assortiment" style={{padding:'4px 9px', borderRadius:6, border:'1px solid #a94442', background:'#2b1414', color:'#ffb4b4', cursor:'pointer', fontWeight:700}}>
+                          X
+                        </button>
+                      </span>
+                    </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
             {importResult.unrecognized.length > 0 && (
               <div style={{marginBottom:16}}>
-                <div style={{color:'#bbb', fontWeight:700, marginBottom:6}}>? Geen referentie herkend — geen artikelnummer of SKU in deze regel</div>
+                <div style={{color:'#bbb', fontWeight:700, marginBottom:6}}>? Geen referentie herkend — voeg manueel SKU toe of markeer met X</div>
                 <div style={{display:'flex', flexDirection:'column', gap:6}}>
-                  {importResult.unrecognized.map((u, i) =>
-                    <span key={i} style={{background:'#242424', color:'#ccc', border:'1px solid #555', borderRadius:6, padding:'5px 10px', fontSize:'0.9em', display:'inline-flex', alignItems:'center', gap:10, justifyContent:'space-between'}}>
-                      <span style={{overflowWrap:'anywhere'}}>{u.raw}</span>
-                      {renderLineRef(u.line)}
-                    </span>
-                  )}
+                  {importResult.unrecognized.map((u, i) => {
+                    const k = `unrecognized-${i}`;
+                    const suggestionKey = openItemKey('unrecognized', i, u);
+                    const suggestionStatus = openItemSuggestionStatus[suggestionKey] || 'idle';
+                    const suggestions = openItemSuggestions[suggestionKey] || [];
+                    return (
+                    <div key={i} style={{background:'#242424', color:'#ccc', border:'1px solid #555', borderRadius:6, padding:'6px 10px', fontSize:'0.9em', display:'flex', alignItems:'center', gap:10, justifyContent:'space-between', flexWrap:'wrap'}}>
+                      <span style={{overflowWrap:'anywhere', flex:1, minWidth:220}}>
+                        <div>{u.raw}</div>
+                        {suggestionStatus === 'loading' && (
+                          <div style={{marginTop:4, color:'#8ecbff', fontSize:'0.82em'}}>Suggesties ophalen...</div>
+                        )}
+                        {suggestionStatus === 'error' && (
+                          <div style={{marginTop:4, color:'#ff9b9b', fontSize:'0.82em'}}>Suggesties laden mislukte. Voeg manueel SKU toe.</div>
+                        )}
+                        {suggestionStatus === 'ready' && suggestions.length > 0 && (
+                          <div style={{marginTop:6, display:'flex', flexDirection:'column', gap:5}}>
+                            {suggestions.map((s, si) => (
+                              <div key={`${s.sku}-${si}`} style={{display:'grid', gridTemplateColumns:'90px 1fr auto auto', gap:8, alignItems:'center', background:'#1f1f1f', border:'1px solid #444', borderRadius:6, padding:'4px 6px'}}>
+                                <span style={{fontWeight:700, color:'#d6e5ff'}}>{s.sku}</span>
+                                <span style={{overflowWrap:'anywhere'}}>
+                                  {s.name || <em style={{color:'#888'}}>geen naam</em>}
+                                  {!!(s.reasons && s.reasons.length) && (
+                                    <span style={{display:'block', color:'#94a3b8', fontSize:'0.78em'}}>{s.reasons.join(' · ')}</span>
+                                  )}
+                                </span>
+                                <span style={{fontSize:'0.78em', borderRadius:10, padding:'1px 7px', background:'#143048', color:'#8ecbff', fontWeight:700}}>{suggestionStrengthLabel(s.score)}</span>
+                                <button onClick={() => addSuggestionSkuFromOpen('unrecognized', i, u, s)} style={{padding:'3px 8px', borderRadius:6, border:'1px solid #4caf50', background:'#1c2e14', color:'#7ee08a', cursor:'pointer', fontWeight:700}}>
+                                  Kies
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {suggestionStatus === 'ready' && suggestions.length === 0 && (
+                          <div style={{marginTop:4, color:'#9ca3af', fontSize:'0.82em'}}>Geen bruikbare suggestie gevonden voor deze regel.</div>
+                        )}
+                      </span>
+                      <span style={{display:'inline-flex', alignItems:'center', gap:8, flexWrap:'wrap'}}>
+                        {renderLineRef(u.line, u.raw)}
+                        <input
+                          value={openManualSku[k] || ''}
+                          onChange={e => setManualSkuValue(k, e.target.value)}
+                          placeholder="SKU"
+                          style={{width:90, padding:'4px 8px', borderRadius:6, border:'1px solid #666', background:'#1e1e1e', color:'#fff'}}
+                        />
+                        <button onClick={() => addManualSkuFromOpen('unrecognized', i, u)} style={{padding:'4px 9px', borderRadius:6, border:'1px solid #4caf50', background:'#1c2e14', color:'#7ee08a', cursor:'pointer', fontWeight:700}}>
+                          Toevoegen
+                        </button>
+                        <button onClick={() => ignoreOpenItem('unrecognized', i, u)} title="Niet in assortiment" style={{padding:'4px 9px', borderRadius:6, border:'1px solid #666', background:'#151515', color:'#ddd', cursor:'pointer', fontWeight:700}}>
+                          X
+                        </button>
+                      </span>
+                    </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -1446,12 +2580,22 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                   ✓ {importResult.resolved.length} herkend product(en) toevoegen
                 </button>
               ) : (
-                <span style={{color:'#888'}}>Geen producten om toe te voegen — maak eerst een keuze hierboven.</span>
+                <span style={{color:'#888'}}>
+                  Geen extra herkende producten om toe te voegen.
+                  {(importResult.ambiguous.length + importResult.unresolved.length + importResult.unrecognized.length) > 0
+                    ? ` Nog open: ${importResult.ambiguous.length + importResult.unresolved.length + importResult.unrecognized.length} regel(s) voor manuele opvolging.`
+                    : ' Alles uit deze import is verwerkt.'}
+                </span>
               )}
-              <button onClick={() => setImportResult(null)} style={{padding:'10px 18px', borderRadius:7, background:'none', border:'1px solid #555', color:'#ccc', cursor:'pointer'}}>
+              <button onClick={closeImportResult} style={{padding:'10px 18px', borderRadius:7, background:'none', border:'1px solid #555', color:'#ccc', cursor:'pointer'}}>
                 Sluiten
               </button>
             </div>
+            {importAuditNotes.length > 0 && (
+              <div style={{marginTop:10, color:'#8ecbff', fontSize:'0.85em'}}>
+                Interne opvolgnotities: {importAuditNotes.length}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -1612,26 +2756,117 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
       {/* Offerte producten en totalen */}
       {products.length > 0 && (
         <>
-          <div style={{width: "100%"}}>
+          <div className="quote-table-toolbar">
+            <div className="quote-table-toolbar__group">
+              <span className="quote-table-toolbar__label">Weergave</span>
+              <div className="quote-view-toggle" role="tablist" aria-label="Artikeltabel weergave">
+                <button
+                  type="button"
+                  className={`quote-view-toggle__btn ${tableMode === "compact" ? "is-active" : ""}`}
+                  onClick={() => setTableMode("compact")}
+                >
+                  Compact
+                </button>
+                <button
+                  type="button"
+                  className={`quote-view-toggle__btn ${tableMode === "extended" ? "is-active" : ""}`}
+                  onClick={() => setTableMode("extended")}
+                >
+                  Uitgebreid
+                </button>
+              </div>
+            </div>
+
+            <div className="quote-table-toolbar__group quote-table-toolbar__group--grow">
+              <label className="quote-table-toolbar__field quote-table-toolbar__field--grow">
+                <span>Filter</span>
+                <input
+                  type="search"
+                  value={articleSearch}
+                  onChange={(e) => setArticleSearch(e.target.value)}
+                  placeholder="Zoek op SKU, SupRef, naam..."
+                />
+              </label>
+
+              <label className="quote-table-toolbar__field">
+                <span>Status</span>
+                <select value={articleStatusFilter} onChange={(e) => setArticleStatusFilter(e.target.value)}>
+                  <option value="all">Alle</option>
+                  <option value="stock">Uit voorraad</option>
+                  <option value="order">Met bestelling</option>
+                  <option value="split">Split levering</option>
+                </select>
+              </label>
+
+              <label className="quote-table-toolbar__field">
+                <span>Sorteren</span>
+                <select value={articleSortBy} onChange={(e) => setArticleSortBy(e.target.value)}>
+                  <option value="input-order">Ingevoerde volgorde</option>
+                  <option value="name-asc">Naam A-Z</option>
+                  <option value="sku-asc">SKU A-Z</option>
+                  <option value="price-desc">Prijs hoog-laag</option>
+                  <option value="proposal-desc">Proposal hoog-laag</option>
+                  <option value="mpp-desc">M%P hoog-laag</option>
+                </select>
+              </label>
+
+              <label className="quote-table-toolbar__field" style={{display:'flex', alignItems:'center', gap:6}}>
+                <span style={{whiteSpace:'nowrap'}}>+ Artikel</span>
+                <input
+                  type="text"
+                  placeholder="SKU"
+                  value={quickAddSku}
+                  onChange={e => setQuickAddSku(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && handleQuickAddArticle()}
+                  style={{width:70, padding:'6px 8px', borderRadius:4, border:'1px solid #555', background:'#1a1f2e', color:'#fff', fontSize:'0.9em'}}
+                />
+                <input
+                  type="number"
+                  min={1}
+                  value={quickAddAmount}
+                  onChange={e => setQuickAddAmount(Math.max(1, Math.floor(Number(e.target.value)) || 1))}
+                  onKeyDown={e => e.key === "Enter" && handleQuickAddArticle()}
+                  style={{width:50, padding:'6px 8px', borderRadius:4, border:'1px solid #555', background:'#1a1f2e', color:'#fff', fontSize:'0.9em', textAlign:'center'}}
+                  title="Aantal"
+                />
+                <button
+                  onClick={handleQuickAddArticle}
+                  disabled={quickAddLoading}
+                  style={{padding:'6px 12px', borderRadius:4, border:'1px solid #0077cc', background:'#0077cc', color:'white', fontWeight:600, cursor:quickAddLoading?'wait':'pointer', fontSize:'0.9em', whiteSpace:'nowrap'}}
+                  title="Voeg artikel toe aan offerte"
+                >
+                  {quickAddLoading ? '⏳' : '✓'}
+                </button>
+              </label>
+            </div>
+
+            <div className="quote-table-toolbar__meta">
+              {visibleProductIndices.length} / {products.length} artikelen
+            </div>
+          </div>
+
+          <div className="quote-table-shell" style={{width: "100%"}}>
             <table className="quote-products-table" style={{width:"100%",background:"#161b25",borderRadius:10, tableLayout:"fixed", border:"1px solid #2c3240"}}>
             <colgroup>
-              {columns.map(col => (
-                <col key={col.key} style={{ width: colWidths[col.key] || "auto" }} />
+              {visibleColumns.map(col => (
+                <col key={col.key} style={{ width: getColumnWidth(col.key) }} />
               ))}
               <col style={{ width: "76px" }} />
             </colgroup>
             <thead>
               <tr>
-                {columns.map(col => (
-                  <th key={col.key} style={{padding:"8px 6px",color:"#fff",fontSize:"0.9rem",whiteSpace:"normal",textAlign:["Price","Discount","Discount%","Cost","M€","M%","mpp","givenDiscount"].includes(col.key)?"right":"left",borderTop:"1px solid #2c3240",borderBottom:"1px solid #2c3240"}}>{col.label}</th>
+                {visibleColumns.map(col => (
+                  <th key={col.key} style={{padding:"8px 6px",color:"#fff",fontSize:"0.9rem",whiteSpace:"normal",textAlign:["Price","Discount","Discount%","Cost","M€","M%","mpp","givenDiscount"].includes(col.key)?"right":"left",borderTop:"1px solid #2c3240",borderBottom:"1px solid #2c3240"}}>{getColumnLabel(col)}</th>
                 ))}
                 <th style={{borderTop:"1px solid #2c3240",borderBottom:"1px solid #2c3240"}}></th>
               </tr>
             </thead>
             <tbody>
-              {products.map((p, i) => (
+              {visibleProductIndices.map((i) => {
+                const p = products[i];
+                return (
                 <tr key={i}>
-                  {columns.map(col => {
+                  {visibleColumns.map(col => {
                     if (col.key === "amount") {
                       return (
                         <td key={col.key} style={{padding:"6px",color:"#eee", textAlign:"center"}}>
@@ -1698,23 +2933,22 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                         ? Number(proposalInputBuffer[p.SKU])
                         : p.proposal;
                       const price = Number(p.Price) || 0;
-                      const given = price > 0 ? ((price - Number(proposalVal)) / price) * 100 : 0;
-                      const color = given > 0.001 ? "#ffb74d" : given < -0.001 ? "#81c784" : "#eee";
-                      return <td key={col.key} style={{padding:"5px", color, fontWeight: Math.abs(given) > 0.001 ? 700 : 400, whiteSpace:"nowrap", textAlign:"right", fontVariantNumeric:"tabular-nums", fontSize:"0.92em"}}>{fmt(given)}%</td>;
+                      const rawGiven = price > 0 ? ((price - Number(proposalVal)) / price) * 100 : 0;
+                      const given = normalizePct(rawGiven);
+                      const color = given > 0 ? "#ffb74d" : given < 0 ? "#81c784" : "#eee";
+                      return <td key={col.key} style={{padding:"5px", color, fontWeight: given !== 0 ? 700 : 400, whiteSpace:"nowrap", textAlign:"right", fontVariantNumeric:"tabular-nums", fontSize:"0.92em"}}>{fmt(given)}%</td>;
                     }
                     if (col.key === "Name") {
+                      const productName = p[col.key] || "";
                       return (
                         <td key={col.key} style={{padding:"5px",color:"#eee", fontSize:"0.92em", lineHeight:1.2, verticalAlign:"top"}}>
-                          <div style={{
-                            display: "-webkit-box",
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            overflowWrap: "anywhere"
-                          }} className="quote-name-cell" title={p[col.key] || ""}>
-                            {p[col.key]}
-                            <span className="quote-name-tooltip">{p[col.key] || ""}</span>
+                          <div
+                            className="quote-name-cell"
+                            title={productName}
+                            data-full-name={productName}
+                          >
+                            <span className="quote-name-cell__text">{productName}</span>
+                            <span className="quote-name-tooltip">{productName}</span>
                           </div>
                         </td>
                       );
@@ -1744,7 +2978,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                           marginLeft: 0
                         }}
                         onMouseEnter={e => {
-                          setHoveredRow(i);
+                          setHoveredRow(`row-${i}`);
                           setTooltipPosition(getSafeTooltipPosition(e.clientX, e.clientY, { width: 360, height: 340 }));
                         }}
                         onMouseLeave={() => setHoveredRow(null)}
@@ -1772,7 +3006,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                         &#10060;
                       </button>
                     </div>
-                    {hoveredRow === i && (
+                    {hoveredRow === `row-${i}` && (
                       <div
                         style={{
                           position: "fixed",
@@ -1798,16 +3032,17 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                     )}
                   </td>
                 </tr>
-              ))}
+              );
+              })}
             </tbody>
             </table>
           </div>
           {/* Totalen/offerte */}
           <h3 style={{ marginTop: 36 }}>Totalen/offerte</h3>
-          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(320px, 1fr))', gap:24, margin:'0 0 24px', width:'100%'}}>
+          <div className="quote-overview-grid" style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(320px, 1fr))', gap:24, margin:'0 0 24px', width:'100%'}}>
             {/* Globale korting */}
-            <div style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:0}}>
-              <div style={{fontWeight:700, marginBottom:10}}>Globale korting</div>
+              <div className="quote-panel quote-panel--discount" style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:0}}>
+                <div className="quote-panel__title">Globale korting</div>
               <div style={{display:'flex', gap:8, alignItems:'center', flexWrap:'wrap'}}>
                 <input type="number" min={0} step="0.5" value={discountValue}
                   onChange={e => setDiscountValue(e.target.value)}
@@ -1821,62 +3056,95 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                 <button onClick={applyGlobalDiscount} style={{padding:'8px 16px', borderRadius:6, background:'#0077cc', color:'#fff', border:'none', fontWeight:700, cursor:'pointer'}}>Toepassen</button>
                 <button onClick={resetPrices} style={{padding:'8px 16px', borderRadius:6, background:'#eee', color:'#333', border:'1px solid #ccc', cursor:'pointer'}}>Reset prijzen</button>
               </div>
-              <div style={{fontSize:'0.85em', color:'#666', marginTop:8}}>
+              <div className="quote-panel__note" style={{fontSize:'0.85em', color:'#666', marginTop:8}}>
                 Eerst op marge boven 12%, daarna eventueel over alle producten. Prijs gaat nooit onder kostprijs.
               </div>
               {discountNote && <div style={{color:'#e57373', fontSize:'0.85em', marginTop:6}}>{discountNote}</div>}
             </div>
             {/* Klanttotaal met btw */}
-            <div style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:0}}>
-              <div style={{fontWeight:700, marginBottom:10}}>Offertetotaal (klant)</div>
-              <div style={{display:'flex', justifyContent:'space-between', padding:'4px 0'}}><span>Totaal excl. btw</span><b>€ {fmt(customerExcl)}</b></div>
-              <div style={{display:'flex', justifyContent:'space-between', padding:'4px 0'}}><span>BTW ({vat.pct}%)</span><b>€ {fmt(customerBtw)}</b></div>
-              <div style={{display:'flex', justifyContent:'space-between', padding:'6px 0', borderTop:'1px solid #e3e8ee', fontSize:'1.1em'}}><span>Totaal</span><b>€ {fmt(customerIncl)}</b></div>
-              <div style={{fontSize:'0.85em', color: vat.intracommunautair ? '#2e7d32' : '#666', marginTop:8}}>{vat.label}</div>
+            <div className="quote-panel quote-panel--totals quote-summary-card" style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:0}}>
+              <div className="quote-panel__title">Offertetotaal (klant)</div>
+              <div className="quote-total-line"><span>Totaal excl. btw</span><b>€ {fmt(customerExcl)}</b></div>
+              <div className="quote-total-line"><span>BTW ({vat.pct}%)</span><b>€ {fmt(customerBtw)}</b></div>
+              <div className="quote-total-line quote-total-line--highlight"><span>Totaal</span><b>€ {fmt(customerIncl)}</b></div>
+              <div className="quote-panel__note quote-panel__note--vat" style={{fontSize:'0.85em', color: vat.intracommunautair ? '#2e7d32' : '#666', marginTop:8}}>{vat.label}</div>
+            </div>
+            {/* Verzendkosten */}
+            <div className="quote-panel quote-panel--shipping" style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:0}}>
+              <div className="quote-panel__title" style={{marginBottom:12}}>Verzendkosten (excl. btw)</div>
+              <div style={{display:'flex', gap:12, alignItems:'center'}}>
+                <input
+                  type="number"
+                  value={shippingCost}
+                  onChange={e => setShippingCost(e.target.value)}
+                  placeholder="0"
+                  step="0.01"
+                  min="0"
+                  className="quote-input"
+                  style={{flex:1, padding:'8px 12px', borderRadius:8, border:'1px solid #b0c4d8', fontSize:'1em'}}
+                />
+                <span style={{fontSize:'1.1em', fontWeight:600, minWidth:'60px'}}>€</span>
+              </div>
+              <div className="quote-panel__note" style={{fontSize:'0.82em', color:'#666', marginTop:8}}>
+                Optioneel. Laat leeg voor gratis verzending. Bedrag excl. btw — btw wordt automatisch berekend.
+              </div>
+            </div>
+              <div className="quote-panel quote-panel--notes" style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:0}}>
+              <div className="quote-panel__title" style={{marginBottom:8}}>Zichtbare nota (verschijnt in PDF/Excel)</div>
+              <textarea
+                value={zichtbareNota}
+                onChange={e => setZichtbareNota(e.target.value)}
+                placeholder="Bijv. leveringstermijn, speciale voorwaarden, opmerkingen voor de klant..."
+                className="quote-textarea"
+                style={{width:'100%', minHeight:72, borderRadius:8, border:'1px solid #b0c4d8', padding:10, resize:'vertical', background:'#f0f7ff'}}
+              />
+            </div>
+            <div className="quote-panel quote-panel--notes" style={{background:'#fff', border:'1px solid #e3e8ee', borderRadius:16, padding:20, color:'#222', minWidth:0}}>
+              <div className="quote-panel__title">Interne opmerkingen (niet in PDF/Excel)</div>
+              <textarea
+                value={internalComment}
+                onChange={e => setInternalComment(e.target.value)}
+                placeholder="Interne nota voor opvolging..."
+                className="quote-textarea"
+                style={{width:'100%', minHeight:96, borderRadius:8, border:'1px solid #ccc', padding:10, resize:'vertical'}}
+              />
+              <div className="quote-panel__label" style={{marginTop:10, fontSize:'0.82em', color:'#5f6b76', fontWeight:700}}>
+                Wat wordt opgeslagen
+              </div>
+              <div className="quote-note-preview" style={{marginTop:6, border:'1px solid #d7dee7', borderRadius:8, background:'#f7f9fc', padding:'10px 12px', minHeight:84, whiteSpace:'pre-wrap', fontSize:'0.82em', color:'#2f3a44'}}>
+                {internalSavePreview || 'Nog geen interne notities.'}
+              </div>
+              {importAuditNotes.length > 0 && (
+                <div style={{marginTop:8, fontSize:'0.85em', color:'#4a5d70'}}>
+                  Slimme import opvolging wordt automatisch intern mee opgeslagen ({importAuditNotes.length} notitie(s)).
+                </div>
+              )}
+              {openImportSummary.length > 0 && (
+                <div style={{marginTop:6, fontSize:'0.85em', color:'#7a4d4d'}}>
+                  Nog open importregels worden ook intern gelogd bij opslaan.
+                </div>
+              )}
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(440px, 1fr))", gap: 24, alignItems: "stretch", marginTop: 0, width: "100%" }}>
+          <div className="quote-insight-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(440px, 1fr))", gap: 24, alignItems: "stretch", marginTop: 0, width: "100%" }}>
             <div style={{ minWidth: 0, display: "flex", alignItems: "stretch" }}>
-              <div style={{
-                background: "#f6f8fa",
-                boxShadow: "0 4px 18px rgba(0,0,0,0.13)",
-                borderRadius: 24,
-                padding: 32,
-                width: "100%",
-                border: "1px solid #e3e8ee",
-                fontSize: "1.12rem",
-                color: "#222",
-                minHeight: 370,
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "0px 18px"
-              }}>
-                <div style={{ gridColumn: "1 / span 2", marginBottom: 18, display: "flex", gap: "16px", justifyContent: "center", width: "100%", flexWrap: "wrap" }}>
-                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 24px", minWidth: "200px", flex: 1, textAlign: "center", boxSizing: "border-box" }}>
-                    <div style={{ fontWeight: 700, fontSize: "1.25rem", marginBottom: 2 }}>Current Price</div>
-                    <div style={{ fontWeight: 700, fontSize: "2.1rem", color: "#222" }}>
-                      € {fmt(totals.currentPrice)}
-                    </div>
+              <div className="quote-insight-card quote-insight-card--metrics">
+                <div className="quote-metrics-grid">
+                  <div className="quote-stat-card quote-metric-card quote-metric-card--price-current">
+                    <div className="quote-metric-card__label">Huidige prijs</div>
+                    <div className="quote-metric-card__value">€ {fmt(totals.currentPrice)}</div>
                   </div>
-                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 24px", minWidth: "200px", flex: 1, textAlign: "center", boxSizing: "border-box" }}>
-                    <div style={{ fontWeight: 700, fontSize: "1.25rem", marginBottom: 2 }}>New Price</div>
-                    <div style={{ fontWeight: 700, fontSize: "2.1rem", color: "#222" }}>
-                      € {fmt(totals.newPrice)}
-                    </div>
+                  <div className="quote-stat-card quote-metric-card quote-metric-card--price-new">
+                    <div className="quote-metric-card__label">Nieuwe prijs</div>
+                    <div className="quote-metric-card__value">€ {fmt(totals.newPrice)}</div>
                   </div>
-                </div>
-                <div style={{ gridColumn: "1 / span 2", marginBottom: 18, display: "flex", gap: "16px", justifyContent: "center", width: "100%", flexWrap: "wrap" }}>
-                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 24px", minWidth: "200px", flex: 1, textAlign: "center", boxSizing: "border-box" }}>
-                    <div style={{ fontWeight: 700, fontSize: "1.25rem", marginBottom: 2 }}>Current Profit</div>
-                    <div style={{ fontWeight: 700, fontSize: "2.1rem", color: "#222" }}>
-                      € {fmt(totals.currentProfit)}
-                    </div>
+                  <div className="quote-stat-card quote-metric-card quote-metric-card--profit-current">
+                    <div className="quote-metric-card__label">Huidige winst</div>
+                    <div className="quote-metric-card__value">€ {fmt(totals.currentProfit)}</div>
                   </div>
-                  <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "none", border: "1px solid #e3e8ee", padding: "24px 24px", minWidth: "200px", flex: 1, textAlign: "center", boxSizing: "border-box" }}>
-                    <div style={{ fontWeight: 700, fontSize: "1.25rem", marginBottom: 2 }}>New Profit</div>
-                    <div style={{ fontWeight: 700, fontSize: "2.1rem", color: "#222" }}>
-                      € {fmt(totals.newProfit)}
-                    </div>
+                  <div className="quote-stat-card quote-metric-card quote-metric-card--profit-new">
+                    <div className="quote-metric-card__label">Nieuwe winst</div>
+                    <div className="quote-metric-card__value">€ {fmt(totals.newProfit)}</div>
                   </div>
                 </div>
                 <div style={{ gridColumn: "1 / span 2", margin: "12px 0 0 0" }}>
@@ -1918,7 +3186,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                             if (cdcTooltipTimer) clearTimeout(cdcTooltipTimer);
                             setHoveredRow("cdc-uitleg");
                             const rect = e.target.getBoundingClientRect();
-                            setTooltipPosition(getSafeTooltipPosition(rect.right, rect.top, { width: 420, height: 340, offset: 10 }));
+                            setTooltipPosition(getSafeTooltipPosition(rect.right, rect.top, { width: 620, height: 420, offset: 12 }));
                           }}
                           onMouseLeave={e => {
                             const timer = setTimeout(() => setHoveredRow(null), 200);
@@ -1939,17 +3207,18 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                             position: "fixed",
                             left: tooltipPosition.x,
                             top: tooltipPosition.y,
-                            minWidth: 220,
-                            maxWidth: 400,
-                            maxHeight: 340,
+                            width: "clamp(520px, 58vw, 760px)",
+                            minWidth: 520,
+                            maxWidth: 760,
+                            maxHeight: 420,
                             overflowY: "auto",
                             background: "#222",
                             color: "#fff",
-                            borderRadius: 10,
-                            padding: "16px 20px",
+                            borderRadius: 14,
+                            padding: "18px 20px",
                             boxShadow: "0 2px 14px rgba(0,0,0,0.22)",
                             zIndex: 9999,
-                            fontSize: "1.05em",
+                            fontSize: "0.98rem",
                             textAlign: "left",
                             pointerEvents: "auto"
                           }}
@@ -1972,15 +3241,15 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                           )}
                           {totals.cdcRows && totals.cdcRows.length > 0 && (
                             <div style={{ border: "1px solid #3b3f56", borderRadius: 8, overflow: "hidden" }}>
-                              <div style={{ display: "grid", gridTemplateColumns: "86px 1fr 84px 98px", background: "#2d3146", fontWeight: 700, fontSize: "0.9em", padding: "7px 10px" }}>
+                              <div style={{ display: "grid", gridTemplateColumns: "132px 1fr 88px 120px", background: "#2d3146", fontWeight: 700, fontSize: "0.9em", padding: "8px 12px" }}>
                                 <span>SKU</span>
                                 <span>Verdeling</span>
                                 <span style={{ textAlign: "center" }}>Lijnen</span>
                                 <span style={{ textAlign: "right" }}>CDC</span>
                               </div>
-                              <div style={{ maxHeight: 220, overflowY: "auto" }}>
+                              <div style={{ maxHeight: 260, overflowY: "auto" }}>
                                 {totals.cdcRows.map((r, i) => (
-                                  <div key={r.sku + i} style={{ display: "grid", gridTemplateColumns: "86px 1fr 84px 98px", padding: "7px 10px", borderTop: i === 0 ? "none" : "1px solid #33374d", fontSize: "0.92em", alignItems: "center" }}>
+                                  <div key={r.sku + i} style={{ display: "grid", gridTemplateColumns: "132px 1fr 88px 120px", padding: "8px 12px", borderTop: i === 0 ? "none" : "1px solid #33374d", fontSize: "0.92em", alignItems: "center", columnGap: 8 }}>
                                     <span style={{ fontWeight: 700 }}>{r.sku}</span>
                                     <span>
                                       {r.inStock > 0 && <span style={{ color: "#81c784" }}>{r.inStock} voorraad</span>}
@@ -1988,7 +3257,7 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                                       {r.backOrder > 0 && <span style={{ color: "#ffcc80" }}>{r.backOrder} backorder</span>}
                                     </span>
                                     <span style={{ textAlign: "center" }}>{r.cdcLines}</span>
-                                    <span style={{ textAlign: "right", fontWeight: 700 }}>{fmt(r.cdcValue)}</span>
+                                    <span style={{ textAlign: "right", fontWeight: 700, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>{fmt(r.cdcValue)}</span>
                                   </div>
                                 ))}
                               </div>
@@ -2002,9 +3271,9 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
               </div>
             </div>
             <div style={{ minWidth: 0 }}>
-              <h3 style={{ margin: 0, padding: 0, color: '#222' }}>Klantgegevens</h3>
-              <form style={{ background: "#ffffffff", boxShadow: "0 2px 10px rgba(0,0,0,0.10)", borderRadius: 16, padding: 26, border: "1px solid #eee", fontSize: "1.06rem", color: "#222", display: "flex", flexDirection: "column", justifyContent: "flex-start", marginTop: 0 }}>
-                <div style={{ fontWeight: 700, color: "#20264b", marginBottom: 10, fontSize: "1.05rem" }}>Factuurgegevens</div>
+              <h3 className="quote-section-title" style={{ margin: 0, padding: 0, color: '#222' }}>Klantgegevens</h3>
+              <form className="quote-form-card" style={{ background: "#ffffffff", boxShadow: "0 2px 10px rgba(0,0,0,0.10)", borderRadius: 16, padding: 26, border: "1px solid #eee", fontSize: "1.06rem", color: "#222", display: "flex", flexDirection: "column", justifyContent: "flex-start", marginTop: 0 }}>
+                <div className="quote-panel__title">Factuurgegevens</div>
                 <div style={{ marginBottom: 12 }}>
                   <label><b>Naam:</b></label><br />
                   <input type="text" value={customerData.naam} onChange={e => setCustomerData({ ...customerData, naam: e.target.value })} style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />
@@ -2053,14 +3322,14 @@ export default function QuotationTool({ onOfferteSaved, offerteData }) {
                   <label><b>E-mail:</b></label><br />
                   <input type="email" value={customerData.email} onChange={e => setCustomerData({ ...customerData, email: e.target.value })} style={{ width: "100%", padding: 8, borderRadius: 6, border: "1px solid #ccc" }} />
                 </div>
-                <div style={{ background: vat.intracommunautair || vat.isExport ? "#e8f5e9" : "#eef1f8", border: "1px solid " + (vat.intracommunautair || vat.isExport ? "#a5d6a7" : "#c5cbe0"), borderRadius: 8, padding: "8px 12px", marginBottom: 14, fontSize: "0.92rem" }}>
+                <div className={`quote-vat-regime ${vat.intracommunautair || vat.isExport ? "quote-vat-regime--zero" : "quote-vat-regime--local"}`}>
                   <b>BTW-regeling:</b>{" "}
                   {vat.intracommunautair
                     ? "0% — intracommunautaire levering (btw verlegd)"
                     : vat.isExport
                       ? "0% — export buiten EU"
                       : `${vat.pct}% btw (${vat.code})`}
-                  {!sameDelivery && <span style={{ color: "#666" }}> · o.b.v. leveringsland</span>}
+                  {!sameDelivery && <span className="quote-vat-regime__hint"> · o.b.v. leveringsland</span>}
                 </div>
 
                 <label style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: sameDelivery ? 6 : 12, cursor: "pointer", fontWeight: 600 }}>

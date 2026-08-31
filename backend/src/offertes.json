@@ -3013,5 +3013,2623 @@
         "prijs": 41.65
       }
     ]
+  },
+  {
+    "id": 77,
+    "customer": "HA2 ISP - Houda",
+    "total": 2020.92,
+    "date": "2026-07-23",
+    "bedrijf": "ISP France SAS",
+    "btw": "FR38449955590",
+    "adres": "Impasse des Charmes 1",
+    "postcode": "38280 ",
+    "gemeente": "Villette-d'Anthon",
+    "land": "FR",
+    "email": "achats2@isp-group.org",
+    "producten": [
+      {
+        "sku": "08073263",
+        "naam": "WIHA 246240 dopsleutelinzet geïsoleerd binnenzeskant 4 x 75 mm - 43105",
+        "aantal": 3,
+        "prijs": 20
+      },
+      {
+        "sku": "08073284",
+        "naam": "WIHA 287992 adapter TorqueVario-S electric voor 1/4\" dopsleutels - 43128",
+        "aantal": 1,
+        "prijs": 13.88
+      },
+      {
+        "sku": "41293780",
+        "naam": "FACOM ETS.104 standaard schroefbit serie 1 met kogelkop voor zeskant inbusschroeven 25mm, 4mm",
+        "aantal": 3,
+        "prijs": 6.68
+      },
+      {
+        "sku": "08073272",
+        "naam": "WIHA 246267 momentsleutel electric 3/8\" voor dopsleutels 5-25 Nm - 44163",
+        "aantal": 4,
+        "prijs": 275.87
+      },
+      {
+        "sku": "08074538",
+        "naam": "WIHA 320N035100 schroevendraaier SoftFinish electric sleufkop 3,5 x 100 mm - 00822",
+        "aantal": 1,
+        "prijs": 5.66
+      },
+      {
+        "sku": "08074539",
+        "naam": "WIHA 320N040100 schroevendraaier SoftFinish electric sleufkop 4 x 100 mm - 00823",
+        "aantal": 1,
+        "prijs": 6.98
+      },
+      {
+        "sku": "41191195",
+        "naam": "KNIPEX 98 00 12 steeksleutel 15° gebogen 12 mm",
+        "aantal": 3,
+        "prijs": 16.36
+      },
+      {
+        "sku": "41191197",
+        "naam": "KNIPEX 98 00 14 steeksleutel 15° gebogen 14 mm",
+        "aantal": 1,
+        "prijs": 16.69
+      },
+      {
+        "sku": "08079842",
+        "naam": "WIHA SB25517 spanningszoeker en continuiteitstester 0,5-1000V AC, CAT IV incl. 2x AAA batterijen - 45217",
+        "aantal": 1,
+        "prijs": 83.22
+      },
+      {
+        "sku": "02786312",
+        "naam": "WIHA 320N030100 schroevendraaier SoftFinish electric sleufkop 3 x 100 mm - 00821",
+        "aantal": 1,
+        "prijs": 5.47
+      },
+      {
+        "sku": "41191330",
+        "naam": "KNIPEX 98 41 omschakelbare ratel met buitenvierkant 1/2\" 265 mm",
+        "aantal": 2,
+        "prijs": 81.65
+      },
+      {
+        "sku": "08073522",
+        "naam": "WIHA 3251025 schroevendraaier SoftFinish electric slimFix Torx T25 x 125 mm - 36539",
+        "aantal": 2,
+        "prijs": 11.98
+      },
+      {
+        "sku": "08073234",
+        "naam": "WIHA 246211 dopsleutelinzet geïsoleerd buitenzeskant 22 mm x 3/8\" - 43076",
+        "aantal": 2,
+        "prijs": 18.14
+      },
+      {
+        "sku": "41191194",
+        "naam": "KNIPEX 98 00 11 steeksleutel 15° gebogen 11 mm",
+        "aantal": 1,
+        "prijs": 15.54
+      },
+      {
+        "sku": "08073719",
+        "naam": "WIHA 28723200 momentschroevendraaierset TorqueVario-S electric variabel 0,5-2 Nm - 26625",
+        "aantal": 1,
+        "prijs": 132.19
+      },
+      {
+        "sku": "41191196",
+        "naam": "KNIPEX 98 00 13 steeksleutel 15° gebogen 13 mm",
+        "aantal": 3,
+        "prijs": 16.36
+      },
+      {
+        "sku": "41190063",
+        "naam": "KNIPEX 70 06 160 zijsnijtang geïsoleerd met meer-componentengrepen, VDE-getest verchroomd 160 mm",
+        "aantal": 1,
+        "prijs": 23.8
+      },
+      {
+        "sku": "03244661",
+        "naam": "KNIPEX 78 06 125 electronic Super Knips VDE geïsoleerd met meer-componentengrepen, VDE-getest 125 mm",
+        "aantal": 9,
+        "prijs": 20.5
+      },
+      {
+        "sku": "41191348",
+        "naam": "KNIPEX 98 49 06 dop voor ratel, voor binnenzeskantschroeven met binnenvierkant 1/2\" 75 mm",
+        "aantal": 1,
+        "prijs": 27.77
+      }
+    ],
+    "interneOpmerking": ""
+  },
+  {
+    "id": 78,
+    "customer": "Mertens Glenn (HQS & Training Manager)",
+    "total": 15641.790000000008,
+    "date": "2026-07-24",
+    "bedrijf": "SOLYSTIC Belgium Branch",
+    "btw": "BE0841923970",
+    "adres": "Prins Boudewijnlaan 17 bus unit 5",
+    "postcode": "2550",
+    "gemeente": "Kontich",
+    "land": "BE",
+    "email": "glenn.mertens@solystic.com",
+    "producten": [
+      {
+        "sku": "03169262",
+        "naam": "FACOM 1618.00PB voelermaat met 19 bladen",
+        "aantal": 2,
+        "prijs": 14.5
+      },
+      {
+        "sku": "03170723",
+        "naam": "FACOM BP.P26APB Pro gereedschapskoffer 26\"",
+        "aantal": 12,
+        "prijs": 41.98
+      },
+      {
+        "sku": "41291842",
+        "naam": "FACOM 44.21X23 steeksleutel 21 x 23 mm",
+        "aantal": 2,
+        "prijs": 10.36
+      },
+      {
+        "sku": "03169337",
+        "naam": "FACOM 192.16CPESLS diagonale kniptang met SLS bevestiging 160mm",
+        "aantal": 2,
+        "prijs": 32.34
+      },
+      {
+        "sku": "41291847",
+        "naam": "FACOM 44.26X28 steeksleutel 26 x 28 mm",
+        "aantal": 2,
+        "prijs": 11.56
+      },
+      {
+        "sku": "41280509",
+        "naam": "FACOM 179A.13 tang voor binnenborgveren met rechte bekken",
+        "aantal": 2,
+        "prijs": 15.79
+      },
+      {
+        "sku": "41295129",
+        "naam": "FACOM 205H.30 monteurshamer type DIN met steel van hickory",
+        "aantal": 2,
+        "prijs": 10.4
+      },
+      {
+        "sku": "41851525",
+        "naam": "BAHCO 5050 stethoscoop met stalen sensor, 1050 mm",
+        "aantal": 2,
+        "prijs": 60.86
+      },
+      {
+        "sku": "02947738",
+        "naam": "FACOM ATP1X100 ProTwist schroevendraaier voor Phillips schroeven met rond bled PH1 x 100 mm",
+        "aantal": 20,
+        "prijs": 6.12
+      },
+      {
+        "sku": "02947675",
+        "naam": "FACOM ATD2X125VE ProTwist schroevendraaier geisoleerd tot 1000V voor Pozidriv schroeven PZ2 x 125 mm",
+        "aantal": 2,
+        "prijs": 9.05
+      },
+      {
+        "sku": "41299476",
+        "naam": "FACOM 440.1/4 ringsteeksleutel met OGV profiel 1/4\"",
+        "aantal": 1,
+        "prijs": 5.99
+      },
+      {
+        "sku": "02947760",
+        "naam": "FACOM ATP3X150 ProTwist schroevendraaier voor Phillips schroeven met rond bled PH3 x 150 mm",
+        "aantal": 20,
+        "prijs": 10.69
+      },
+      {
+        "sku": "02810152",
+        "naam": "FACOM 84TZA.2.5 inbussleutel zeskant met P-greep 2,5 mm",
+        "aantal": 2,
+        "prijs": 4.78
+      },
+      {
+        "sku": "02810161",
+        "naam": "FACOM 84TZA.5 inbussleutel zeskant met P-greep 5 mm",
+        "aantal": 2,
+        "prijs": 6.06
+      },
+      {
+        "sku": "02810166",
+        "naam": "FACOM 84TZA.10 inbussleutel zeskant met P-greep 10 mm",
+        "aantal": 2,
+        "prijs": 10.14
+      },
+      {
+        "sku": "02851253",
+        "naam": "FACOM 467BF.11 scharnierende steekringratelsleutel 11 mm",
+        "aantal": 1,
+        "prijs": 14.84
+      },
+      {
+        "sku": "02947700",
+        "naam": "FACOM ATF5.5X150 ProTwist schroevendraaier voor sleufschroeven met gesmeed bled 5.5 x 150 mm",
+        "aantal": 6,
+        "prijs": 6.56
+      },
+      {
+        "sku": "02951005",
+        "naam": "FLUKE 114 compacte elektrische RMS multimeter tot 600V AC/DC - 2583552",
+        "aantal": 2,
+        "prijs": 214.59
+      },
+      {
+        "sku": "41291843",
+        "naam": "FACOM 44.22X24 steeksleutel 22 x 24 mm",
+        "aantal": 2,
+        "prijs": 10.58
+      },
+      {
+        "sku": "02293143",
+        "naam": "FLUKE 117 compacte RMS multimeter met contactloze spanningszoeker voor elektriciens tot 600V AC/DC - 10A AC/DC - 2583647",
+        "aantal": 1,
+        "prijs": 327.94
+      },
+      {
+        "sku": "02947695",
+        "naam": "FACOM ATF10X200 ProTwist schroevendraaier voor sleufschroeven met gesmeed bled 10 x 200 mm",
+        "aantal": 6,
+        "prijs": 9.67
+      },
+      {
+        "sku": "03159736",
+        "naam": "FACOM 467BF.JP10PB scharnierende anti-slip steekringratelsleutelset metrisch in houder 10-delig",
+        "aantal": 23,
+        "prijs": 153.06
+      },
+      {
+        "sku": "41190109",
+        "naam": "KNIPEX 25 05 160 platspitse tang met zijsnijder (radiotang) met comfortgrepen verchroomd",
+        "aantal": 23,
+        "prijs": 18.06
+      },
+      {
+        "sku": "41293174",
+        "naam": "FACOM AEF.J3 Micro-Tech schroevendraaierset voor sleuf en phillips schroeven in doos 8-delig",
+        "aantal": 12,
+        "prijs": 40.99
+      },
+      {
+        "sku": "41299477",
+        "naam": "FACOM 440.10 ringsteeksleutel met OGV profiel 10 mm",
+        "aantal": 8,
+        "prijs": 6.18
+      },
+      {
+        "sku": "41280510",
+        "naam": "FACOM 179A.18 tang voor binnenborgveren met rechte bekken",
+        "aantal": 2,
+        "prijs": 18.01
+      },
+      {
+        "sku": "41850620",
+        "naam": "BAHCO 9072 P moersleutel verstelbaar ERGO met centrale moer, rubberen handgreep, gefosfateerd met omkeerbare bek 257 mm 33 mm",
+        "aantal": 10,
+        "prijs": 35.3
+      },
+      {
+        "sku": "02947671",
+        "naam": "FACOM ATD1X100VE ProTwist schroevendraaier geisoleerd tot 1000V voor Pozidriv schroeven PZ1 x 100 mm",
+        "aantal": 2,
+        "prijs": 9.36
+      },
+      {
+        "sku": "02947437",
+        "naam": "FACOM AT6.5X150 ProTwist schroevendraaier voor sleufschroeven met gefreesd bled 6.5 x 150 mm",
+        "aantal": 15,
+        "prijs": 6.58
+      },
+      {
+        "sku": "02810162",
+        "naam": "FACOM 84TZA.6 inbussleutel zeskant met P-greep 6 mm",
+        "aantal": 2,
+        "prijs": 7.24
+      },
+      {
+        "sku": "41291826",
+        "naam": "FACOM 44.10X11 steeksleutel 10 x 11 mm",
+        "aantal": 14,
+        "prijs": 4.87
+      },
+      {
+        "sku": "41190776",
+        "naam": "KNIPEX 76 05 125 zijsnijtang voor elektromechanica met comfortgrepen verchroomd 125 mm",
+        "aantal": 20,
+        "prijs": 22.89
+      },
+      {
+        "sku": "02293974",
+        "naam": "WERA Bit-Check 30 Impaktor 1 schroefbitset in kunststof houder 30-delig - 05057690001",
+        "aantal": 9,
+        "prijs": 53.78
+      },
+      {
+        "sku": "02296270",
+        "naam": "FACOM DRD.MD200EMA halfronde halfzoete vijl met handgreep 6x21x200 mm",
+        "aantal": 2,
+        "prijs": 12.19
+      },
+      {
+        "sku": "41294747",
+        "naam": "FACOM 83SH.5/32 lange inbussleutel met kogelkop 5/32\"",
+        "aantal": 1,
+        "prijs": 3.03
+      },
+      {
+        "sku": "02810158",
+        "naam": "FACOM 84TZA.3 inbussleutel zeskant met P-greep 3 mm",
+        "aantal": 2,
+        "prijs": 5.23
+      },
+      {
+        "sku": "41290760",
+        "naam": "FACOM R.8 dop 1/4\" zeskant 8 mm",
+        "aantal": 1,
+        "prijs": 3.95
+      },
+      {
+        "sku": "02657291",
+        "naam": "FACOM DELA.1051.300 flexibele RVS-liniaal dubbelzijdig 300 mm",
+        "aantal": 1,
+        "prijs": 4.67
+      },
+      {
+        "sku": "41290156",
+        "naam": "FACOM S.17H dop 1/2\" zeskant 17 mm",
+        "aantal": 1,
+        "prijs": 5.16
+      },
+      {
+        "sku": "02947683",
+        "naam": "FACOM ATD.J8VE ProTwist schroevendraaierset geisoleerd 1000V 8-delig",
+        "aantal": 14,
+        "prijs": 47.16
+      },
+      {
+        "sku": "41292560",
+        "naam": "FACOM 113A.12C verchroomde sleutel met kartelwiel",
+        "aantal": 2,
+        "prijs": 26.61
+      },
+      {
+        "sku": "41293175",
+        "naam": "FACOM AEF.J5 Micro-Tech schroevendraaierset voor sleuf en pozidriv schroeven in doos 5-delig",
+        "aantal": 2,
+        "prijs": 29.85
+      },
+      {
+        "sku": "02035305",
+        "naam": "STANLEY 1-95-611 FATMAX gereedschapsrugzak",
+        "aantal": 11,
+        "prijs": 38.33
+      },
+      {
+        "sku": "02810159",
+        "naam": "FACOM 84TZA.4 inbussleutel zeskant met P-greep 4 mm",
+        "aantal": 2,
+        "prijs": 5.41
+      },
+      {
+        "sku": "02850923",
+        "naam": "FACOM 187A.16CPE combinatietang",
+        "aantal": 2,
+        "prijs": 15.21
+      },
+      {
+        "sku": "41290151",
+        "naam": "FACOM S.12H dop 1/2\" zeskant 12 mm",
+        "aantal": 1,
+        "prijs": 4.95
+      },
+      {
+        "sku": "02947752",
+        "naam": "FACOM ATP2X125 ProTwist schroevendraaier voor Phillips schroeven met rond bled PH2 x 125 mm",
+        "aantal": 23,
+        "prijs": 7.45
+      },
+      {
+        "sku": "08131818",
+        "naam": "WERA Tool-Check PLUS 1 gereedschapsset, 39-delig - 05049055001",
+        "aantal": 12,
+        "prijs": 69
+      },
+      {
+        "sku": "41191629",
+        "naam": "KNIPEX 00 19 56 borgveertangenset 4-delig",
+        "aantal": 1,
+        "prijs": 60.47
+      },
+      {
+        "sku": "41295801",
+        "naam": "FACOM 249.JT7 slaggereedschapset 7-delig",
+        "aantal": 2,
+        "prijs": 52.8
+      },
+      {
+        "sku": "41296136",
+        "naam": "FACOM 416.MT micro-tech kniptang met puntbekken",
+        "aantal": 2,
+        "prijs": 47.74
+      },
+      {
+        "sku": "02227156",
+        "naam": "BAHCO 2484/S4 breekijzerset met plat uiteinde en PVC-handgreep 4-delig",
+        "aantal": 2,
+        "prijs": 46.6
+      },
+      {
+        "sku": "02794601",
+        "naam": "FACOM R.161-3P6 doppenset met ratel 1/4\" zeskant in opbergdoos 19-delig",
+        "aantal": 2,
+        "prijs": 115.91
+      },
+      {
+        "sku": "03169447",
+        "naam": "FACOM 2520.00PB schuifmaat 140c",
+        "aantal": 2,
+        "prijs": 38.1
+      },
+      {
+        "sku": "41294748",
+        "naam": "FACOM 83SH.3/16 lange inbussleutel met kogelkop 3/16\"",
+        "aantal": 1,
+        "prijs": 3.1
+      },
+      {
+        "sku": "41294755",
+        "naam": "FACOM 83SH.JP9A inbussleutelset lang 1,5-10 mm 9-delig",
+        "aantal": 7,
+        "prijs": 20.85
+      },
+      {
+        "sku": "03169221",
+        "naam": "FACOM 113AS.6CPB korte verstelbare moersleutel 6\"",
+        "aantal": 9,
+        "prijs": 20.48
+      },
+      {
+        "sku": "41295017",
+        "naam": "FACOM 141.12 hoge precisie pincet, recht model",
+        "aantal": 2,
+        "prijs": 19.08
+      },
+      {
+        "sku": "41299497",
+        "naam": "FACOM 440.19 ringsteeksleutel met OGV profiel 19 mm",
+        "aantal": 6,
+        "prijs": 8
+      },
+      {
+        "sku": "41280505",
+        "naam": "FACOM 177A.18 tang voor buitenborgveren met rechte bekken",
+        "aantal": 2,
+        "prijs": 18.27
+      },
+      {
+        "sku": "41290152",
+        "naam": "FACOM S.13H dop 1/2\" zeskant 13 mm",
+        "aantal": 1,
+        "prijs": 4.95
+      },
+      {
+        "sku": "41299486",
+        "naam": "FACOM 440.13 ringsteeksleutel met OGV profiel 13 mm",
+        "aantal": 9,
+        "prijs": 7.2
+      },
+      {
+        "sku": "02810164",
+        "naam": "FACOM 84TZA.8 inbussleutel zeskant met P-greep 8 mm",
+        "aantal": 2,
+        "prijs": 7.99
+      },
+      {
+        "sku": "41291851",
+        "naam": "FACOM 44.30X32 steeksleutel 30 x 32 mm",
+        "aantal": 2,
+        "prijs": 15.2
+      },
+      {
+        "sku": "41291822",
+        "naam": "FACOM 44.6X7 steeksleutel 6 x 7 mm",
+        "aantal": 14,
+        "prijs": 4.3
+      },
+      {
+        "sku": "41291830",
+        "naam": "FACOM 44.12X13 steeksleutel 12 x 13 mm",
+        "aantal": 14,
+        "prijs": 5.33
+      },
+      {
+        "sku": "41291824",
+        "naam": "FACOM 44.8X9 steeksleutel 8 x 9 mm",
+        "aantal": 14,
+        "prijs": 4.56
+      },
+      {
+        "sku": "41291834",
+        "naam": "FACOM 44.14X15 steeksleutel 14 x 15 mm",
+        "aantal": 14,
+        "prijs": 7.1
+      },
+      {
+        "sku": "41291836",
+        "naam": "FACOM 44.16X17 steeksleutel 16 x 17 mm",
+        "aantal": 14,
+        "prijs": 7.1
+      },
+      {
+        "sku": "41291839",
+        "naam": "FACOM 44.18X19 steeksleutel 18 x 19 mm",
+        "aantal": 14,
+        "prijs": 8.62
+      },
+      {
+        "sku": "41291841",
+        "naam": "FACOM 44.20X22 steeksleutel 20 x 22 mm",
+        "aantal": 12,
+        "prijs": 9.85
+      },
+      {
+        "sku": "02283116",
+        "naam": "FACOM 89S.JP8A haakse lange inbussleutelset Torx kogelkop in houder 8-delig",
+        "aantal": 18,
+        "prijs": 42.31
+      },
+      {
+        "sku": "41299502",
+        "naam": "FACOM 440.24 ringsteeksleutel met OGV profiel 24 mm",
+        "aantal": 12,
+        "prijs": 10.89
+      },
+      {
+        "sku": "02948668",
+        "naam": "FACOM 194A.17VE draadstripper 1000V",
+        "aantal": 2,
+        "prijs": 29.68
+      },
+      {
+        "sku": "03170089",
+        "naam": "FACOM 844.S18PB automatisch herladende cutter 18 mm",
+        "aantal": 2,
+        "prijs": 10.34
+      },
+      {
+        "sku": "41295167",
+        "naam": "FACOM 207A.50CB hamer met aluminium kop voor verwisselbare hamerdoppen",
+        "aantal": 2,
+        "prijs": 65.84
+      },
+      {
+        "sku": "41280503",
+        "naam": "FACOM 177A.13 tang voor buitenborgveren met rechte bekken",
+        "aantal": 2,
+        "prijs": 15.77
+      },
+      {
+        "sku": "02283111",
+        "naam": "FACOM 83SH.JP8AU haakse sleutelset zeskant 3/32-3/8\" in houder 8-delig",
+        "aantal": 10,
+        "prijs": 20
+      },
+      {
+        "sku": "41299494",
+        "naam": "FACOM 440.17 ringsteeksleutel met OGV profiel 17 mm",
+        "aantal": 8,
+        "prijs": 10.18
+      },
+      {
+        "sku": "41291848",
+        "naam": "FACOM 44.27X29 steeksleutel 27 x 29 mm",
+        "aantal": 2,
+        "prijs": 11.88
+      },
+      {
+        "sku": "02947183",
+        "naam": "FACOM AT4X100 ProTwist schroevendraaier voor sleufschroeven met gefreesd bled 4 x 100 mm",
+        "aantal": 14,
+        "prijs": 4.31
+      },
+      {
+        "sku": "41298202",
+        "naam": "FACOM 83S.JP9AL haakse sleutelset zeskant 1,5-10mm in houder 9-delig",
+        "aantal": 12,
+        "prijs": 24.95
+      },
+      {
+        "sku": "02947160",
+        "naam": "FACOM AT2.5X75 ProTwist schroevendraaier voor sleufschroeven met gefreesd bled 2.5 x 75 mm",
+        "aantal": 2,
+        "prijs": 4.05
+      },
+      {
+        "sku": "41190018",
+        "naam": "KNIPEX 03 02 180 kombitang met comfortgrepen zwart geatramenteerd 180 mm",
+        "aantal": 21,
+        "prijs": 14.21
+      },
+      {
+        "sku": "03171539",
+        "naam": "FACOM R.360NANOPB ratel R.360 met ultra compacte doppenset 6-kant 1/4\" in opbergdoos 38-delig",
+        "aantal": 6,
+        "prijs": 127.77
+      },
+      {
+        "sku": "02203425",
+        "naam": "FACOM 181A.25CPEPB waterpomptang chroom/ergo",
+        "aantal": 13,
+        "prijs": 25.34
+      },
+      {
+        "sku": "03170609",
+        "naam": "FACOM 893B.319PB dubbelzijdig meetlint met ABS-behuizing 3m/19mm",
+        "aantal": 23,
+        "prijs": 6.66
+      },
+      {
+        "sku": "41290759",
+        "naam": "FACOM R.7 dop 1/4\" zeskant 7 mm",
+        "aantal": 1,
+        "prijs": 3.95
+      },
+      {
+        "sku": "02678313",
+        "naam": "FACOM DELA.1051.150 flexibele RVS-liniaal dubbelzijdig 150 mm",
+        "aantal": 1,
+        "prijs": 2.23
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- [object Object]\n- [object Object]\n- [object Object]\n- [object Object]\n- [object Object]\n- [object Object]\n- [object Object]\n- [object Object]\n- [object Object]\n- [object Object]\n- [object Object]\n- [object Object]"
+  },
+  {
+    "id": 79,
+    "customer": "Marcel Bakker",
+    "total": 3436.87,
+    "date": "2026-07-27",
+    "bedrijf": "Bakker totaalbouw",
+    "btw": "NL865086370b01",
+    "adres": "Parallelweg  103",
+    "postcode": "3371 GE",
+    "gemeente": "Hardinxveld-Giessendam",
+    "land": "NL",
+    "email": "Marcel@bakkertotaalbouw.nl",
+    "producten": [
+      {
+        "sku": "03174222",
+        "naam": "MAKITA DTM52ZJ 18V LXT accu-multitool in Makpac III (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 205.31
+      },
+      {
+        "sku": "02669193",
+        "naam": "MAKITA DHS680RTJ 18V LXT accu-cirkelzaag 57mm 165mm in MAKPAC (2x 5,0Ah accu + lader)",
+        "aantal": 1,
+        "prijs": 454.86
+      },
+      {
+        "sku": "02712942",
+        "naam": "DEWALT DWS777-QS afkort- en verstekzaag met XPS-indicator 216 mm 1800 W",
+        "aantal": 1,
+        "prijs": 403.66
+      },
+      {
+        "sku": "08093141",
+        "naam": "MAKITA DJV185Z 18V LXT accu-decoupeerzaag met D-greep in kartonnen doos (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 151.59
+      },
+      {
+        "sku": "02760962",
+        "naam": "MAKITA 197626-8 accu-laadset (4x 18V 5,0Ah accu + snellader)",
+        "aantal": 1,
+        "prijs": 367.4
+      },
+      {
+        "sku": "02946335",
+        "naam": "MAKITA DHR243ZJW 18V LXT accu-combihamer SDS-Plus 24mm + stofafzuiging DX07 in MAKPAC IV (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 339.69
+      },
+      {
+        "sku": "03175293",
+        "naam": "FESTOOL TS 55 FEBQ-Plus invalcirkelzaag 160mm 1200W in SYS3 M 337 - 576703",
+        "aantal": 1,
+        "prijs": 518.53
+      },
+      {
+        "sku": "03231282",
+        "naam": "MAKITA DFR551ZJ 18V LXT accu-schroefautomaat 55mm in MAKPAC III (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 312.05
+      },
+      {
+        "sku": "02345070",
+        "naam": "DEWALT DE7033-XJ compact universeel onderstel voor afkort-/verstekzagen",
+        "aantal": 1,
+        "prijs": 112.89
+      },
+      {
+        "sku": "02866939",
+        "naam": "MAKITA DGA514ZJU 18V LXT haakse accu-slijper 125mm in MAKPAC (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 245.93
+      },
+      {
+        "sku": "08135290",
+        "naam": "MAKITA DHP492Z 18V LXT accu-klopboorschroefmachine in kartonnen doos (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 196.72
+      },
+      {
+        "sku": "03174186",
+        "naam": "MAKITA DTD153Z 18V LXT accu-slagschroevendraaier 170Nm 1/4\" Hex in kartonnen doos (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 98.53
+      },
+      {
+        "sku": "41012683",
+        "naam": "STANLEY 1-45-013 opvouwbare bouwhaak aluminium 1720 x 1220 mm",
+        "aantal": 1,
+        "prijs": 29.71
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- regel 1: handmatig toegevoegd als SKU 08135290 (bron: 1x Makita DHP486Z – Schroefklopboor).\n- regel 4: handmatig toegevoegd als SKU 02866939 (bron: 1x Makita DGA504ZJ – Haakse slijpmachine).\n- regel 6: handmatig toegevoegd als SKU 08093141 (bron: 1x Makita DJV182ZJ – Decoupeerzaag).\n- regel 7: handmatig toegevoegd als SKU 02669193 (bron: 1x Makita DHS680ZJ – Handcirkelzaag).\n- regel 9: handmatig toegevoegd als SKU 02760962 (bron: 1x Makita 191D52-3 – Power Source Kit).\n- regel 13: handmatig toegevoegd als SKU 41012683 (bron: 1x Stabila 10105 – Uitklapbare bouwhaak)."
+  },
+  {
+    "id": 81,
+    "customer": "Mertens Glenn (HQS & Training Manager)",
+    "total": 15741.15,
+    "date": "2026-07-29",
+    "bedrijf": "SOLYSTIC Belgium Branch",
+    "btw": "BE0841923970",
+    "adres": "Prins Boudewijnlaan 17 bus unit 5",
+    "postcode": "2550",
+    "gemeente": "Kontich",
+    "land": "BE",
+    "email": "glenn.mertens@solystic.com",
+    "producten": [
+      {
+        "sku": "02947738",
+        "naam": "FACOM ATP1X100 ProTwist schroevendraaier voor Phillips schroeven met rond bled PH1 x 100 mm",
+        "aantal": 20,
+        "prijs": 6.15
+      },
+      {
+        "sku": "02947675",
+        "naam": "FACOM ATD2X125VE ProTwist schroevendraaier geisoleerd tot 1000V voor Pozidriv schroeven PZ2 x 125 mm",
+        "aantal": 2,
+        "prijs": 9.05
+      },
+      {
+        "sku": "41299476",
+        "naam": "FACOM 440.1/4 ringsteeksleutel met OGV profiel 1/4\"",
+        "aantal": 1,
+        "prijs": 6.02
+      },
+      {
+        "sku": "02850923",
+        "naam": "FACOM 187A.16CPE combinatietang",
+        "aantal": 2,
+        "prijs": 15.22
+      },
+      {
+        "sku": "41280505",
+        "naam": "FACOM 177A.18 tang voor buitenborgveren met rechte bekken",
+        "aantal": 2,
+        "prijs": 18.28
+      },
+      {
+        "sku": "41280509",
+        "naam": "FACOM 179A.13 tang voor binnenborgveren met rechte bekken",
+        "aantal": 2,
+        "prijs": 15.8
+      },
+      {
+        "sku": "41280510",
+        "naam": "FACOM 179A.18 tang voor binnenborgveren met rechte bekken",
+        "aantal": 2,
+        "prijs": 18.02
+      },
+      {
+        "sku": "02657291",
+        "naam": "FACOM DELA.1051.300 flexibele RVS-liniaal dubbelzijdig 300 mm",
+        "aantal": 1,
+        "prijs": 4.69
+      },
+      {
+        "sku": "41295017",
+        "naam": "FACOM 141.12 hoge precisie pincet, recht model",
+        "aantal": 2,
+        "prijs": 19.08
+      },
+      {
+        "sku": "41291822",
+        "naam": "FACOM 44.6X7 steeksleutel 6 x 7 mm",
+        "aantal": 14,
+        "prijs": 4.31
+      },
+      {
+        "sku": "41291824",
+        "naam": "FACOM 44.8X9 steeksleutel 8 x 9 mm",
+        "aantal": 14,
+        "prijs": 4.58
+      },
+      {
+        "sku": "41291830",
+        "naam": "FACOM 44.12X13 steeksleutel 12 x 13 mm",
+        "aantal": 14,
+        "prijs": 5.35
+      },
+      {
+        "sku": "41291834",
+        "naam": "FACOM 44.14X15 steeksleutel 14 x 15 mm",
+        "aantal": 14,
+        "prijs": 7.13
+      },
+      {
+        "sku": "41291836",
+        "naam": "FACOM 44.16X17 steeksleutel 16 x 17 mm",
+        "aantal": 14,
+        "prijs": 7.13
+      },
+      {
+        "sku": "41291839",
+        "naam": "FACOM 44.18X19 steeksleutel 18 x 19 mm",
+        "aantal": 14,
+        "prijs": 8.66
+      },
+      {
+        "sku": "41291841",
+        "naam": "FACOM 44.20X22 steeksleutel 20 x 22 mm",
+        "aantal": 12,
+        "prijs": 9.89
+      },
+      {
+        "sku": "41291842",
+        "naam": "FACOM 44.21X23 steeksleutel 21 x 23 mm",
+        "aantal": 2,
+        "prijs": 10.4
+      },
+      {
+        "sku": "41291847",
+        "naam": "FACOM 44.26X28 steeksleutel 26 x 28 mm",
+        "aantal": 2,
+        "prijs": 11.57
+      },
+      {
+        "sku": "41291851",
+        "naam": "FACOM 44.30X32 steeksleutel 30 x 32 mm",
+        "aantal": 2,
+        "prijs": 15.2
+      },
+      {
+        "sku": "03169221",
+        "naam": "FACOM 113AS.6CPB korte verstelbare moersleutel 6\"",
+        "aantal": 9,
+        "prijs": 20.5
+      },
+      {
+        "sku": "02810152",
+        "naam": "FACOM 84TZA.2.5 inbussleutel zeskant met P-greep 2,5 mm",
+        "aantal": 2,
+        "prijs": 4.8
+      },
+      {
+        "sku": "02810161",
+        "naam": "FACOM 84TZA.5 inbussleutel zeskant met P-greep 5 mm",
+        "aantal": 2,
+        "prijs": 6.08
+      },
+      {
+        "sku": "02810164",
+        "naam": "FACOM 84TZA.8 inbussleutel zeskant met P-greep 8 mm",
+        "aantal": 2,
+        "prijs": 8.02
+      },
+      {
+        "sku": "02810166",
+        "naam": "FACOM 84TZA.10 inbussleutel zeskant met P-greep 10 mm",
+        "aantal": 2,
+        "prijs": 10.18
+      },
+      {
+        "sku": "02035305",
+        "naam": "STANLEY 1-95-611 FATMAX gereedschapsrugzak",
+        "aantal": 11,
+        "prijs": 38.39
+      },
+      {
+        "sku": "03170723",
+        "naam": "FACOM BP.P26APB Pro gereedschapskoffer 26\"",
+        "aantal": 12,
+        "prijs": 41.98
+      },
+      {
+        "sku": "02947700",
+        "naam": "FACOM ATF5.5X150 ProTwist schroevendraaier voor sleufschroeven met gesmeed bled 5.5 x 150 mm",
+        "aantal": 6,
+        "prijs": 6.59
+      },
+      {
+        "sku": "03169337",
+        "naam": "FACOM 192.16CPESLS diagonale kniptang met SLS bevestiging 160mm",
+        "aantal": 2,
+        "prijs": 32.34
+      },
+      {
+        "sku": "02296270",
+        "naam": "FACOM DRD.MD200EMA halfronde halfzoete vijl met handgreep 6x21x200 mm",
+        "aantal": 2,
+        "prijs": 12.2
+      },
+      {
+        "sku": "41190018",
+        "naam": "KNIPEX 03 02 180 kombitang met comfortgrepen zwart geatramenteerd 180 mm",
+        "aantal": 21,
+        "prijs": 14.22
+      },
+      {
+        "sku": "03169262",
+        "naam": "FACOM 1618.00PB voelermaat met 19 bladen",
+        "aantal": 2,
+        "prijs": 14.5
+      },
+      {
+        "sku": "41290151",
+        "naam": "FACOM S.12H dop 1/2\" zeskant 12 mm",
+        "aantal": 1,
+        "prijs": 4.97
+      },
+      {
+        "sku": "41290152",
+        "naam": "FACOM S.13H dop 1/2\" zeskant 13 mm",
+        "aantal": 1,
+        "prijs": 4.98
+      },
+      {
+        "sku": "41290156",
+        "naam": "FACOM S.17H dop 1/2\" zeskant 17 mm",
+        "aantal": 1,
+        "prijs": 5.18
+      },
+      {
+        "sku": "41293174",
+        "naam": "FACOM AEF.J3 Micro-Tech schroevendraaierset voor sleuf en phillips schroeven in doos 8-delig",
+        "aantal": 12,
+        "prijs": 40.99
+      },
+      {
+        "sku": "02851253",
+        "naam": "FACOM 467BF.11 scharnierende steekringratelsleutel 11 mm",
+        "aantal": 1,
+        "prijs": 14.86
+      },
+      {
+        "sku": "41294748",
+        "naam": "FACOM 83SH.3/16 lange inbussleutel met kogelkop 3/16\"",
+        "aantal": 1,
+        "prijs": 3.11
+      },
+      {
+        "sku": "41294747",
+        "naam": "FACOM 83SH.5/32 lange inbussleutel met kogelkop 5/32\"",
+        "aantal": 1,
+        "prijs": 3.04
+      },
+      {
+        "sku": "41851525",
+        "naam": "BAHCO 5050 stethoscoop met stalen sensor, 1050 mm",
+        "aantal": 2,
+        "prijs": 60.88
+      },
+      {
+        "sku": "02947695",
+        "naam": "FACOM ATF10X200 ProTwist schroevendraaier voor sleufschroeven met gesmeed bled 10 x 200 mm",
+        "aantal": 6,
+        "prijs": 9.69
+      },
+      {
+        "sku": "41190109",
+        "naam": "KNIPEX 25 05 160 platspitse tang met zijsnijder (radiotang) met comfortgrepen verchroomd",
+        "aantal": 23,
+        "prijs": 18.06
+      },
+      {
+        "sku": "41850620",
+        "naam": "BAHCO 9072 P moersleutel verstelbaar ERGO met centrale moer, rubberen handgreep, gefosfateerd met omkeerbare bek 257 mm 33 mm",
+        "aantal": 10,
+        "prijs": 35.33
+      },
+      {
+        "sku": "02947671",
+        "naam": "FACOM ATD1X100VE ProTwist schroevendraaier geisoleerd tot 1000V voor Pozidriv schroeven PZ1 x 100 mm",
+        "aantal": 2,
+        "prijs": 9.4
+      },
+      {
+        "sku": "02947760",
+        "naam": "FACOM ATP3X150 ProTwist schroevendraaier voor Phillips schroeven met rond bled PH3 x 150 mm",
+        "aantal": 20,
+        "prijs": 10.74
+      },
+      {
+        "sku": "02947437",
+        "naam": "FACOM AT6.5X150 ProTwist schroevendraaier voor sleufschroeven met gefreesd bled 6.5 x 150 mm",
+        "aantal": 15,
+        "prijs": 6.6
+      },
+      {
+        "sku": "41190776",
+        "naam": "KNIPEX 76 05 125 zijsnijtang voor elektromechanica met comfortgrepen verchroomd 125 mm",
+        "aantal": 20,
+        "prijs": 22.9
+      },
+      {
+        "sku": "02293974",
+        "naam": "WERA Bit-Check 30 Impaktor 1 schroefbitset in kunststof houder 30-delig - 05057690001",
+        "aantal": 9,
+        "prijs": 53.79
+      },
+      {
+        "sku": "02951005",
+        "naam": "FLUKE 114 compacte elektrische RMS multimeter tot 600V AC/DC - 2583552",
+        "aantal": 2,
+        "prijs": 214.78
+      },
+      {
+        "sku": "41299494",
+        "naam": "FACOM 440.17 ringsteeksleutel met OGV profiel 17 mm",
+        "aantal": 8,
+        "prijs": 10.22
+      },
+      {
+        "sku": "41299497",
+        "naam": "FACOM 440.19 ringsteeksleutel met OGV profiel 19 mm",
+        "aantal": 6,
+        "prijs": 8.01
+      },
+      {
+        "sku": "02678313",
+        "naam": "FACOM DELA.1051.150 flexibele RVS-liniaal dubbelzijdig 150 mm",
+        "aantal": 1,
+        "prijs": 2.24
+      },
+      {
+        "sku": "41291826",
+        "naam": "FACOM 44.10X11 steeksleutel 10 x 11 mm",
+        "aantal": 14,
+        "prijs": 4.89
+      },
+      {
+        "sku": "03170609",
+        "naam": "FACOM 893B.319PB dubbelzijdig meetlint met ABS-behuizing 3m/19mm",
+        "aantal": 23,
+        "prijs": 6.67
+      },
+      {
+        "sku": "41291843",
+        "naam": "FACOM 44.22X24 steeksleutel 22 x 24 mm",
+        "aantal": 2,
+        "prijs": 10.63
+      },
+      {
+        "sku": "41293175",
+        "naam": "FACOM AEF.J5 Micro-Tech schroevendraaierset voor sleuf en pozidriv schroeven in doos 5-delig",
+        "aantal": 2,
+        "prijs": 29.87
+      },
+      {
+        "sku": "08131818",
+        "naam": "WERA Tool-Check PLUS 1 gereedschapsset, 39-delig - 05049055001",
+        "aantal": 12,
+        "prijs": 69.05
+      },
+      {
+        "sku": "02810159",
+        "naam": "FACOM 84TZA.4 inbussleutel zeskant met P-greep 4 mm",
+        "aantal": 2,
+        "prijs": 5.44
+      },
+      {
+        "sku": "41299502",
+        "naam": "FACOM 440.24 ringsteeksleutel met OGV profiel 24 mm",
+        "aantal": 12,
+        "prijs": 10.9
+      },
+      {
+        "sku": "02293143",
+        "naam": "FLUKE 117 compacte RMS multimeter met contactloze spanningszoeker voor elektriciens tot 600V AC/DC - 10A AC/DC - 2583647",
+        "aantal": 1,
+        "prijs": 328.37
+      },
+      {
+        "sku": "41294755",
+        "naam": "FACOM 83SH.JP9A inbussleutelset lang 1,5-10 mm 9-delig",
+        "aantal": 7,
+        "prijs": 20.87
+      },
+      {
+        "sku": "41191629",
+        "naam": "KNIPEX 00 19 56 borgveertangenset 4-delig",
+        "aantal": 1,
+        "prijs": 60.51
+      },
+      {
+        "sku": "02947160",
+        "naam": "FACOM AT2.5X75 ProTwist schroevendraaier voor sleufschroeven met gefreesd bled 2.5 x 75 mm",
+        "aantal": 2,
+        "prijs": 4.07
+      },
+      {
+        "sku": "02810162",
+        "naam": "FACOM 84TZA.6 inbussleutel zeskant met P-greep 6 mm",
+        "aantal": 2,
+        "prijs": 7.28
+      },
+      {
+        "sku": "41299486",
+        "naam": "FACOM 440.13 ringsteeksleutel met OGV profiel 13 mm",
+        "aantal": 9,
+        "prijs": 7.23
+      },
+      {
+        "sku": "02810158",
+        "naam": "FACOM 84TZA.3 inbussleutel zeskant met P-greep 3 mm",
+        "aantal": 2,
+        "prijs": 5.25
+      },
+      {
+        "sku": "03170089",
+        "naam": "FACOM 844.S18PB automatisch herladende cutter 18 mm",
+        "aantal": 2,
+        "prijs": 10.36
+      },
+      {
+        "sku": "02203425",
+        "naam": "FACOM 181A.25CPEPB waterpomptang chroom/ergo",
+        "aantal": 13,
+        "prijs": 25.35
+      },
+      {
+        "sku": "02283116",
+        "naam": "FACOM 89S.JP8A haakse lange inbussleutelset Torx kogelkop in houder 8-delig",
+        "aantal": 18,
+        "prijs": 42.31
+      },
+      {
+        "sku": "41295801",
+        "naam": "FACOM 249.JT7 slaggereedschapset 7-delig",
+        "aantal": 2,
+        "prijs": 52.87
+      },
+      {
+        "sku": "41296136",
+        "naam": "FACOM 416.MT micro-tech kniptang met puntbekken",
+        "aantal": 2,
+        "prijs": 47.79
+      },
+      {
+        "sku": "03171539",
+        "naam": "FACOM R.360NANOPB ratel R.360 met ultra compacte doppenset 6-kant 1/4\" in opbergdoos 38-delig",
+        "aantal": 6,
+        "prijs": 127.77
+      },
+      {
+        "sku": "41295167",
+        "naam": "FACOM 207A.50CB hamer met aluminium kop voor verwisselbare hamerdoppen",
+        "aantal": 2,
+        "prijs": 65.93
+      },
+      {
+        "sku": "41290760",
+        "naam": "FACOM R.8 dop 1/4\" zeskant 8 mm",
+        "aantal": 1,
+        "prijs": 3.97
+      },
+      {
+        "sku": "41280503",
+        "naam": "FACOM 177A.13 tang voor buitenborgveren met rechte bekken",
+        "aantal": 2,
+        "prijs": 15.78
+      },
+      {
+        "sku": "41290759",
+        "naam": "FACOM R.7 dop 1/4\" zeskant 7 mm",
+        "aantal": 1,
+        "prijs": 3.97
+      },
+      {
+        "sku": "41291848",
+        "naam": "FACOM 44.27X29 steeksleutel 27 x 29 mm",
+        "aantal": 2,
+        "prijs": 11.89
+      },
+      {
+        "sku": "02947752",
+        "naam": "FACOM ATP2X125 ProTwist schroevendraaier voor Phillips schroeven met rond bled PH2 x 125 mm",
+        "aantal": 23,
+        "prijs": 7.48
+      },
+      {
+        "sku": "41295129",
+        "naam": "FACOM 205H.30 monteurshamer type DIN met steel van hickory",
+        "aantal": 2,
+        "prijs": 10.4
+      },
+      {
+        "sku": "02947683",
+        "naam": "FACOM ATD.J8VE ProTwist schroevendraaierset geisoleerd 1000V 8-delig",
+        "aantal": 14,
+        "prijs": 47.21
+      },
+      {
+        "sku": "02948668",
+        "naam": "FACOM 194A.17VE draadstripper 1000V",
+        "aantal": 2,
+        "prijs": 29.69
+      },
+      {
+        "sku": "03169447",
+        "naam": "FACOM 2520.00PB schuifmaat 140c",
+        "aantal": 2,
+        "prijs": 38.11
+      },
+      {
+        "sku": "41292560",
+        "naam": "FACOM 113A.12C verchroomde sleutel met kartelwiel",
+        "aantal": 2,
+        "prijs": 26.61
+      },
+      {
+        "sku": "02794601",
+        "naam": "FACOM R.161-3P6 doppenset met ratel 1/4\" zeskant in opbergdoos 19-delig",
+        "aantal": 2,
+        "prijs": 115.94
+      },
+      {
+        "sku": "02227156",
+        "naam": "BAHCO 2484/S4 breekijzerset met plat uiteinde en PVC-handgreep 4-delig",
+        "aantal": 2,
+        "prijs": 46.65
+      },
+      {
+        "sku": "03159736",
+        "naam": "FACOM 467BF.JP10PB scharnierende anti-slip steekringratelsleutelset metrisch in houder 10-delig",
+        "aantal": 23,
+        "prijs": 153.06
+      },
+      {
+        "sku": "02947183",
+        "naam": "FACOM AT4X100 ProTwist schroevendraaier voor sleufschroeven met gefreesd bled 4 x 100 mm",
+        "aantal": 14,
+        "prijs": 4.33
+      },
+      {
+        "sku": "02283111",
+        "naam": "FACOM 83SH.JP8AU haakse sleutelset zeskant 3/32-3/8\" in houder 8-delig",
+        "aantal": 10,
+        "prijs": 20
+      },
+      {
+        "sku": "41298202",
+        "naam": "FACOM 83S.JP9AL haakse sleutelset zeskant 1,5-10mm in houder 9-delig",
+        "aantal": 12,
+        "prijs": 24.95
+      },
+      {
+        "sku": "41299489",
+        "naam": "FACOM 440.14 ringsteeksleutel met OGV profiel 14 mm",
+        "aantal": 10,
+        "prijs": 7.38
+      },
+      {
+        "sku": "41299477",
+        "naam": "FACOM 440.10 ringsteeksleutel met OGV profiel 10 mm",
+        "aantal": 10,
+        "prijs": 6.21
+      }
+    ],
+    "interneOpmerking": "29/07/2027 10x ringsteeksleutel Facom 440.14 toegevoegd\n\nOpen importregels bij opslaan:\n- keuze nodig: 10x ringsteeksleutel Facom 440.14 (regel 1)"
+  },
+  {
+    "id": 84,
+    "customer": "Dragan Noya",
+    "total": 247.9,
+    "date": "2026-07-29",
+    "bedrijf": "itsmenederland",
+    "btw": "NL005195706B01",
+    "adres": "Liebrugweg 1",
+    "postcode": "1165 AD ",
+    "gemeente": "Halfweg",
+    "land": "NL",
+    "email": "amsterdam@itsmenederland.nl",
+    "producten": [
+      {
+        "sku": "08123266",
+        "naam": "MILWAUKEE 4932500395 bithouder SHOCKWAVE magnetisch geleider 75 mm",
+        "aantal": 1,
+        "prijs": 8.76
+      },
+      {
+        "sku": "08069661",
+        "naam": "MILWAUKEE 4932471274 SHOCKWAVE haaks schroefaccessoire 1/4\" zeskant met 10 schroefbits",
+        "aantal": 1,
+        "prijs": 15.66
+      },
+      {
+        "sku": "03065926",
+        "naam": "MILWAUKEE 4932471822 SHOCKWAVE IMPACT DUTY magnetische bithouder 152mm met 1/4\" zeskant aansluiting",
+        "aantal": 1,
+        "prijs": 10.55
+      },
+      {
+        "sku": "03199006",
+        "naam": "MILWAUKEE 4932478803 adapter 1/4\" hex naar 1/2\" vierkant",
+        "aantal": 1,
+        "prijs": 5.95
+      },
+      {
+        "sku": "03048749",
+        "naam": "MILWAUKEE 4932471826 dopadapter 1/4\" hex naar 1/4\" vierkant",
+        "aantal": 1,
+        "prijs": 3.4
+      },
+      {
+        "sku": "08083244",
+        "naam": "MILWAUKEE M12 FID2-202X FUEL compacte accu-slagschroevendraaier 1/4\" Hex in HD Box (2x 2,0Ah accu + lader) - 4933479877",
+        "aantal": 1,
+        "prijs": 203.58
+      }
+    ],
+    "interneOpmerking": "Zou u zo vriendelijk willen zijn ticketnummer 1116407 in het onderwerp van de offerte te vermelden?"
+  },
+  {
+    "id": 85,
+    "customer": "Romain VAN HOORDE",
+    "total": 8201.810000000001,
+    "date": "2026-07-31",
+    "bedrijf": "H2O TECH SERVICES",
+    "btw": "",
+    "adres": "Route de la Papilloud 2047 ",
+    "postcode": "69460 ",
+    "gemeente": "Vaux En Beaujolais",
+    "land": "FR",
+    "email": "romain.vanhoorde@hotmail.fr",
+    "producten": [
+      {
+        "sku": "08087741",
+        "naam": "MILWAUKEE M18 FPD3-502X FUEL accu-klopboorschroefmachine in HD Box (2x 5,0Ah accu+ lader) - 4933479860",
+        "aantal": 1,
+        "prijs": 405.97
+      },
+      {
+        "sku": "03235277",
+        "naam": "MILWAUKEE 4932480457 SHOCKWAVE IMPACT DUTY 1/2\" slagdoppenset diep 10-delig",
+        "aantal": 1,
+        "prijs": 51.9
+      },
+      {
+        "sku": "08105476",
+        "naam": "MILWAUKEE 4932493370 SHOCKWAVE IMPACT DUTY set automotive slagvaste doppen 1/2\" hex 3-delig",
+        "aantal": 1,
+        "prijs": 26.11
+      },
+      {
+        "sku": "03167201",
+        "naam": "MILWAUKEE M12 PAL-0 roterende werkplaats accu-lamp - 4933478226",
+        "aantal": 1,
+        "prijs": 93.34
+      },
+      {
+        "sku": "03167438",
+        "naam": "MILWAUKEE M18 FSZ-502X FUEL SAWZALL accu-reciprozaag in HD Box (2x 5,0Ah accu + lader) - 4933478291",
+        "aantal": 1,
+        "prijs": 460.35
+      },
+      {
+        "sku": "08119548",
+        "naam": "MILWAUKEE IRPSUOP2500 stroomtoevoer generator ROLL-ON 7200W/3600W 2,5 kWh - 4933492133",
+        "aantal": 1,
+        "prijs": 3429.59
+      },
+      {
+        "sku": "08142523",
+        "naam": "MILWAUKEE M12 FIR38G2-0 FUEL accu-ratelsleutel 3/8\" Gen 2 in doos (zonder accu en lader) - 4933498936",
+        "aantal": 1,
+        "prijs": 226.8
+      },
+      {
+        "sku": "03329870",
+        "naam": "MILWAUKEE M18 FHIW2F12-502X FUEL 1/2\" accu-slagmoersleutel met frictiering in HD Box (2x 5,0Ah accu + lader) - 4933492783",
+        "aantal": 1,
+        "prijs": 480.85
+      },
+      {
+        "sku": "03167435",
+        "naam": "MILWAUKEE M18 FSAGV125XPDB-0X haakse accu-slijper 125 mm met peddelschakelaar in HD box (zonder accu en lader) - 4933478437",
+        "aantal": 1,
+        "prijs": 259.98
+      },
+      {
+        "sku": "08087729",
+        "naam": "MILWAUKEE M18 FDGROVB-0X FUEL ONE-KEY rechte accu-slijper in HD Box (zonder accu en lader) - 4933480955",
+        "aantal": 1,
+        "prijs": 252.75
+      },
+      {
+        "sku": "03356124",
+        "naam": "MILWAUKEE M12 FCIWF12G3-502X FUEL accu-slagmoersleutel 1/2\" met frictiering in HD Box (2x 5,0Ah accu + lader) - 4933493455",
+        "aantal": 1,
+        "prijs": 309.37
+      },
+      {
+        "sku": "03167023",
+        "naam": "MILWAUKEE M18 DFC Dual Bay snellader - 4932472073",
+        "aantal": 1,
+        "prijs": 187.06
+      },
+      {
+        "sku": "08105318",
+        "naam": "MILWAUKEE M18 FB12 18V FORGE 12,0Ah accu - 4932492651",
+        "aantal": 1,
+        "prijs": 241.07
+      },
+      {
+        "sku": "08136408",
+        "naam": "MILWAUKEE 49224771 QUIK-LOK HOLEDOZER gatzagenset 25-76mm 9-delig",
+        "aantal": 1,
+        "prijs": 131.07
+      },
+      {
+        "sku": "02825923",
+        "naam": "MILWAUKEE M18 GG-201C Heavy Duty accu-vetspuit in transportkoffer (1x 2,0Ah accu + lader) - 4933440490",
+        "aantal": 1,
+        "prijs": 318.41
+      },
+      {
+        "sku": "08105319",
+        "naam": "MILWAUKEE M18 FB8 18V FORGE 8,0Ah accu - 4932492131",
+        "aantal": 2,
+        "prijs": 200.58
+      },
+      {
+        "sku": "02860714",
+        "naam": "MILWAUKEE D-202B M4 inline accu-schroefmachine (2x 2,0Ah accu + lader) - 4933440475",
+        "aantal": 1,
+        "prijs": 157.29
+      },
+      {
+        "sku": "02883343",
+        "naam": "MILWAUKEE 48899332 stappenboor M 6 - M 32",
+        "aantal": 1,
+        "prijs": 51.9
+      },
+      {
+        "sku": "03047624",
+        "naam": "MILWAUKEE M12 FDDXKIT-202X FUEL accu-installatieboor-/schroefmachine met verwisselbare kop in HD Box (2x 2,0Ah accu + lader) - 4933464979",
+        "aantal": 1,
+        "prijs": 315.97
+      },
+      {
+        "sku": "08083454",
+        "naam": "MILWAUKEE 4932480456 SHOCKWAVE krachtdoppenset 1/2\" kort zeskant 13-delig",
+        "aantal": 1,
+        "prijs": 46.45
+      },
+      {
+        "sku": "03167440",
+        "naam": "MILWAUKEE HOAL-0 M18 high output area lamp - 4933478118",
+        "aantal": 1,
+        "prijs": 216.02
+      },
+      {
+        "sku": "02654880",
+        "naam": "MILWAUKEE M18 B5 Li-ion accu 18V 5,0Ah - 4932430483",
+        "aantal": 2,
+        "prijs": 69.2
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- regel 2: handmatig toegevoegd als SKU 08105319 (bron: 2 × M18 FORGE FB8 (8.0 Ah) (suggestie)).\n- regel 3: handmatig toegevoegd als SKU 08105318 (bron: 1 × M18 FORGE FB12 (12.0 Ah) (suggestie)).\n- regel 9: handmatig toegevoegd als SKU 03167435 (bron: M18 FSAGV125X-502X - Meuleuse 125 mm).\n- regel 22: handmatig toegevoegd als SKU 08119548 (bron: Milwaukee ROLL-ON 3600/7200 W - Station d'énergie portable 2,5 kWh (suggestie)).\n- regel 17: handmatig toegevoegd als SKU 08136408 (bron: Coffret Hole Dozer QUIK-LOK (9 scies cloches) (suggestie)).\n- regel 10: handmatig toegevoegd als SKU 08087729 (bron: M18 FDGROVB-OX - Meuleuse droite).\n- regel 14: handmatig toegevoegd als SKU 03167440 (bron: M18 TRUEVIEW 4000 Lumens).\n- regel 1: handmatig toegevoegd als SKU 03167023 (bron: 1 × Super Chargeur M18 Double).\n- regel 15: handmatig toegevoegd als SKU 08142523 (bron: M12 FUEL Cliquet 1/2\").\n- regel 16: handmatig toegevoegd als SKU 02860714 (bron: M4 FUEL Tournevis électrique).\n- regel 18: handmatig toegevoegd als SKU 02883343 (bron: Foret étagé Milwaukee).\n- regel 19: handmatig toegevoegd als SKU 08083454 (bron: Jeu Shockwave 1/2\" courtes).\n- regel 20: handmatig toegevoegd als SKU 03235277 (bron: Jeu Shockwave 1/2\" longues).\n- regel 21: handmatig toegevoegd als SKU 08105476 (bron: Jeu de douilles automobiles 1/2\" (17 / 19 / 21))."
+  },
+  {
+    "id": 86,
+    "customer": "Wim Vanlommel",
+    "total": 1985.22797,
+    "date": "2026-07-31",
+    "bedrijf": "Siemka BV ",
+    "btw": "BE 0879.030.430",
+    "adres": "Maatheide  98 bus a",
+    "postcode": "3920",
+    "gemeente": "Lommel",
+    "land": "BE",
+    "email": "wim@siemka.be",
+    "producten": [
+      {
+        "sku": "02852301",
+        "naam": "STANLEY FMHT10330-0 FATMAX afbreekmes met schroefknop 25mm",
+        "aantal": 30,
+        "prijs": 9.751999
+      },
+      {
+        "sku": "03017426",
+        "naam": "STABILA 707 vouwmeter geel 2 m - 01304",
+        "aantal": 50,
+        "prijs": 3.18
+      },
+      {
+        "sku": "41012610",
+        "naam": "STANLEY 0-30-697 rolbandmaat Tylon 5m - 19mm",
+        "aantal": 10,
+        "prijs": 4.48
+      },
+      {
+        "sku": "41012612",
+        "naam": "STANLEY 0-30-657 rolbandmaat Tylon 8m - 25mm",
+        "aantal": 20,
+        "prijs": 7.61
+      },
+      {
+        "sku": "43990042",
+        "naam": "STANLEY 2-14-563 blikschaar met smalle bek rechts",
+        "aantal": 30,
+        "prijs": 17.19
+      },
+      {
+        "sku": "02942246",
+        "naam": "HIKOKI 782664 SDS-Plus boor 6x210 mm (25 st.)",
+        "aantal": 4,
+        "prijs": 85.785
+      },
+      {
+        "sku": "08058720",
+        "naam": "HIKOKI 782663 SDS-Plus boor 6x160 mm (25 st.)",
+        "aantal": 4,
+        "prijs": 50.082
+      },
+      {
+        "sku": "02052519",
+        "naam": "STANLEY 0-10-481 FATMAX afbreekmes 18mm",
+        "aantal": 30,
+        "prijs": 9.25
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- regel 4: handmatig toegevoegd als SKU 41012612 (bron: 20x 8M Rolmeter Tylon 0-30-657 Stanley (suggestie)).\n- regel 5: handmatig toegevoegd als SKU 41012610 (bron: 10x 5M Rolmeter Tylon 0-30-697 Stanley (suggestie)).\n- regel 6: handmatig toegevoegd als SKU 02052519 (bron: 30x Stanley Bimat afbreekmes 18mm (suggestie)).\n- regel 7: handmatig toegevoegd als SKU 02852301 (bron: 30x Stanley Fatmax afbreekmes met schroef 25mm).\n- regel 8: handmatig toegevoegd als SKU 03017426 (bron: 50x vouwmeter volledig recht)."
+  },
+  {
+    "id": 87,
+    "customer": "Richard van Dijk",
+    "total": 1246.92,
+    "date": "2026-08-03",
+    "bedrijf": "Richard van Dijk (Glas- en Klussenbedrijf)",
+    "btw": "NL001709917B64",
+    "adres": "Kwartiersedijk  12 bus B",
+    "postcode": "4793 RE",
+    "gemeente": "Fijnaart",
+    "land": "NL",
+    "email": "mdereijer@gmail.com",
+    "producten": [
+      {
+        "sku": "02807224",
+        "naam": "MAKITA VC3012L bedrijfsstofzuiger L-klasse 1200W 30L 250mbar met accessoireset",
+        "aantal": 1,
+        "prijs": 348.04
+      },
+      {
+        "sku": "03346812",
+        "naam": "MAKITA DC18RC snellader voor 14,4V / 18V Li-ion accu's - 1914J1-4",
+        "aantal": 1,
+        "prijs": 52.18
+      },
+      {
+        "sku": "03093585",
+        "naam": "MAKITA DTW700ZJ 18V LXT accu-slagmoersleutel 1/2\" 700Nm in MAKPAC (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 296.22
+      },
+      {
+        "sku": "08142687",
+        "naam": "MAKITA 1914E8-5 accu Li-ion 18V 5,0Ah (2 st.)",
+        "aantal": 1,
+        "prijs": 155.41
+      },
+      {
+        "sku": "03174090",
+        "naam": "MAKITA DDF484Z 18V LXT accu-schroefboormachine 13mm in kartonnen doos (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 109.28
+      },
+      {
+        "sku": "02964461",
+        "naam": "MAKITA P-84078 filterstofzak voor VC3012L/VC3012M (5 st.)",
+        "aantal": 5,
+        "prijs": 21.65
+      },
+      {
+        "sku": "08122120",
+        "naam": "MAKITA DTD173ZJ 18V LXT accu-slagschroevendraaier 180 Nm 1/4\" in MAKPAC II (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 177.54
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- regel 3: handmatig toegevoegd als SKU 08122120 (bron: 1 × Makita DTD173Z slagschroevendraaier (suggestie)).\n- regel 5: handmatig toegevoegd als SKU 03093585 (bron: 1 × Makita DTW700Z slagmoersleutel (suggestie)).\n\nOpen importregels bij opslaan:\n- keuze nodig: 1 × Makita BL1850B Duopack (2 × 5,0 Ah accu) (regel 1)"
+  },
+  {
+    "id": 88,
+    "customer": "Richard van Dijk",
+    "total": 1160.32,
+    "date": "2026-08-03",
+    "bedrijf": "Richard van Dijk (Glas- en Klussenbedrijf)",
+    "btw": "NL001709917B64",
+    "adres": "Kwartiersedijk  12 bus B",
+    "postcode": "4793 RE",
+    "gemeente": "Fijnaart",
+    "land": "NL",
+    "email": "mdereijer@gmail.com",
+    "producten": [
+      {
+        "sku": "02807224",
+        "naam": "MAKITA VC3012L bedrijfsstofzuiger L-klasse 1200W 30L 250mbar met accessoireset",
+        "aantal": 1,
+        "prijs": 348.04
+      },
+      {
+        "sku": "03346812",
+        "naam": "MAKITA DC18RC snellader voor 14,4V / 18V Li-ion accu's - 1914J1-4",
+        "aantal": 1,
+        "prijs": 52.18
+      },
+      {
+        "sku": "03093585",
+        "naam": "MAKITA DTW700ZJ 18V LXT accu-slagmoersleutel 1/2\" 700Nm in MAKPAC (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 296.22
+      },
+      {
+        "sku": "08142687",
+        "naam": "MAKITA 1914E8-5 accu Li-ion 18V 5,0Ah (2 st.)",
+        "aantal": 1,
+        "prijs": 155.41
+      },
+      {
+        "sku": "03174090",
+        "naam": "MAKITA DDF484Z 18V LXT accu-schroefboormachine 13mm in kartonnen doos (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 109.28
+      },
+      {
+        "sku": "02964461",
+        "naam": "MAKITA P-84078 filterstofzak voor VC3012L/VC3012M (5 st.)",
+        "aantal": 1,
+        "prijs": 21.65
+      },
+      {
+        "sku": "08122120",
+        "naam": "MAKITA DTD173ZJ 18V LXT accu-slagschroevendraaier 180 Nm 1/4\" in MAKPAC II (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 177.54
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- regel 3: handmatig toegevoegd als SKU 08122120 (bron: 1 × Makita DTD173Z slagschroevendraaier (suggestie)).\n- regel 5: handmatig toegevoegd als SKU 03093585 (bron: 1 × Makita DTW700Z slagmoersleutel (suggestie)).\n\nOpen importregels bij opslaan:\n- keuze nodig: 1 × Makita BL1850B Duopack (2 × 5,0 Ah accu) (regel 1)"
+  },
+  {
+    "id": 89,
+    "customer": " Sofia Inara",
+    "total": 17616.2031,
+    "date": "2026-08-05",
+    "bedrijf": "J&G Direct LLC",
+    "btw": "",
+    "adres": "",
+    "postcode": "",
+    "gemeente": "",
+    "land": "US",
+    "email": "procurement@jandgdirect.com",
+    "producten": [
+      {
+        "sku": "02333324",
+        "naam": "FESTOOL ST-STF 125/8-M8-J W-HT schuurzool - 492286",
+        "aantal": 25,
+        "prijs": 32.89199
+      },
+      {
+        "sku": "02820943",
+        "naam": "FESTOOL PP-STF D125 /2 protection pad (2 st.) - 203344",
+        "aantal": 25,
+        "prijs": 8.79
+      },
+      {
+        "sku": "02339731",
+        "naam": "FESTOOL FS-RAPID/R snelspanner voor FS/2 en FS/2-KP - 489790",
+        "aantal": 25,
+        "prijs": 41.983
+      },
+      {
+        "sku": "02332559",
+        "naam": "FESTOOL D 10X50/510 BU DOMINO deuvels beuken (510 st.) - 493300",
+        "aantal": 10,
+        "prijs": 76.52799
+      },
+      {
+        "sku": "03222476",
+        "naam": "FESTOOL RS-ST D 27/36-PLUS standaard reinigingsset voor alle CT's in SYS3 M 137 - 577257",
+        "aantal": 100,
+        "prijs": 74.21399
+      },
+      {
+        "sku": "08108661",
+        "naam": "FESTOOL CT-F I afstandsbediening - 578499",
+        "aantal": 25,
+        "prijs": 49.15299
+      },
+      {
+        "sku": "02332549",
+        "naam": "FESTOOL D 5X30/1800 BU DOMINO deuvels beuken (1800 st.) - 493296",
+        "aantal": 25,
+        "prijs": 84.132
+      },
+      {
+        "sku": "01049182",
+        "naam": "FESTOOL ST-STF D125/8 FX-W-HT schuurzool - 492125",
+        "aantal": 20,
+        "prijs": 25.78499
+      },
+      {
+        "sku": "02332938",
+        "naam": "FESTOOL ST-STF D125/8 FX-H-HT schuurzool - 492127",
+        "aantal": 10,
+        "prijs": 25.78499
+      },
+      {
+        "sku": "02332788",
+        "naam": "FESTOOL D 14-NL 70 HW-DF 700 domino frees voor DF 700 - 497871",
+        "aantal": 10,
+        "prijs": 51.735
+      },
+      {
+        "sku": "02379804",
+        "naam": "FESTOOL EVA NAT 48X-KA 65 smeltlijm naturel - 499812",
+        "aantal": 25,
+        "prijs": 108.595
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- regel 2: handmatig toegevoegd als SKU 08108661 (bron: 25× 202098)."
+  },
+  {
+    "id": 90,
+    "customer": "Asad Nawaz",
+    "total": 22238.36,
+    "date": "2026-08-05",
+    "bedrijf": "SBSI",
+    "btw": "",
+    "adres": "",
+    "postcode": "",
+    "gemeente": "",
+    "land": "OTHER",
+    "email": "asad.nawaz@starbsi.com",
+    "producten": [
+      {
+        "sku": "06002569",
+        "naam": "HI-FORCE HH10 hoge druk hydraulische slang met 3/8\"-18 NPT koppeling zwart 10m",
+        "aantal": 76,
+        "prijs": 292.61
+      }
+    ],
+    "interneOpmerking": ""
+  },
+  {
+    "id": 91,
+    "customer": "Luc Smeets",
+    "total": 3465.1481790000003,
+    "date": "2026-08-06",
+    "bedrijf": "",
+    "btw": "",
+    "adres": "",
+    "postcode": "",
+    "gemeente": "",
+    "land": "BE",
+    "email": "smeets.montage@gmail.com",
+    "producten": [
+      {
+        "sku": "08098739",
+        "naam": "HIKOKI UR18DAW4Z 18V digitale accu-radio met Bluetooth / FM / DAB+ (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 110.3949
+      },
+      {
+        "sku": "41894909",
+        "naam": "GEDORE 600 IH-2000 bankhamer rotband-plus 2000 g - 8588970",
+        "aantal": 1,
+        "prijs": 48.09899
+      },
+      {
+        "sku": "02969710",
+        "naam": "GEDORE RED R73003010 slagmoerdopsleutel 3/4\" 6-kant, kort 30 mm - 3300601",
+        "aantal": 1,
+        "prijs": 15.371
+      },
+      {
+        "sku": "02969711",
+        "naam": "GEDORE RED R73003210 slagmoerdopsleutel 3/4\" 6-kant, kort 32 mm - 3300602",
+        "aantal": 1,
+        "prijs": 17.31399
+      },
+      {
+        "sku": "03093402",
+        "naam": "HIKOKI G13SE3WBZ haakse slijper met dodemansschakelaar 125mm 1400W",
+        "aantal": 1,
+        "prijs": 134.3609
+      },
+      {
+        "sku": "02301338",
+        "naam": "GEDORE ITX 19 INU-20 dopsleutelset 1/2\" 42-delig - 2546000",
+        "aantal": 1,
+        "prijs": 419.5039
+      },
+      {
+        "sku": "02969721",
+        "naam": "GEDORE RED R73002419 slagmoerdopsleutel 3/4\" 6-kant, lang 24 mm - 3300617",
+        "aantal": 1,
+        "prijs": 21.322
+      },
+      {
+        "sku": "41890428",
+        "naam": "GEDORE 7 XL 30 ringsteeksleutel extra lang 30 mm - 6101780",
+        "aantal": 1,
+        "prijs": 32.89199
+      },
+      {
+        "sku": "41890429",
+        "naam": "GEDORE 7 XL 32 ringsteeksleutel extra lang 32 mm - 6101430",
+        "aantal": 1,
+        "prijs": 42.80899
+      },
+      {
+        "sku": "41890432",
+        "naam": "GEDORE 7 XL 36 ringsteeksleutel extra lang 36 mm - 6101510",
+        "aantal": 1,
+        "prijs": 56.033
+      },
+      {
+        "sku": "41890424",
+        "naam": "GEDORE 7 XL 19 ringsteeksleutel extra lang 19 mm - 6101000",
+        "aantal": 1,
+        "prijs": 20.495
+      },
+      {
+        "sku": "41890777",
+        "naam": "GEDORE K 19 24 slagmoerdopsleutel 1/2\" 24 mm - 6161410",
+        "aantal": 1,
+        "prijs": 10.02
+      },
+      {
+        "sku": "41963269",
+        "naam": "GEDORE 4534-5 rolbandmaat 5 m - 6698060",
+        "aantal": 1,
+        "prijs": 7.395999
+      },
+      {
+        "sku": "03006755",
+        "naam": "HIKOKI UC18YTSLW0Z multi lader (4 batterijen) 14,4-18V - MultiVolt",
+        "aantal": 1,
+        "prijs": 121.6039
+      },
+      {
+        "sku": "08123027",
+        "naam": "HIKOKI BSL3640MVT T-PWR Multi-Volt Li-ion accu 36V 4.0Ah/18V 8.0Ah - 381990",
+        "aantal": 1,
+        "prijs": 167.3549
+      },
+      {
+        "sku": "08098126",
+        "naam": "HIKOKI KC18DEWHZ 18V accu-machineset in tas (3x 5.0Ah accu en lader)",
+        "aantal": 1,
+        "prijs": 725.395
+      },
+      {
+        "sku": "41890426",
+        "naam": "GEDORE 7 XL 24 ringsteeksleutel extra lang 24 mm - 6101270",
+        "aantal": 1,
+        "prijs": 24.628
+      },
+      {
+        "sku": "02232770",
+        "naam": "GEDORE 135-6 montagedoorn 200 x 13 x 6 mm - 8782430",
+        "aantal": 1,
+        "prijs": 14.545
+      },
+      {
+        "sku": "02232771",
+        "naam": "GEDORE 135-8 montagedoorn 200 x 13 x 8 mm - 8782510",
+        "aantal": 1,
+        "prijs": 15.53699
+      },
+      {
+        "sku": "02232775",
+        "naam": "GEDORE 137-600 monteerijzer 600 x 20 x 5 mm - 8783590",
+        "aantal": 1,
+        "prijs": 48.92499
+      },
+      {
+        "sku": "02010341",
+        "naam": "GEDORE K 19 30 slagmoerdopsleutel 1/2\" 30 mm - 1560557",
+        "aantal": 1,
+        "prijs": 8.595
+      },
+      {
+        "sku": "41890423",
+        "naam": "GEDORE 7 XL 17 ringsteeksleutel extra lang 17 mm - 6100970",
+        "aantal": 1,
+        "prijs": 17.85099
+      },
+      {
+        "sku": "02879263",
+        "naam": "GEDORE RED R63002416 slagmoerdopsleutel 1/2\" lang 24 mm - 3300551",
+        "aantal": 1,
+        "prijs": 11.89999
+      },
+      {
+        "sku": "08092985",
+        "naam": "HIKOKI BSL1850MA 18V Li-ion accu 5,0Ah - 378683",
+        "aantal": 1,
+        "prijs": 87.68499
+      },
+      {
+        "sku": "41890805",
+        "naam": "GEDORE K 19 L 19 slagmoerdopsleutel 1/2\", lang 19 mm - 6164000",
+        "aantal": 1,
+        "prijs": 13.057
+      },
+      {
+        "sku": "02969723",
+        "naam": "GEDORE RED R73003019 slagmoerdopsleutel 3/4\" 6-kant, lang 30 mm - 3300623",
+        "aantal": 1,
+        "prijs": 25.95
+      },
+      {
+        "sku": "02956347",
+        "naam": "HIKOKI G23UDY2WKZ haakse slijper 230 mm 2600W",
+        "aantal": 1,
+        "prijs": 184.485
+      },
+      {
+        "sku": "41890773",
+        "naam": "GEDORE K 19 19 slagmoerdopsleutel 1/2\" 19 mm - 6161090",
+        "aantal": 1,
+        "prijs": 9.14
+      },
+      {
+        "sku": "02232765",
+        "naam": "GEDORE 135-11 montagedoorn 250 x 25 x 11 mm - 8782940",
+        "aantal": 1,
+        "prijs": 23.099
+      },
+      {
+        "sku": "41891984",
+        "naam": "GEDORE KB 1990-5 verlengstuk 1/2\" 125 mm - 6655250",
+        "aantal": 1,
+        "prijs": 14.83399
+      },
+      {
+        "sku": "02232772",
+        "naam": "GEDORE 135-9 montagedoorn 200 x 20 x 9 mm - 8782780",
+        "aantal": 1,
+        "prijs": 16.694
+      },
+      {
+        "sku": "41210071",
+        "naam": "BESSEY GZ40 geheel stalen lijmtang GZ 400x120mm",
+        "aantal": 1,
+        "prijs": 43.13999
+      },
+      {
+        "sku": "08097765",
+        "naam": "HIKOKI WR36DGW4Z 36V accu-slagmoeraanzetter 1.400 Nm-2.000 Nm 1/2\" in doos (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 261.51
+      },
+      {
+        "sku": "08097772",
+        "naam": "HIKOKI WR36DFW2Z 36V accu-slagmoeraanzetter 1.900 Nm-2.400 Nm 3/4\" in HSC III koffer (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 273.0799
+      },
+      {
+        "sku": "41891985",
+        "naam": "GEDORE KB 1990-10 verlengstuk 1/2\" 250 mm - 6650100",
+        "aantal": 1,
+        "prijs": 28.76
+      },
+      {
+        "sku": "08097769",
+        "naam": "HIKOKI WR36DHW2Z 36V accu-slagmoeraanzetter 380 Nm-700 Nm 1/2\" in HSC II koffer (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 231.0559
+      },
+      {
+        "sku": "41210430",
+        "naam": "BESSEY GM16Z-2K OMEGA lijmtang GMZ-2K 160x80mm",
+        "aantal": 1,
+        "prijs": 23.471
+      },
+      {
+        "sku": "08097743",
+        "naam": "HIKOKI RA18DAW4Z 18V accu-luchtpistool (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 103
+      },
+      {
+        "sku": "41894835",
+        "naam": "GEDORE 138-400 breekijzer 400 mm - 1396609",
+        "aantal": 1,
+        "prijs": 33.84199
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- regel 3: handmatig toegevoegd als SKU 08097769 (bron: HiKOKI - WR36DHW2).\n- regel 38: handmatig toegevoegd als SKU 02301338 (bron: GEDORE - Z546000).\n- regel 27: niet in assortiment gemarkeerd (bron: GEDORE - 8782220).\n- regel 40: niet in assortiment gemarkeerd (bron: GEDORE - 665410)."
+  },
+  {
+    "id": 92,
+    "customer": "Martijn Schraven",
+    "total": 32045.859999999997,
+    "date": "2026-08-06",
+    "bedrijf": "Sanorice Netherlands B.V.",
+    "btw": "NL005137196B01",
+    "adres": "Inductorstraat 72",
+    "postcode": "3903 KB",
+    "gemeente": "Veenendaal",
+    "land": "NL",
+    "email": "martijn.schraven@sanorice.com",
+    "producten": [
+      {
+        "sku": "02232566",
+        "naam": "GEDORE S 1500 ES-03 module-assortiment groot 325-delig - 2319861",
+        "aantal": 14,
+        "prijs": 2288.99
+      }
+    ],
+    "interneOpmerking": ""
+  },
+  {
+    "id": 93,
+    "customer": "Romain VAN HOORDE",
+    "total": 11300.611159999999,
+    "date": "2026-08-26",
+    "bedrijf": "H2O TECH SERVICES",
+    "btw": "",
+    "adres": "Route de la Papilloud 2047",
+    "postcode": "69460 ",
+    "gemeente": "Vaux En Beaujolais",
+    "land": "FR",
+    "email": "romain.vanhoorde@hotmail.fr",
+    "producten": [
+      {
+        "sku": "02825923",
+        "naam": "MILWAUKEE M18 GG-201C Heavy Duty accu-vetspuit in transportkoffer (1x 2,0Ah accu + lader) - 4933440490",
+        "aantal": 1,
+        "prijs": 318.411
+      },
+      {
+        "sku": "03235277",
+        "naam": "MILWAUKEE 4932480457 SHOCKWAVE IMPACT DUTY 1/2\" slagdoppenset diep 10-delig",
+        "aantal": 1,
+        "prijs": 54.70999
+      },
+      {
+        "sku": "03167440",
+        "naam": "MILWAUKEE HOAL-0 M18 high output area lamp - 4933478118",
+        "aantal": 1,
+        "prijs": 217.016
+      },
+      {
+        "sku": "08119548",
+        "naam": "MILWAUKEE IRPSUOP2500 stroomtoevoer generator ROLL-ON 7200W/3600W 2,5 kWh - 4933492133",
+        "aantal": 1,
+        "prijs": 3429.585
+      },
+      {
+        "sku": "03167023",
+        "naam": "MILWAUKEE M18 DFC Dual Bay snellader - 4932472073",
+        "aantal": 1,
+        "prijs": 171.1909
+      },
+      {
+        "sku": "08105318",
+        "naam": "MILWAUKEE M18 FB12 18V FORGE 12,0Ah accu - 4932492651",
+        "aantal": 1,
+        "prijs": 241.074
+      },
+      {
+        "sku": "08105476",
+        "naam": "MILWAUKEE 4932493370 SHOCKWAVE IMPACT DUTY set automotive slagvaste doppen 1/2\" hex 3-delig",
+        "aantal": 1,
+        "prijs": 26.28
+      },
+      {
+        "sku": "08087741",
+        "naam": "MILWAUKEE M18 FPD3-502X FUEL accu-klopboorschroefmachine in HD Box (2x 5,0Ah accu+ lader) - 4933479860",
+        "aantal": 1,
+        "prijs": 405.9729
+      },
+      {
+        "sku": "03356124",
+        "naam": "MILWAUKEE M12 FCIWF12G3-502X FUEL accu-slagmoersleutel 1/2\" met frictiering in HD Box (2x 5,0Ah accu + lader) - 4933493455",
+        "aantal": 1,
+        "prijs": 309.036
+      },
+      {
+        "sku": "08142523",
+        "naam": "MILWAUKEE M12 FIR38G2-0 FUEL accu-ratelsleutel 3/8\" Gen 2 in doos (zonder accu en lader) - 4933498936",
+        "aantal": 1,
+        "prijs": 218.535
+      },
+      {
+        "sku": "03047624",
+        "naam": "MILWAUKEE M12 FDDXKIT-202X FUEL accu-installatieboor-/schroefmachine met verwisselbare kop in HD Box (2x 2,0Ah accu + lader) - 4933464979",
+        "aantal": 1,
+        "prijs": 316.4689
+      },
+      {
+        "sku": "03167438",
+        "naam": "MILWAUKEE M18 FSZ-502X FUEL SAWZALL accu-reciprozaag in HD Box (2x 5,0Ah accu + lader) - 4933478291",
+        "aantal": 1,
+        "prijs": 460.3529
+      },
+      {
+        "sku": "08083454",
+        "naam": "MILWAUKEE 4932480456 SHOCKWAVE krachtdoppenset 1/2\" kort zeskant 13-delig",
+        "aantal": 1,
+        "prijs": 51.074
+      },
+      {
+        "sku": "03329870",
+        "naam": "MILWAUKEE M18 FHIW2F12-502X FUEL 1/2\" accu-slagmoersleutel met frictiering in HD Box (2x 5,0Ah accu + lader) - 4933492783",
+        "aantal": 1,
+        "prijs": 486.7999
+      },
+      {
+        "sku": "08136408",
+        "naam": "MILWAUKEE 49224771 QUIK-LOK HOLEDOZER gatzagenset 25-76mm 9-delig",
+        "aantal": 1,
+        "prijs": 131.735
+      },
+      {
+        "sku": "03167201",
+        "naam": "MILWAUKEE M12 PAL-0 roterende werkplaats accu-lamp - 4933478226",
+        "aantal": 1,
+        "prijs": 84.785
+      },
+      {
+        "sku": "08087729",
+        "naam": "MILWAUKEE M18 FDGROVB-0X FUEL ONE-KEY rechte accu-slijper in HD Box (zonder accu en lader) - 4933480955",
+        "aantal": 1,
+        "prijs": 255.725
+      },
+      {
+        "sku": "02883343",
+        "naam": "MILWAUKEE 48899332 stappenboor M 6 - M 32",
+        "aantal": 1,
+        "prijs": 51.735
+      },
+      {
+        "sku": "03167435",
+        "naam": "MILWAUKEE M18 FSAGV125XPDB-0X haakse accu-slijper 125 mm met peddelschakelaar in HD box (zonder accu en lader) - 4933478437",
+        "aantal": 1,
+        "prijs": 258.328
+      },
+      {
+        "sku": "02860714",
+        "naam": "MILWAUKEE D-202B M4 inline accu-schroefmachine (2x 2,0Ah accu + lader) - 4933440475",
+        "aantal": 1,
+        "prijs": 156.9649
+      },
+      {
+        "sku": "08105319",
+        "naam": "MILWAUKEE M18 FB8 18V FORGE 8,0Ah accu - 4932492131",
+        "aantal": 2,
+        "prijs": 200.578
+      },
+      {
+        "sku": "02654880",
+        "naam": "MILWAUKEE M18 B5 Li-ion accu 18V 5,0Ah - 4932430483",
+        "aantal": 2,
+        "prijs": 69.19999
+      },
+      {
+        "sku": "02861306",
+        "naam": "MILWAUKEE M18 BHG-0 accu-heteluchtpistool (zonder accu en lader) - 4933459771",
+        "aantal": 1,
+        "prijs": 120.188
+      },
+      {
+        "sku": "01041477",
+        "naam": "GEDORE 2.50 binnen- en buitentrekker-set - 2017040",
+        "aantal": 1,
+        "prijs": 1227.107
+      },
+      {
+        "sku": "02779355",
+        "naam": "FACOM B124.1A startbooster 12V/24V",
+        "aantal": 1,
+        "prijs": 831.6519
+      },
+      {
+        "sku": "02340830",
+        "naam": "EXPERT E100110 momentsleutel 3/4\" - 150 tot 750 Nm",
+        "aantal": 1,
+        "prijs": 437.6849
+      },
+      {
+        "sku": "41190255",
+        "naam": "KNIPEX 87 01 180 Cobra Hightech-waterpomptang met anti-slip kunststof bekleed grijs geatramenteerd 180 mm",
+        "aantal": 1,
+        "prijs": 20.495
+      },
+      {
+        "sku": "41190131",
+        "naam": "KNIPEX 87 01 250 Cobra Hightech-waterpomptang met anti-slip kunststof bekleed grijs geatramenteerd 250 mm",
+        "aantal": 1,
+        "prijs": 21.652
+      },
+      {
+        "sku": "41190310",
+        "naam": "KNIPEX 87 01 300 Cobra Hightech-waterpomptang met anti-slip kunststof bekleed grijs geatramenteerd 300 mm",
+        "aantal": 1,
+        "prijs": 28.76
+      },
+      {
+        "sku": "41191463",
+        "naam": "KNIPEX 87 01 560 Cobra XXL Pijp- en waterpomptang met kunststof bekleed grijs geatramenteerd 560 mm",
+        "aantal": 1,
+        "prijs": 82.47899
+      },
+      {
+        "sku": "51201288",
+        "naam": "PHANTOM 292602000 UNI HSS-E machinetappenset DIN 371/6 - 22.200/22.201 (M3-M12) + 11.500 (2,5-10,2)",
+        "aantal": 1,
+        "prijs": 175.52
+      },
+      {
+        "sku": "08121988",
+        "naam": "XHANDER 71568881 wandmodel kabelhaspel 3G2,5 - 12 m",
+        "aantal": 1,
+        "prijs": 169.738
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- regel 1: handmatig toegevoegd als SKU 02861306 (bron: MILWAUKEE M18 BHG-0 pistolet à air chaud sans fil (sans batterie ni chargeur) - 493345977 (suggestie)).\n- regel 9: handmatig toegevoegd als SKU 01041477 (bron: GEDORE 2.50 jeu d'extracteurs intérieurs et extérieurs - 201704 (suggestie))."
+  },
+  {
+    "id": 94,
+    "customer": "Benjamin Dox",
+    "total": 4680.200000000001,
+    "date": "2026-08-26",
+    "bedrijf": "DESCHACHT NV",
+    "btw": "BE0863771043",
+    "adres": "Antwerpsesteenweg 1068",
+    "postcode": "9041",
+    "gemeente": "Gent-Oostakker",
+    "land": "BE",
+    "email": "benjamin.dox@deschacht.eu",
+    "producten": [
+      {
+        "sku": "02279479",
+        "naam": "PASLODE 142010 papiergebonden stripnagels 2,8x63 glad blank RD (3750 st.) + 3 gaspatronen IM90",
+        "aantal": 20,
+        "prijs": 124.37
+      },
+      {
+        "sku": "02342142",
+        "naam": "PASLODE 142021 papiergebonden stripnagels 2,8x80 glad blank rd(2500 st.) + 2 gaspatronen IM90",
+        "aantal": 20,
+        "prijs": 109.64
+      }
+    ],
+    "interneOpmerking": ""
+  },
+  {
+    "id": 95,
+    "customer": "Frederic Decrolier",
+    "total": 4646.275584000001,
+    "date": "2026-08-28",
+    "bedrijf": "MegaCool Technologies",
+    "btw": "BE1029293229",
+    "adres": "Wingepark 51",
+    "postcode": "3110",
+    "gemeente": "Rotselaar",
+    "land": "BE",
+    "email": "frederic.decrolier@megacool-technologies.com",
+    "producten": [
+      {
+        "sku": "41853161",
+        "naam": "BAHCO 8072 C moersleutel verstelbaar met centrale moer verchroomd 10\" 31 mm 255 mm",
+        "aantal": 1,
+        "prijs": 29.586
+      },
+      {
+        "sku": "55030003",
+        "naam": "BAHCO 3830-17-VIP gatzaag Sandflex bimetaal voor metaal, houtsoorten en kunstof in kartonnen doos 17 mm",
+        "aantal": 1,
+        "prijs": 7.106999
+      },
+      {
+        "sku": "55030005",
+        "naam": "BAHCO 3830-20-VIP gatzaag Sandflex bimetaal voor metaal, houtsoorten en kunstof in kartonnen doos 20 mm",
+        "aantal": 1,
+        "prijs": 7.106999
+      },
+      {
+        "sku": "55030008",
+        "naam": "BAHCO 3830-24-VIP gatzaag Sandflex bimetaal voor metaal, houtsoorten en kunstof in kartonnen doos 24 mm",
+        "aantal": 1,
+        "prijs": 7.106999
+      },
+      {
+        "sku": "55030014",
+        "naam": "BAHCO 3830-33-VIP gatzaag Sandflex bimetaal voor metaal, houtsoorten en kunstof in kartonnen doos 33 mm",
+        "aantal": 1,
+        "prijs": 7.933
+      },
+      {
+        "sku": "02233750",
+        "naam": "GEDORE 8730 ontbraammes - 2190907",
+        "aantal": 1,
+        "prijs": 13.88399
+      },
+      {
+        "sku": "02227352",
+        "naam": "BAHCO 1157 centerpunt automatisch met gehard stalen punt 130 mm 2 mm",
+        "aantal": 1,
+        "prijs": 10.578
+      },
+      {
+        "sku": "02109276",
+        "naam": "3M 2890 ruimzichtbril condenswerend/krasbestendig polycarbonaat heldere lens - 7000032480",
+        "aantal": 1,
+        "prijs": 13.18099
+      },
+      {
+        "sku": "03285180",
+        "naam": "SHOWA 383 handschoenen groen - 383-EBT XL/9",
+        "aantal": 1,
+        "prijs": 3.96
+      },
+      {
+        "sku": "03199487",
+        "naam": "WD-40 49109/NBA Specialist boor- en snijolie 400 ml - 49110/NBA",
+        "aantal": 1,
+        "prijs": 11.19999
+      },
+      {
+        "sku": "02887338",
+        "naam": "MILWAUKEE REDSTICK Slim Box waterpas 100 cm - 4932459093",
+        "aantal": 1,
+        "prijs": 18.51199
+      },
+      {
+        "sku": "02789986",
+        "naam": "BOSCH 2608587018 metaalborenset ProBox HSS-CO, DIN 338, 1-13 mm in kunststof cassette 25-delig",
+        "aantal": 1,
+        "prijs": 79.17299
+      },
+      {
+        "sku": "02790463",
+        "naam": "MAKITA DDF484RTJ 18V LXT accu-schroefboormachine 13mm in MAKPAC (2x 5,0Ah accu + lader)",
+        "aantal": 1,
+        "prijs": 272.915
+      },
+      {
+        "sku": "02632897",
+        "naam": "MAKITA P-53023 doorslijpschijf staal 125x1,0x22,23mm",
+        "aantal": 1,
+        "prijs": 2.23
+      },
+      {
+        "sku": "02842245",
+        "naam": "FAMI FAXPBC002A05401 ECOGREEN PICKIG BOX maat 2 149x233x123 mm grijs - COC0025401",
+        "aantal": 1,
+        "prijs": 2.3
+      },
+      {
+        "sku": "02773455",
+        "naam": "MAKITA D-53453 houtboor 13x151mm",
+        "aantal": 1,
+        "prijs": 3.8
+      },
+      {
+        "sku": "02678364",
+        "naam": "FACOM DELA.1056.1000 halfstijve RVS-liniaal lang model enkelzijdig 1000 mm",
+        "aantal": 1,
+        "prijs": 23.305
+      },
+      {
+        "sku": "02629994",
+        "naam": "PRINTER SURF RSX 2265016 polo shirt piqué zwart - 2265016-900-7",
+        "aantal": 1,
+        "prijs": 11.76
+      },
+      {
+        "sku": "03174116",
+        "naam": "MAKITA DGA506Z 18V LXT haakse accu-slijper 125mm met schuifschakelaar in kartonnen doos (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 131.7579
+      },
+      {
+        "sku": "08055644",
+        "naam": "MAKITA DJV182Z 18V LXT accu-decoupeerzaag in kartonnen doos (zonder accu en lader)",
+        "aantal": 1,
+        "prijs": 186.4279
+      },
+      {
+        "sku": "55030009",
+        "naam": "BAHCO 3830-25-VIP gatzaag Sandflex bimetaal voor metaal, houtsoorten en kunstof in kartonnen doos 25 mm",
+        "aantal": 1,
+        "prijs": 8.099
+      },
+      {
+        "sku": "55030010",
+        "naam": "BAHCO 3830-27-VIP gatzaag Sandflex bimetaal voor metaal, houtsoorten en kunstof in kartonnen doos 27 mm",
+        "aantal": 1,
+        "prijs": 8.099
+      },
+      {
+        "sku": "08086633",
+        "naam": "BAHCO 3625S-35 hamer met rubber greep en nylon kop, 35 mm, 610 g",
+        "aantal": 1,
+        "prijs": 20.495
+      },
+      {
+        "sku": "41012674",
+        "naam": "STANLEY 1-45-685 winkelhaak 250 x 140mm",
+        "aantal": 1,
+        "prijs": 15.86699
+      },
+      {
+        "sku": "55030006",
+        "naam": "BAHCO 3830-21-VIP gatzaag Sandflex bimetaal voor metaal, houtsoorten en kunstof in kartonnen doos 21 mm",
+        "aantal": 1,
+        "prijs": 6.57
+      },
+      {
+        "sku": "02622435",
+        "naam": "FACOM 1224125 bankschroef voor industrie en onderhoud 360° draaibaar - 1224.125",
+        "aantal": 1,
+        "prijs": 269.9169
+      },
+      {
+        "sku": "41296611",
+        "naam": "FACOM 887A knabbelschaar 26cm",
+        "aantal": 1,
+        "prijs": 67.107
+      },
+      {
+        "sku": "41280308",
+        "naam": "FACOM JETCM215GBNL gereedschapswagen zwart met 8 laden (6 gevuld) 215-delig",
+        "aantal": 1,
+        "prijs": 2232.065
+      },
+      {
+        "sku": "41291830",
+        "naam": "FACOM 44.12X13 steeksleutel 12 x 13 mm",
+        "aantal": 1,
+        "prijs": 6.179999
+      },
+      {
+        "sku": "41291834",
+        "naam": "FACOM 44.14X15 steeksleutel 14 x 15 mm",
+        "aantal": 1,
+        "prijs": 8.229999
+      },
+      {
+        "sku": "41291843",
+        "naam": "FACOM 44.22X24 steeksleutel 22 x 24 mm",
+        "aantal": 1,
+        "prijs": 12.26
+      },
+      {
+        "sku": "41291845",
+        "naam": "FACOM 44.24X27 steeksleutel 24 x 27 mm",
+        "aantal": 1,
+        "prijs": 10.413
+      },
+      {
+        "sku": "41291846",
+        "naam": "FACOM 44.25X28 steeksleutel 25 x 28 mm",
+        "aantal": 1,
+        "prijs": 12.23099
+      },
+      {
+        "sku": "08122728",
+        "naam": "MAKITA D-27501 lamellenschijf 125mm Z80",
+        "aantal": 1,
+        "prijs": 5.119999
+      },
+      {
+        "sku": "08135592",
+        "naam": "BOSCH 2608594623 as en centreerboor voor gatzaag, 32-210 x 44 mm",
+        "aantal": 1,
+        "prijs": 8.595
+      },
+      {
+        "sku": "08135593",
+        "naam": "BOSCH 2608594624 as en centreerboor voor gatzaag, 14-30 x 44 mm",
+        "aantal": 1,
+        "prijs": 7.933
+      },
+      {
+        "sku": "08072639",
+        "naam": "FAMI WORK UP werkbank met mutiplex blad 2000x750x1107 mm lichtgrijs RAL 7035 + antracietgrijs RAL 7016 - WORK2003",
+        "aantal": 1,
+        "prijs": 846.02
+      },
+      {
+        "sku": "02782013",
+        "naam": "FACOM 1230B.20 230V soldeerbout electronica 20 W",
+        "aantal": 1,
+        "prijs": 48.28699
+      },
+      {
+        "sku": "02130154",
+        "naam": "TORK 652000 vloerstandaard kunststof wit/turquoise W1",
+        "aantal": 1,
+        "prijs": 95.82599
+      },
+      {
+        "sku": "02220907",
+        "naam": "BOSCH 2607010533 houtspiraalborenset RobustLine in kunststof cassette 8-delig",
+        "aantal": 1,
+        "prijs": 13.553
+      },
+      {
+        "sku": "08091642",
+        "naam": "LOCTITE 8150 EGFD anti-seize smeermiddel (400g blik) - 2900107",
+        "aantal": 1,
+        "prijs": 27.76799
+      },
+      {
+        "sku": "93010243",
+        "naam": "TORK 130050 poetspapier Plus 2-laags 34x36,9cm blauw W1 (1500 st.)",
+        "aantal": 1,
+        "prijs": 57.80899
+      },
+      {
+        "sku": "91010284",
+        "naam": "3M - PELTOR OPT1GU Optime I gehoorkappen 27 dB geel met hoofdband, H510A-401-GU - 7000039616",
+        "aantal": 1,
+        "prijs": 14.008
+      }
+    ],
+    "interneOpmerking": "Slimme import opvolging:\n- regel 18: handmatig toegevoegd als SKU 02109276 (bron: 02109276 3M 2890 lunettes à large champ de vision verre en polycarbonate transparent résistant à la condensation et aux rayures - 7000032480 21% 13,18 € 1 13,18 €).\n\nOpen importregels bij opslaan:\n- geen referentie: Référence Produit Taux de taxe Prix unitaire (HT) Quanti té Total (HT) (regel 1)"
+  },
+  {
+    "id": 96,
+    "customer": "Gennadi Yankilov",
+    "total": 30108.839999999997,
+    "date": "2026-08-28",
+    "bedrijf": "IB Energy UAB",
+    "btw": "",
+    "adres": "",
+    "postcode": "",
+    "gemeente": "",
+    "land": "LT",
+    "email": "ibenergy.eu@gmail.com",
+    "producten": [
+      {
+        "sku": "93940714",
+        "naam": "SPC SPC300-E olieabsorberende doeken, medium gewicht, geperforeerd en gebonden 41 cm x 51 cm (100 st.) - 813738",
+        "aantal": 460,
+        "prijs": 65.454
+      }
+    ],
+    "interneOpmerking": ""
   }
 ]

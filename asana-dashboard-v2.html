@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIM Work - Executive Dashboard</title>
+    <style>
+      :root {
+        --bg: #f3f7fc;
+        --panel: #ffffff;
+        --ink: #122033;
+        --muted: #62748b;
+        --line: #dde7f2;
+        --primary: #2b6ef3;
+        --primary-soft: rgba(43,110,243,0.12);
+        --success: #1d9d66;
+        --success-soft: rgba(29,157,102,0.12);
+        --warning: #d9821f;
+        --warning-soft: rgba(217,130,31,0.12);
+        --purple: #7a50d8;
+        --purple-soft: rgba(122,80,216,0.12);
+        --danger: #d9485f;
+        --shadow: 0 14px 30px rgba(13, 25, 45, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+
+      .container {
+        max-width: 1500px;
+        margin: 28px auto;
+        padding: 0 20px 60px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 3vw, 3.2rem);
+      }
+
+      .subhead {
+        color: var(--muted);
+        margin-top: 6px;
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 12px 14px;
+        box-shadow: var(--shadow);
+      }
+
+      .controls label {
+        font-weight: 600;
+      }
+
+      input[type="file"], select, button {
+        font: inherit;
+      }
+
+      input[type="file"], select {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 9px 10px;
+        background: white;
+      }
+
+      button {
+        border: none;
+        cursor: pointer;
+        border-radius: 10px;
+        padding: 10px 14px;
+        background: #edf4ff;
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .filters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin: 18px 0 26px;
+      }
+
+      .filter {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 12px 14px;
+      }
+
+      .filter-label {
+        display: block;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.7rem;
+        margin-bottom: 8px;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 22px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 18px 20px;
+      }
+
+      .card .label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+
+      .card .value {
+        font-size: clamp(1.8rem, 2vw, 2.6rem);
+        font-weight: 800;
+        line-height: 1.1;
+      }
+
+      .card.primary { background: linear-gradient(135deg, var(--panel), var(--primary-soft)); }
+      .card.success { background: linear-gradient(135deg, var(--panel), var(--success-soft)); }
+      .card.warning { background: linear-gradient(135deg, var(--panel), var(--warning-soft)); }
+      .card.purple { background: linear-gradient(135deg, var(--panel), var(--purple-soft)); }
+      .card.neutral { background: linear-gradient(135deg, var(--panel), #eef4ff); }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 0.7fr;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .bottom-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+
+      .panel h2 {
+        margin: 0 0 14px;
+        font-size: 1.06rem;
+      }
+
+      .stack-list, .bars {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .stack-item {
+        display: grid;
+        grid-template-columns: 120px 1fr 46px;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .stack-label {
+        font-size: 0.8rem;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .stack-shell, .bar-shell {
+        height: 14px;
+        border-radius: 999px;
+        background: #edf3fe;
+        overflow: hidden;
+      }
+
+      .stack-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--primary), #74a2ff);
+      }
+
+      .stack-fill.success {
+        background: linear-gradient(90deg, var(--success), #63d4a0);
+      }
+
+      .stack-fill.purple {
+        background: linear-gradient(90deg, var(--purple), #a88ef6);
+      }
+
+      .stack-fill.warning {
+        background: linear-gradient(90deg, var(--warning), #f7b76b);
+      }
+
+      .stack-value {
+        text-align: right;
+        font-weight: 700;
+        font-size: 0.8rem;
+      }
+
+      .mini-meta {
+        margin-top: -6px;
+        margin-left: 130px;
+        color: var(--muted);
+        font-size: 0.75rem;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 108px 1fr 76px;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .month-label {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .double-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .bar-fill.requested {
+        background: linear-gradient(90deg, var(--primary), #78a7ff);
+        height: 100%;
+        border-radius: 999px;
+      }
+
+      .bar-fill.completed {
+        background: linear-gradient(90deg, var(--success), #66d2a1);
+        height: 100%;
+        border-radius: 999px;
+      }
+
+      .bar-value {
+        text-align: right;
+        font-weight: 700;
+        font-size: 0.8rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        border-bottom: 1px solid var(--line);
+        padding: 10px 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+
+      td {
+        font-size: 0.92rem;
+      }
+
+      .status-badge {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 5px 8px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        background: #edf3ff;
+        color: #2145a7;
+      }
+
+      .status-badge.done {
+        background: #ebfaf1;
+        color: #11643d;
+      }
+
+      .status-badge.open {
+        background: #fff1e5;
+        color: #975a12;
+      }
+
+      .empty {
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      @media (max-width: 980px) {
+        .dashboard-grid, .bottom-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <h1>PIM Work Dashboard</h1>
+          <div class="subhead">Executive overzicht van alles wat binnenkomt en afgaat in PIM Work</div>
+        </div>
+        <div class="controls">
+          <label for="csvFile">CSV / JSON upload</label>
+          <input id="csvFile" type="file" accept=".csv,.json" />
+          <button id="resetDemo">Reset demo</button>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="filter">
+          <label class="filter-label" for="yearFilter">Jaar</label>
+          <select id="yearFilter"></select>
+        </div>
+        <div class="filter">
+          <label class="filter-label" for="projectFilter">Project</label>
+          <select id="projectFilter"></select>
+        </div>
+        <div class="filter">
+          <label class="filter-label" for="assigneeFilter">Medewerker</label>
+          <select id="assigneeFilter"></select>
+        </div>
+        <div class="filter">
+          <label class="filter-label" for="requesterFilter">Aanvrager</label>
+          <select id="requesterFilter"></select>
+        </div>
+        <div class="filter">
+          <label class="filter-label" for="statusFilter">Status</label>
+          <select id="statusFilter"></select>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="card primary">
+          <div class="label">Totaal taken</div>
+          <div class="value" id="totalTasks">0</div>
+        </div>
+        <div class="card neutral">
+          <div class="label">Aangevraagd</div>
+          <div class="value" id="requestedCount">0</div>
+        </div>
+        <div class="card success">
+          <div class="label">Afgewerkt</div>
+          <div class="value" id="completedCount">0</div>
+        </div>
+        <div class="card warning">
+          <div class="label">Open</div>
+          <div class="value" id="openCount">0</div>
+        </div>
+        <div class="card purple">
+          <div class="label">Gem. doorlooptijd</div>
+          <div class="value" id="avgCycleDays">0.0 d</div>
+        </div>
+        <div class="card success">
+          <div class="label">Afgewerkt %</div>
+          <div class="value" id="completedRate">0.0%</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel">
+          <h2>Overzicht per jaar</h2>
+          <div id="yearBars" class="stack-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Statusverdeling</h2>
+          <div id="statusBreakdown" class="stack-list"></div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel">
+          <h2>Volume per maand</h2>
+          <div id="monthBars" class="bars"></div>
+        </div>
+        <div class="panel">
+          <h2>Aanvragers</h2>
+          <div id="requesterBars" class="stack-list"></div>
+        </div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="panel">
+          <h2>Medewerkers</h2>
+          <div id="assigneeBars" class="stack-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Projecten</h2>
+          <div id="projectBars" class="stack-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Top prioriteiten</h2>
+          <div id="priorityBars" class="stack-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:18px;">
+        <h2>Laatste 10 taken</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Taak</th>
+              <th>Project</th>
+              <th>Aanvrager</th>
+              <th>Medewerker</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Completed</th>
+            </tr>
+          </thead>
+          <tbody id="recentRows"></tbody>
+        </table>
+      </div>
+
+      <div class="panel" style="margin-top:18px;">
+        <h2>Alle taakrecords</h2>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Taak</th>
+                <th>Project</th>
+                <th>Aanvrager</th>
+                <th>Medewerker</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Completed</th>
+              </tr>
+            </thead>
+            <tbody id="taskTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const demoCsv = `Task Name,Project,Assignee,Requester,Status,Created At,Completed At
+"PIM - producttitel aanvullen","PIM work","Jill","Sophie","Done","2026-01-05T09:20:00Z","2026-01-10T14:40:00Z"
+"PIM - foto mapping controle","PIM work","Marco","Sophie","In Progress","2026-01-11T10:05:00Z",""
+"PIM - HTML attributen corrigeren","PIM work","Sara","Niels","Done","2026-02-02T08:15:00Z","2026-02-04T15:00:00Z"
+"PIM - prijsveld koppelen","PIM work","Nina","Sophie","Done","2026-02-07T12:00:00Z","2026-02-09T09:30:00Z"
+"PIM - inventory data check","PIM work","Jill","Hans","Done","2026-03-02T09:00:00Z","2026-03-06T17:10:00Z"
+"PIM - gewicht kwaliteit review","PIM work","Marco","Niels","Done","2026-03-17T10:30:00Z","2026-03-18T11:15:00Z"
+"PIM - tekst enrichments","PIM work","Sara","Sophie","In Progress","2026-04-03T15:00:00Z",""
+"PIM - vervallen SKU controle","PIM work","Nina","Hans","Done","2026-04-06T09:45:00Z","2026-04-10T13:00:00Z"
+"PIM - exportcatalogus fix","PIM work","Jill","Sophie","Done","2026-05-08T14:00:00Z","2026-05-10T11:30:00Z"
+"PIM - SEO tags aanvullingen","PIM work","Marco","Hans","Done","2026-05-15T11:00:00Z","2026-05-19T09:22:00Z"
+"PIM - batch upload controle","PIM work","Sara","Niels","Done","2026-06-01T07:50:00Z","2026-06-05T15:00:00Z"
+"PIM - bulk wijziging import","PIM work","Nina","Sophie","Done","2026-06-14T08:30:00Z","2026-06-16T10:00:00Z"
+"PIM - productcategorie mapping","PIM work","Jill","Hans","Done","2026-07-01T09:10:00Z","2026-07-03T12:15:00Z"
+"PIM - attributen validatie","PIM work","Marco","Sophie","In Progress","2026-07-08T13:10:00Z",""
+"PIM - labels review","PIM work","Sara","Niels","Done","2026-08-02T10:00:00Z","2026-08-04T08:00:00Z"`;
+
+      const state = {
+        tasks: [],
+        filters: { year: "all", project: "all", assignee: "all", requester: "all", status: "all" }
+      };
+
+      function normalizeHeader(value) {
+        return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+      }
+
+      function parseCSV(text) {
+        const rows = [];
+        let row = [];
+        let current = "";
+        let inQuotes = false;
+
+        for (let i = 0; i < text.length; i++) {
+          const ch = text[i];
+          const next = text[i + 1];
+
+          if (ch === '"') {
+            if (inQuotes && next === '"') {
+              current += '"';
+              i++;
+            } else {
+              inQuotes = !inQuotes;
+            }
+          } else if (ch === ',' && !inQuotes) {
+            row.push(current);
+            current = "";
+          } else if ((ch === '\n' || ch === '\r') && !inQuotes) {
+            if (ch === '\r' && next === '\n') i++;
+            row.push(current);
+            if (row.some((cell) => cell !== "")) rows.push(row);
+            row = [];
+            current = "";
+          } else {
+            current += ch;
+          }
+        }
+
+        if (current !== "" || row.length) {
+          row.push(current);
+          if (row.some((cell) => cell !== "")) rows.push(row);
+        }
+
+        return rows;
+      }
+
+      function detectColumns(headers) {
+        const lookup = new Map();
+        headers.forEach((header, index) => lookup.set(normalizeHeader(header), index));
+
+        const find = (keys) => {
+          for (const key of keys) {
+            const index = lookup.get(key);
+            if (index !== undefined) return index;
+          }
+          return -1;
+        };
+
+        return {
+          taskName: find(["task name", "name", "title", "task"]),
+          project: find(["project", "project name", "workspace"]),
+          assignee: find(["assignee", "assignee name", "owner"]),
+          requester: find(["requester", "requester name", "submitted by", "created by", "aanvrager"]),
+          status: find(["status", "state"]),
+          createdAt: find(["created at", "created date", "created", "created on"]),
+          completedAt: find(["completed at", "completed date", "done at", "finished at", "completed on"])
+        };
+      }
+
+      function toText(value) {
+        if (value === null || value === undefined) return "";
+        if (typeof value === "string") return value.trim();
+        if (typeof value === "object") {
+          if (value.name) return String(value.name);
+          if (value.title) return String(value.title);
+          if (value.text) return String(value.text);
+          if (value.gid) return String(value.gid);
+          return "";
+        }
+        return String(value);
+      }
+
+      function inferStatus(task) {
+        const raw = String(task.status || "").toLowerCase();
+        if (task.completed || raw.includes("done") || raw.includes("completed")) return "Done";
+        if (raw.includes("in progress") || raw.includes("working")) return "In Progress";
+        if (raw.includes("waiting") || raw.includes("blocked") || raw.includes("deferred")) return "Waiting";
+        if (raw.includes("cancel") || raw.includes("rejected")) return "Cancelled";
+        return "Open";
+      }
+
+      function normalizeJsonItem(item) {
+        const getValue = (...keys) => {
+          for (const key of keys) {
+            const value = item?.[key];
+            if (value !== undefined && value !== null && value !== "") return value;
+          }
+          return "";
+        };
+
+        const assignee = getValue("assignee", "assignee_name", "owner");
+        const project = getValue("project", "project_name", "projectName", "workspace");
+        const requester = getValue("requester", "requester_name", "created_by", "creator", "submitted_by", "requested_by");
+        const title = getValue("name", "task_name", "title", "task");
+        const createdAt = getValue("created_at", "createdAt", "created_at_utc", "created");
+        const completedAt = getValue("completed_at", "completedAt", "completed_at_utc", "finished_at");
+        const status = getValue("status", "state") || "";
+        const completed = Boolean(item?.completed);
+
+        const projectText = Array.isArray(item?.projects) && item.projects.length ? toText(item.projects[0].name) : toText(project);
+        const assigneeText = Array.isArray(item?.assignees) && item.assignees.length ? toText(item.assignees[0].name) : toText(assignee);
+        const requesterText = toText(requester) || toText(assignee) || "Onbekend";
+
+        return {
+          taskName: toText(title),
+          project: projectText || "PIM Work",
+          assignee: assigneeText || "Onbekend",
+          requester: requesterText,
+          status: status ? toText(status) : inferStatus({ status, completed }),
+          createdAt: createdAt || "",
+          completedAt: completedAt || "",
+          completed
+        };
+      }
+
+      function parseJsonData(text) {
+        try {
+          const parsed = JSON.parse(text);
+          const items = Array.isArray(parsed)
+            ? parsed
+            : Array.isArray(parsed.data)
+              ? parsed.data
+              : Array.isArray(parsed.tasks)
+                ? parsed.tasks
+                : Array.isArray(parsed.items)
+                  ? parsed.items
+                  : [];
+
+          return items
+            .map((item) => normalizeJsonItem(item))
+            .filter((item) => item.taskName || item.project || item.assignee || item.createdAt || item.completedAt);
+        } catch (error) {
+          alert("Het JSON-bestand kon niet worden gelezen.");
+          return [];
+        }
+      }
+
+      function normalizeTask(task) {
+        const finished = Boolean(task.completedAt) || String(task.status || "").toLowerCase().includes("done");
+        return {
+          taskName: task.taskName || "Onbekend",
+          project: task.project || "PIM Work",
+          assignee: task.assignee || "Onbekend",
+          requester: task.requester || task.assignee || "Onbekend",
+          status: task.status || inferStatus({ status: task.status || "", completed: finished }),
+          createdAt: task.createdAt || "",
+          completedAt: task.completedAt || "",
+          completed: finished
+        };
+      }
+
+      function getYear(value) {
+        if (!value) return null;
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return null;
+        return d.getFullYear();
+      }
+
+      function asMonthKey(value) {
+        if (!value) return null;
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return null;
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      }
+
+      function formatShortDate(value) {
+        if (!value) return "";
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return value;
+        return d.toLocaleDateString("nl-NL", { day: "2-digit", month: "2-digit", year: "numeric" });
+      }
+
+      function dayDiff(start, end) {
+        if (!start || !end) return null;
+        const d1 = new Date(start);
+        const d2 = new Date(end);
+        if (Number.isNaN(d1.getTime()) || Number.isNaN(d2.getTime())) return null;
+        return Math.max(0, (d2 - d1) / (1000 * 60 * 60 * 24));
+      }
+
+      function capitalize(value) {
+        return String(value || "").charAt(0).toUpperCase() + String(value || "").slice(1);
+      }
+
+      function setOptions(selectId, values, includeAll = true) {
+        const el = document.getElementById(selectId);
+        el.innerHTML = "";
+
+        if (includeAll) {
+          const allOption = document.createElement("option");
+          allOption.value = "all";
+          allOption.textContent = "Alle";
+          el.appendChild(allOption);
+        }
+
+        [...new Set(values.filter(Boolean))].sort().forEach((value) => {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = value;
+          el.appendChild(option);
+        });
+      }
+
+      function buildFilterOptions(tasks) {
+        const years = [...new Set(tasks.map((task) => getYear(task.createdAt)).filter(Boolean))].sort((a, b) => a - b);
+        const projects = [...new Set(tasks.map((task) => task.project).filter(Boolean))];
+        const assignees = [...new Set(tasks.map((task) => task.assignee).filter(Boolean))];
+        const requesters = [...new Set(tasks.map((task) => task.requester).filter(Boolean))];
+        const statuses = [...new Set(tasks.map((task) => task.status).filter(Boolean))];
+
+        setOptions("yearFilter", years.map((year) => String(year)), true);
+        setOptions("projectFilter", projects, true);
+        setOptions("assigneeFilter", assignees, true);
+        setOptions("requesterFilter", requesters, true);
+        setOptions("statusFilter", statuses, true);
+
+        document.getElementById("yearFilter").value = state.filters.year || "all";
+        document.getElementById("projectFilter").value = state.filters.project || "all";
+        document.getElementById("assigneeFilter").value = state.filters.assignee || "all";
+        document.getElementById("requesterFilter").value = state.filters.requester || "all";
+        document.getElementById("statusFilter").value = state.filters.status || "all";
+      }
+
+      function getFilteredTasks(tasks) {
+        return tasks.filter((task) => {
+          const yearOk = state.filters.year === "all" || String(getYear(task.createdAt)) === String(state.filters.year);
+          const projectOk = state.filters.project === "all" || task.project === state.filters.project;
+          const assigneeOk = state.filters.assignee === "all" || task.assignee === state.filters.assignee;
+          const requesterOk = state.filters.requester === "all" || task.requester === state.filters.requester;
+          const statusOk = state.filters.status === "all" || task.status === state.filters.status;
+          return yearOk && projectOk && assigneeOk && requesterOk && statusOk;
+        });
+      }
+
+      function renderSummary(filtered) {
+        const total = filtered.length;
+        const requested = filtered.filter((task) => task.createdAt).length;
+        const completed = filtered.filter((task) => task.completedAt).length;
+        const open = filtered.filter((task) => !task.completedAt && !task.completed).length;
+
+        const cycleDays = filtered
+          .map((task) => dayDiff(task.createdAt, task.completedAt))
+          .filter((value) => value !== null)
+          .map((value) => Number(value));
+
+        const avgCycle = cycleDays.length ? (cycleDays.reduce((sum, val) => sum + val, 0) / cycleDays.length).toFixed(1) : "0.0";
+        const completionPct = requested ? ((completed / requested) * 100).toFixed(1) : "0.0";
+
+        document.getElementById("totalTasks").textContent = total;
+        document.getElementById("requestedCount").textContent = requested;
+        document.getElementById("completedCount").textContent = completed;
+        document.getElementById("openCount").textContent = open;
+        document.getElementById("avgCycleDays").textContent = `${avgCycle} d`;
+        document.getElementById("completedRate").textContent = `${completionPct}%`;
+      }
+
+      function renderYearBars(filtered) {
+        const map = new Map();
+
+        filtered.forEach((task) => {
+          const year = String(getYear(task.createdAt) || "");
+          if (!year) return;
+          if (!map.has(year)) map.set(year, { requested: 0, completed: 0, open: 0 });
+          const bucket = map.get(year);
+          bucket.requested += 1;
+          if (task.completedAt || task.completed) bucket.completed += 1;
+          else bucket.open += 1;
+        });
+
+        const entries = [...map.entries()].sort((a, b) => Number(a[0]) - Number(b[0]));
+        const max = Math.max(1, ...entries.map(([, value]) => value.requested));
+        const target = document.getElementById("yearBars");
+
+        if (!entries.length) {
+          target.innerHTML = '<div class="empty">Geen data</div>';
+          return;
+        }
+
+        target.innerHTML = entries.map(([year, stats]) => `
+          <div class="stack-item">
+            <div class="stack-label">${year}</div>
+            <div class="stack-shell"><div class="stack-fill" style="width:${(stats.requested / max) * 100}%"></div></div>
+            <div class="stack-value">${stats.requested}</div>
+          </div>
+          <div class="mini-meta">afgewerkt: ${stats.completed} · open: ${stats.open}</div>
+        `).join("");
+      }
+
+      function renderMonthBars(filtered) {
+        const monthMap = new Map();
+
+        filtered.forEach((task) => {
+          const month = asMonthKey(task.createdAt);
+          if (!month) return;
+          if (!monthMap.has(month)) monthMap.set(month, { requested: 0, completed: 0 });
+          monthMap.get(month).requested += 1;
+        });
+
+        filtered.forEach((task) => {
+          const month = asMonthKey(task.completedAt);
+          if (!month) return;
+          if (!monthMap.has(month)) monthMap.set(month, { requested: 0, completed: 0 });
+          monthMap.get(month).completed += 1;
+        });
+
+        const entries = [...monthMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+        const max = Math.max(1, ...entries.map(([, value]) => value.requested));
+        const target = document.getElementById("monthBars");
+
+        if (!entries.length) {
+          target.innerHTML = '<div class="empty">Geen maanddata</div>';
+          return;
+        }
+
+        target.innerHTML = entries.map(([month, stats]) => `
+          <div class="bar-row">
+            <div class="month-label">${month}</div>
+            <div class="double-bar">
+              <div class="bar-shell"><div class="bar-fill requested" style="width:${(stats.requested / max) * 100}%"></div></div>
+              <div class="bar-shell"><div class="bar-fill completed" style="width:${(stats.completed / max) * 100}%"></div></div>
+            </div>
+            <div class="bar-value">${stats.requested}/${stats.completed}</div>
+          </div>
+        `).join("");
+      }
+
+      function renderStackList(containerId, records, cssClass = "") {
+        const target = document.getElementById(containerId);
+        if (!records.length) {
+          target.innerHTML = '<div class="empty">Geen data</div>';
+          return;
+        }
+
+        const max = Math.max(...records.map((item) => item.value));
+        target.innerHTML = records.map((item) => `
+          <div class="stack-item">
+            <div class="stack-label">${item.label}</div>
+            <div class="stack-shell"><div class="stack-fill ${cssClass}" style="width:${(item.value / max) * 100}%"></div></div>
+            <div class="stack-value">${item.value}</div>
+          </div>
+        `).join("");
+      }
+
+      function renderRequesterBars(filtered) {
+        const map = new Map();
+        filtered.forEach((task) => {
+          const requester = task.requester || "Onbekend";
+          map.set(requester, (map.get(requester) || 0) + 1);
+        });
+
+        const records = [...map.entries()].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value).slice(0, 8);
+        renderStackList("requesterBars", records, "purple");
+      }
+
+      function renderAssigneeBars(filtered) {
+        const map = new Map();
+        filtered.forEach((task) => {
+          const assignee = task.assignee || "Onbekend";
+          map.set(assignee, (map.get(assignee) || 0) + 1);
+        });
+
+        const records = [...map.entries()].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value).slice(0, 8);
+        renderStackList("assigneeBars", records, "success");
+      }
+
+      function renderProjectBars(filtered) {
+        const map = new Map();
+        filtered.forEach((task) => {
+          const project = task.project || "Onbekend";
+          map.set(project, (map.get(project) || 0) + 1);
+        });
+
+        const records = [...map.entries()].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value).slice(0, 8);
+        renderStackList("projectBars", records, "warning");
+      }
+
+      function renderPriorityBars(filtered) {
+        const map = new Map();
+        filtered.forEach((task) => {
+          const status = task.status || "Open";
+          map.set(status, (map.get(status) || 0) + 1);
+        });
+
+        const records = [...map.entries()].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+        renderStackList("priorityBars", records, "");
+      }
+
+      function renderStatusBreakdown(filtered) {
+        const map = new Map();
+        filtered.forEach((task) => {
+          const status = task.status || "Open";
+          map.set(status, (map.get(status) || 0) + 1);
+        });
+
+        const records = [...map.entries()].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+        renderStackList("statusBreakdown", records, "");
+      }
+
+      function renderRecentRows(filtered) {
+        const tbody = document.getElementById("recentRows");
+        const rows = [...filtered].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)).slice(0, 10);
+
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="7" class="empty">Geen taken gevonden</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = rows.map((task) => `
+          <tr>
+            <td>${task.taskName}</td>
+            <td>${task.project}</td>
+            <td>${task.requester}</td>
+            <td>${task.assignee}</td>
+            <td><span class="status-badge ${task.completed ? "done" : "open"}">${task.status || "Open"}</span></td>
+            <td>${formatShortDate(task.createdAt)}</td>
+            <td>${formatShortDate(task.completedAt)}</td>
+          </tr>
+        `).join("");
+      }
+
+      function renderTaskTable(filtered) {
+        const tbody = document.getElementById("taskTableBody");
+        if (!filtered.length) {
+          tbody.innerHTML = '<tr><td colspan="7" class="empty">Geen gegevens</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = filtered.map((task) => `
+          <tr>
+            <td>${task.taskName}</td>
+            <td>${task.project}</td>
+            <td>${task.requester}</td>
+            <td>${task.assignee}</td>
+            <td><span class="status-badge ${task.completed ? "done" : "open"}">${task.status || "Open"}</span></td>
+            <td>${formatShortDate(task.createdAt)}</td>
+            <td>${formatShortDate(task.completedAt)}</td>
+          </tr>
+        `).join("");
+      }
+
+      function applyFilters() {
+        const filtered = getFilteredTasks(state.tasks).map(normalizeTask);
+        renderSummary(filtered);
+        renderYearBars(filtered);
+        renderMonthBars(filtered);
+        renderRequesterBars(filtered);
+        renderAssigneeBars(filtered);
+        renderProjectBars(filtered);
+        renderPriorityBars(filtered);
+        renderStatusBreakdown(filtered);
+        renderRecentRows(filtered);
+        renderTaskTable(filtered);
+      }
+
+      function attachFilterHandlers() {
+        ["yearFilter", "projectFilter", "assigneeFilter", "requesterFilter", "statusFilter"].forEach((id) => {
+          const el = document.getElementById(id);
+          el.addEventListener("change", () => {
+            const key = id.replace("Filter", "");
+            state.filters[key] = el.value;
+            applyFilters();
+          });
+        });
+      }
+
+      function loadCsvText(text) {
+        const rows = parseCSV(text);
+        if (!rows.length) return;
+
+        const headers = rows[0] || [];
+        const cols = detectColumns(headers);
+
+        const tasks = rows.slice(1).map((row) => ({
+          taskName: row[cols.taskName] || "",
+          project: row[cols.project] || "",
+          assignee: row[cols.assignee] || "",
+          requester: row[cols.requester] || row[cols.assignee] || "",
+          status: row[cols.status] || "",
+          createdAt: row[cols.createdAt] || "",
+          completedAt: row[cols.completedAt] || ""
+        })).filter((task) => task.taskName || task.project || task.assignee || task.createdAt || task.completedAt);
+
+        state.tasks = tasks.map(normalizeTask);
+        buildFilterOptions(state.tasks);
+        applyFilters();
+      }
+
+      function loadUploadedFile(file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const text = event.target.result;
+          const ext = (file.name || "").split(".").pop()?.toLowerCase();
+
+          if (ext === "json") {
+            const jsonTasks = parseJsonData(text);
+            state.tasks = jsonTasks.map(normalizeTask);
+            buildFilterOptions(state.tasks);
+            applyFilters();
+            return;
+          }
+
+          loadCsvText(text);
+        };
+        reader.readAsText(file, "utf-8");
+      }
+
+      document.getElementById("csvFile").addEventListener("change", (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        loadUploadedFile(file);
+      });
+
+      document.getElementById("resetDemo").addEventListener("click", () => {
+        document.getElementById("csvFile").value = "";
+        loadCsvText(demoCsv);
+      });
+
+      attachFilterHandlers();
+      loadCsvText(demoCsv);
+    </script>
+  </body>
+</html>
